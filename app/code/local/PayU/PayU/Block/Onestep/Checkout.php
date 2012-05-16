@@ -1,0 +1,52 @@
+<?php
+
+/**
+ *	ver. 0.1.5
+ *	PayU One Step Checkout Block
+ *
+ *	@copyright  Copyright (c) 2011-2012 PayU
+ *	@license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
+ *	http://www.payu.com
+ *	http://twitter.com/openpayu
+ */
+
+class PayU_PayU_Block_Onestep_Checkout extends Mage_Core_Block_Template
+{
+
+	/** @var config variable */
+	protected $_config;
+
+	/** @var string Start One Step action  */
+	protected $_startAction = 'newOneStep';
+
+	/** @var bool Whether the block should be eventually rendered */
+	protected $_shouldRender = true;
+
+	/** @var string Express checkout model factory name */
+	protected $_checkoutType = 'payu/express_checkout';
+
+	/**
+	 * (non-PHPdoc)
+	 * @see magento/app/code/core/Mage/Core/Block/Mage_Core_Block_Template::_toHtml()
+	 */
+	protected function _toHtml()
+	{
+
+
+		if($this->getRequest()->getParam('submitCustomCheckout'))
+		{
+			$billingAddress = $this->getRequest()->getParam('billing');
+			$billingAddress['use_for_shipping'] = 0;
+			$shippingAddress = $this->getRequest()->getParam('shipping');
+		}
+		 
+		 
+		$this->_config = Mage::getModel('payu/config');
+		$this->setButtonSrc($this->_config->getButtonSrc());
+		$this->setIsOneStepCheckoutEnabled($this->_config->getIsOneStepCheckoutEnabled());
+		$this->setIsOneStepCheckoutAvailable($this->_config->getIsOneStepCheckoutAvailable());
+    	$this->setCheckoutUrl($this->_config->getBaseUrl().$this->_startAction);
+    	
+        return parent::_toHtml();
+    }
+}

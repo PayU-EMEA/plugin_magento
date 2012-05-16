@@ -1,0 +1,5 @@
+<?php if($this->getIsOneStepCheckoutEnabled()): ?>
+<p class="payu-button" style="margin:5px 0 5px 0;">
+   <a onclick="<?php if(!$this->getIsOneStepCheckoutAvailable()): ?>alert('<?php echo $this->__('This feature is currently not available.'); ?>');return false;<?php endif; ?>" href="<?php echo $this->getCheckoutUrl();?>"><img src="<?php echo $this->getButtonSrc(); ?>" alt="PayU One Step Checkout" /></a>
+</p>
+<?php endif; ?>
