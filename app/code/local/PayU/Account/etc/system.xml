@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <sections>
+        <payment>
+            <groups>
+                <payu_account translate="label" module="paygate">
+                    <label>PayU account</label>
+                    <sort_order>670</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+
+                        <header1 translate="label">
+                            <label>Main parameters</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header1>
+
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+
+                        <onestepcheckoutenabled translate="label">
+                            <label>Is One Step Checkout Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </onestepcheckoutenabled>
+
+                        <selfreturn translate="label">
+                            <label>Is self-return enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </selfreturn>
+
+                        <order_status translate="label">
+                            <label>New order status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status_processing</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </order_status>
+
+                        <validity_time translate="label comment">
+                            <label>Order validity time in PayU</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>payu_account/validityTime</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </validity_time>
+
+                        <environment translate="label">
+                            <label>Active environment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>payu_account/environment</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </environment>
+
+                        <header2 translate="label">
+                            <label>Parameters of production environment</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header2>
+
+                        <oauth_client_name translate="label">
+                            <label>OAuth Protocol - client_id (POS ID)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oauth_client_name>
+
+                        <oauth_client_secret translate="label">
+                            <label>OAuth Protocol - client_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oauth_client_secret>
+
+                        <signature_key translate="label">
+                            <label>Symmetrical key for encrypting communication</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </signature_key>
+
+                        <pos_auth_key translate="label">
+                            <label>Pos Auth Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </pos_auth_key>
+
+                        <header3 translate="label">
+                            <label>Parameters of test environment (Sandbox)</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header3>
+
+                        <sandbox_oauth_client_name translate="label">
+                            <label>OAuth Protocol - client_id (POS ID)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_oauth_client_name>
+
+                        <sandbox_oauth_client_secret translate="label">
+                            <label>OAuth Protocol - client_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_oauth_client_secret>
+
+                        <sandbox_signature_key translate="label">
+                            <label>Symmetrical key for encrypting communication</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_signature_key>
+
+                        <sandbox_pos_auth_key translate="label">
+                            <label>Pos Auth Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_pos_auth_key>
+
+                        <header4 translate="label">
+                            <label>Settings of external resources</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>18</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header4>
+
+                        <payubutton translate="label">
+                            <label>One Step Checkout button</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>payu_account/button</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payubutton>
+
+                        <payuthumbnail translate="label">
+                            <label>Small logo (visible when choosing the payment method)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>payu_account/thumbnail</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payuthumbnail>
+
+                        <payuadvertisement translate="label">
+                            <label>PayU Advertisement</label>
+                            <source_model>payu_account/advertisement</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payuadvertisement>
+
+                        <header5 translate="label">
+                            <label>The PayU plugin latest version information</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </header5>
+
+                        <payuupdate translate="label">
+                            <label></label>
+                            <frontend_type>multiline</frontend_type>
+                            <frontend_model>payu_account/updateInfo</frontend_model>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </payuupdate>
+
+                    </fields>
+                </payu_account>
+            </groups>
+        </payment>
+    </sections>
+</config>
