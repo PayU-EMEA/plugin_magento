@@ -180,6 +180,23 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         }
 
+        # quick fix for virtual order
+        if (empty($shippingCostList)) {
+            $shippingCostList[] = array(
+                'ShippingCost' => array(
+                    'Type' => 'virtual',
+                    'CountryCode' => $orderCountryCode,
+                    'Price' => array(
+                        'Gross' => $this->toAmount(0),
+                        'Net' => $this->toAmount(0),
+                        'Tax' => $this->toAmount(0),
+                        'TaxRate' => $this->toAmount(0),
+                        'CurrencyCode' => $orderCurrencyCode
+                    )
+                )
+            );
+        }
+
         $shippingCost = array('CountryCode' => $orderCountryCode,
             'ShipToOtherCountry' => 'true',
             'ShippingCostList' => $shippingCostList
