@@ -156,7 +156,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode();
 
         /** @var string Country Code */
-        $orderCountryCode = $this->_order->getShippingAddress()->getCountry();
+        $orderCountryCode = $this->_order->getBillingAddress()->getCountry();
 
         /** @var array assign the shipping info for created order */
         $shippingCostList = array();
@@ -336,7 +336,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 ->setCustomerIsGuest(false);
         }
 
-        $checkout->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
+        $checkout->getQuote()->getBillingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
 
         // presetting the default shipment method
         $checkout->saveShippingMethod('flatrate_flatrate');
@@ -655,7 +655,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $recipient = explode(" ", $shippingAddress['RecipientName']);
 
-                $shipping = $this->_order->getShippingAddress();
+                $shipping = $this->_order->getBillingAddress();
 
                 $shipping->setFirstname($recipient[0]);
                 $shipping->setLastname($recipient[1]);
