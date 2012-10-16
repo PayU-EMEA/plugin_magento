@@ -58,7 +58,7 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
 		$this->setOrder();
 		$this->forceNewOrderStatus();
 		$this->setPayment(true);
-		$this->_allShippingRates = Mage::getSingleton('checkout/type_onepage')->getQuote()->getShippingAddress()->getAllShippingRates();
+		$this->_allShippingRates = Mage::getSingleton('checkout/type_onepage')->getQuote()->getBillingAddress()->getAllShippingRates();
 		$this->getResponse()->setBody($this->getLayout()->createBlock('payu_account/redirect')->setAllShippingMethods($this->_allShippingRates)->setOrder($this->_order)->toHtml());
 	}
 

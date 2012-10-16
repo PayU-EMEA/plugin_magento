@@ -156,7 +156,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode();
 
         /** @var string Country Code */
-        $orderCountryCode = $this->_order->getShippingAddress()->getCountry();
+        $orderCountryCode = $this->_order->getBillingAddress()->getCountry();
 
         /** @var array assign the shipping info for created order */
         $shippingCostList = array();
@@ -178,6 +178,23 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 )
             );
 
+        }
+
+        # quick fix for virtual order
+        if (empty($shippingCostList)) {
+            $shippingCostList[] = array(
+                'ShippingCost' => array(
+                    'Type' => 'virtual',
+                    'CountryCode' => $orderCountryCode,
+                    'Price' => array(
+                        'Gross' => $this->toAmount(0),
+                        'Net' => $this->toAmount(0),
+                        'Tax' => $this->toAmount(0),
+                        'TaxRate' => $this->toAmount(0),
+                        'CurrencyCode' => $orderCurrencyCode
+                    )
+                )
+            );
         }
 
         $shippingCost = array('CountryCode' => $orderCountryCode,
@@ -223,7 +240,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
 
         // assigning the shopping cart
-        $shoppingCart = array('GrandTotal' => $this->toAmount($this->_order->getBaseSubtotal()),
+        $shoppingCart = array('GrandTotal' => $this->toAmount($this->_order->getGrandTotal()),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
@@ -276,7 +293,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         } else {
             /** Something has gone wrong with the $result succession */
-            Mage::throwException($this->__('There was a problem with initializing the payment, please contact the store administrator.' . $result->getError() . ' ' . $result->getMessage()));
+            Mage::throwException(Mage::helper('payu_account')->__('There was a problem with initializing the payment, please contact the store administrator.' . $result->getError() . ' ' . $result->getMessage()));
         }
 
         return $ret;
@@ -336,7 +353,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 ->setCustomerIsGuest(false);
         }
 
-        $checkout->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
+        $checkout->getQuote()->getBillingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
 
         // presetting the default shipment method
         $checkout->saveShippingMethod('flatrate_flatrate');
@@ -655,7 +672,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $recipient = explode(" ", $shippingAddress['RecipientName']);
 
-                $shipping = $this->_order->getShippingAddress();
+                $shipping = $this->_order->getBillingAddress();
 
                 $shipping->setFirstname($recipient[0]);
                 $shipping->setLastname($recipient[1]);
