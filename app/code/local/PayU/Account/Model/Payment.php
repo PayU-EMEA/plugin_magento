@@ -240,7 +240,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
 
         // assigning the shopping cart
-        $shoppingCart = array('GrandTotal' => $this->toAmount($this->_order->getBaseSubtotal()),
+        $shoppingCart = array('GrandTotal' => $this->toAmount($this->_order->getGrandTotal()),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
@@ -293,7 +293,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         } else {
             /** Something has gone wrong with the $result succession */
-            Mage::throwException($this->__('There was a problem with initializing the payment, please contact the store administrator.' . $result->getError() . ' ' . $result->getMessage()));
+            Mage::throwException(Mage::helper('payu_account')->__('There was a problem with initializing the payment, please contact the store administrator.' . $result->getError() . ' ' . $result->getMessage()));
         }
 
         return $ret;
