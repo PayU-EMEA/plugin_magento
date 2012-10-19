@@ -1,14 +1,14 @@
 <?php
 
 /**
- *    ver. 0.1.6.1
+ *    ver. 0.1.6.2
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
  * @license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
- *	http://www.payu.com
- *	http://www.openpayu.com
- *	http://twitter.com/openpayu
+ *    http://www.payu.com
+ *    http://www.openpayu.com
+ *    http://twitter.com/openpayu
  */
 
 require_once('lib/payu/sdk/openpayu.php');
@@ -156,14 +156,16 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode();
 
         /** @var string Country Code */
-        $orderCountryCode = $this->_order->getShippingAddress()->getCountry();
+        $orderCountryCode = $this->_order->getBillingAddress()->getCountry();
 
         /** @var array assign the shipping info for created order */
         $shippingCostList = array();
 
+        /** @var string Check wether the order is virtual or material */
+        $orderType = ($this->_order->getIsVirtual()) ? "VIRTUAL" : "MATERIAL";
+
         // assigning the shipping costs list
         foreach ($allShippingRates as $rate) {
-
             $shippingCostList[] = array(
                 'ShippingCost' => array(
                     'Type' => $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle(),
@@ -177,15 +179,14 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                     )
                 )
             );
-
         }
 
-        $shippingCost = array('CountryCode' => $orderCountryCode,
+        $shippingCost = array(
+            'CountryCode' => $orderCountryCode,
             'ShipToOtherCountry' => 'true',
             'ShippingCostList' => $shippingCostList
         );
 
-        //print_r($shippingCost);
 
         /** @var string All items included in the order */
         $orderItems = $this->_order->getAllVisibleItems();
@@ -194,7 +195,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $items = array();
 
         foreach ($orderItems as $key => $item) {
-
             /** @var array Retrieving item info */
             $itemInfo = $item->getData();
 
@@ -215,23 +215,16 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         )
                     )
                 );
-
-
             }
-
         }
 
-
         // assigning the shopping cart
-        $shoppingCart = array('GrandTotal' => $this->toAmount($this->_order->getBaseSubtotal()),
+        $shoppingCart = array(
+            'GrandTotal' => $this->toAmount($this->_order->getGrandTotal()),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
 
-        /** @var string Check wether the order is virtual or material */
-        $orderType = ($this->_order->getIsVirtual()) ? "VIRTUAL" : "MATERIAL";
-
-        // http://www.payu.com/pl/openpayu/OrderDomainRequest.html#Link18
         $orderInfo = array('MerchantPosId' => OpenPayU_Configuration::getMerchantPosId(),
             'SessionId' => $sessionid,
             'OrderUrl' => $this->_myUrl . 'cancelPayment?order=' . $this->_order->getRealOrderId(), // is url where customer will see in myaccount, and will be able to use to back to shop.
@@ -243,22 +236,21 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'ValidityTime' => $this->_config->getOrderValidityTime()
         );
 
-        // http://www.payu.com/pl/openpayu/OrderDomainRequest.html#Link2
+
         $OCReq = array('ReqId' => md5(rand()),
             'CustomerIp' => Mage::app()->getFrontController()->getRequest()->getClientIp(),
             'NotifyUrl' => $this->_myUrl . 'orderNotifyRequest', // url where PayU service will send notification with order processing status changes
             'OrderCancelUrl' => $this->_myUrl . 'cancelPayment',
             'OrderCompleteUrl' => $this->_myUrl . 'completePayment',
             'Order' => $orderInfo,
-            'ShippingCost' => array(
-                'AvailableShippingCost' => $shippingCost,
-                'ShippingCostsUpdateUrl' => $this->_myUrl . 'shippingCostRetrieve' // this is url where PayU checkout service will send shipping costs retrieve request
-            )
         );
 
-        //print_r($OCReq);
-
-        //return;
+        if (!$this->_order->getIsVirtual()) {
+            $OCReq['ShippingCost'] = array(
+                'AvailableShippingCost' => $shippingCost,
+                'ShippingCostsUpdateUrl' => $this->_myUrl . 'shippingCostRetrieve' // this is url where PayU checkout service will send shipping costs retrieve request
+            );
+        }
 
         // send message OrderCreateRequest, $result->response = OrderCreateResponse message
         $result = OpenPayU_Order::create($OCReq);
@@ -276,7 +268,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         } else {
             /** Something has gone wrong with the $result succession */
-            Mage::throwException($this->__('There was a problem with initializing the payment, please contact the store administrator.' . $result->getError() . ' ' . $result->getMessage()));
+            Mage::throwException(Mage::helper('payu_account')->__('There was a problem with initializing the payment, please contact the store administrator. ' . $result->getError() . ' ' . $result->getMessage()));
         }
 
         return $ret;
@@ -336,7 +328,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 ->setCustomerIsGuest(false);
         }
 
-        $checkout->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
+        $checkout->getQuote()->getBillingAddress()->setShippingMethod('flatrate_flatrate')->setCollectShippingRates(true);
 
         // presetting the default shipment method
         $checkout->saveShippingMethod('flatrate_flatrate');
@@ -435,7 +427,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             );
 
         } else {
-            Mage::throwException(Mage::helper('payu_account')->__('There was a problem with the payment initialization, please contact system administrator.') . $result->getError() .' '.$result->getMessage());
+            Mage::throwException(Mage::helper('payu_account')->__('There was a problem with the payment initialization, please contact system administrator.') . $result->getError() . ' ' . $result->getMessage());
         }
 
         return $ret;
@@ -655,7 +647,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $recipient = explode(" ", $shippingAddress['RecipientName']);
 
-                $shipping = $this->_order->getShippingAddress();
+                $shipping = $this->_order->getBillingAddress();
 
                 $shipping->setFirstname($recipient[0]);
                 $shipping->setLastname($recipient[1]);

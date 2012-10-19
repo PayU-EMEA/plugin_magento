@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.1
+*	ver. 0.1.6.2
 *	PayU Adminhtml Sales Order Controller
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
