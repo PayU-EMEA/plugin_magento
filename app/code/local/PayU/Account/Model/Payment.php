@@ -1,7 +1,7 @@
 <?php
 
 /**
- *    ver. 0.1.6.2
+ *    ver. 0.1.6.3
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -258,13 +258,22 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if ($result->getSuccess()) {
 
             /** @var array Assigning the redirect form data */
-            $ret = array(
-                'url' => OpenPayU_Configuration::getAuthUrl(),
-                'redirect_uri' => $this->_myUrl . "beforeSummary",
-                'response_type' => "code",
-                'client_id' => OpenPayU_Configuration::getClientId()
-            );
+            $result = OpenPayU_OAuth::accessTokenByClientCredentials();
+            if($result->getSuccess())
+            {
+                $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
+                $lang_code = explode('_', $locale, 2);
 
+                $ret = array(
+                    'url' => OpenPayu_Configuration::getSummaryUrl(),
+                    'sessionId' => $sessionid,
+                    'oauthToken' => $result->getAccessToken(),
+                    'lang' => strtolower($lang_code[1])
+                );
+            } else {
+                /** Something has gone wrong with the $result succession */
+                Mage::throwException(Mage::helper('payu_account')->__('There was a problem with initializing the payment, please contact the store administrator. ' . $result->getError() . ' ' . $result->getMessage()));
+            }
 
         } else {
             /** Something has gone wrong with the $result succession */
@@ -514,9 +523,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if (empty($payUPaymentStatus))
             $this->updateOrderStatus($payUOrderStatus);
 
+
         if (!empty($orderRetrieveResponse['CustomerRecord'])) {
-
-
             // update shipping info of the order
             $this->updateShippingInfo($orderRetrieveResponse);
 
@@ -564,7 +572,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             // Variable $notification contains array with OrderNotificationRequest message.
             $result = OpenPayU_Order::consumeMessage($document);
 
-
             if ($result->getMessage() == 'OrderNotifyRequest') {
 
                 /** @var string identify current session Id from document */
@@ -608,10 +615,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             $customerRecord = $data['CustomerRecord'];
 
-            //if($this->_order->getCustomerIsGuest()){
-
             $this->_order->setCustomerFirstname($customerRecord['FirstName']);
             $this->_order->setCustomerLastname($customerRecord['LastName']);
+            $this->_order->setCustomerEmail($customerRecord['Email']);
 
             $billing = $this->_order->getBillingAddress();
 
@@ -619,56 +625,63 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $billing->setLastname($customerRecord['LastName']);
             $billing->setTelephone($customerRecord['Phone']);
 
-            $this->_order->setBillingAddress($billing);
+            $this->_order->setBillingAddress($billing)->save();
 
-            //}
-
-
-            if (!empty($data['Shipping'])) {
+            if (isset($data['Shipping'])) {
 
                 $shippingAddress = $data['Shipping']['Address'];
-
-                /** check if we have guest customer */
-                //if($this->_order->getCustomerIsGuest()){
-
-                // assign billing additional info only to guests
 
                 $billing = $this->_order->getBillingAddress();
 
                 $billing->setCity($shippingAddress['City']);
-                $billing->setStreet($shippingAddress['Street'] . " " . $shippingAddress['HouseNumber'] . " / " . $shippingAddress['ApartmentNumber']);
+                $billing->setStreet($shippingAddress['Street'] . " " . $shippingAddress['HouseNumber'] . (isset($shippingAddress['ApartmentNumber']) ? " / " . $shippingAddress['ApartmentNumber'] : ''));
                 $billing->setPostcode($shippingAddress['PostalCode']);
                 $billing->setCountryId($shippingAddress['CountryCode']);
 
-                $this->_order->setBillingAddress($billing);
-
-                //}
+                $this->_order->setBillingAddress($billing)->save();
 
 
                 $recipient = explode(" ", $shippingAddress['RecipientName']);
 
-                $shipping = $this->_order->getBillingAddress();
+                $shipping = $this->_order->getShippingAddress();
 
                 $shipping->setFirstname($recipient[0]);
                 $shipping->setLastname($recipient[1]);
                 $shipping->setTelephone($customerRecord['Phone']);
                 $shipping->setCity($shippingAddress['City']);
-                $shipping->setStreet($shippingAddress['Street'] . " " . $shippingAddress['HouseNumber'] . " / " . $shippingAddress['ApartmentNumber']);
+                $shipping->setStreet($shippingAddress['Street'] . " " . $shippingAddress['HouseNumber'] . (isset($shippingAddress['ApartmentNumber']) ? " / " . $shippingAddress['ApartmentNumber'] : ''));
                 $shipping->setPostcode($shippingAddress['PostalCode']);
                 $shipping->setCountryId($shippingAddress['CountryCode']);
 
                 $this->_order->setShippingAddress($shipping)->save();
 
-                if (!$this->_order->getEmailSent()) {
-                    $this->_order->sendNewOrderEmail();
-                    $this->_order->setEmailSent(1);
-                }
+            }
+            elseif(isset($data['Invoice']['Billing']))
+            {
+                $billingAddress = $data['Invoice']['Billing'];
 
+                $billing = $this->_order->getBillingAddress();
+
+                $billing->setFirstname('');
+                $billing->setLastname('');
+                $billing->setCompany($billingAddress['RecipientName']);
+                $billing->setCity($billingAddress['City']);
+                $billing->setStreet($billingAddress['Street'] . " " . $billingAddress['HouseNumber'] . (isset($billingAddress['ApartmentNumber']) ? " / " . $billingAddress['ApartmentNumber'] : ''));
+                $billing->setPostcode($billingAddress['PostalCode']);
+                $billing->setCountryId($billingAddress['CountryCode']);
+
+                $this->_order->setBillingAddress($billing)->save();
+            }
+
+            if (!$this->_order->getEmailSent()) {
+                $this->_order->sendNewOrderEmail();
+                $this->_order->setEmailSent(1);
             }
 
             $this->_order->save();
 
         } catch (Error $e) {
+            Mage::logException("Can not update order data: " . $e);
         }
 
     }
@@ -786,6 +799,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $payment = $this->_order->getPayment();
         $currentState = $payment->getAdditionalInformation('payu_payment_status');
+
 
         // change the payment status if needed
         if ($currentState != $paymentStatus) {

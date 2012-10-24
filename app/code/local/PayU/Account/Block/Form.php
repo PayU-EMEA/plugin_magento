@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.2
+*	ver. 0.1.6.3
 *	PayU Form Block
 *   Payment
 *	

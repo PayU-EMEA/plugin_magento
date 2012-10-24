@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.2
+*	ver. 0.1.6.3
 *	PayU Payment Redirect Block
 *   Payment
 *
@@ -50,10 +50,10 @@ class PayU_Account_Block_Redirect extends Mage_Core_Block_Abstract
             ->setMethod('GET')
             ->setUseContainer(true);
         
-        $form->addField('redirect_uri', 'hidden', array('name'=>'redirect_uri', 'value'=>$redirectData['redirect_uri']));
-        $form->addField('response_type', 'hidden', array('name'=>'response_type', 'value'=>$redirectData['response_type']));
-        $form->addField('client_id', 'hidden', array('name'=>'client_id', 'value'=>$redirectData['client_id']));
-        
+        $form->addField('oauth_token', 'hidden', array('name'=>'oauth_token', 'value'=>$redirectData['oauthToken']));
+        $form->addField('sessionId', 'hidden', array('name'=>'sessionId', 'value'=>$redirectData['sessionId']));
+        $form->addField('lang', 'hidden', array('name'=>'lang', 'value'=>$redirectData['lang']));
+
         $html = '<html><body>';
         $html.= $form->toHtml();
         $html.= '<script type="text/javascript">document.getElementById("payu_checkout").submit();</script>';
