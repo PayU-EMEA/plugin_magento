@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.3
+*	ver. 0.1.6.3.1
 *	PayU Form Block
 *   Payment
 *	
@@ -29,7 +29,7 @@ class PayU_Account_Block_Form extends Mage_Payment_Block_Form
     {
         $this->setTemplate('payu_account/form.phtml');
         $this->setMethodTitle('');
-        $this->setMethodLabelAfterHtml('<img src="'.Mage::getModel('payu_account/config')->getThumbnailSrc().'" height="20" alt="PayU"/> '.Mage::helper('payu_account')->__('Credit Card or E-transfer'));
+        $this->setMethodLabelAfterHtml('<img src="'.Mage::getModel('payu_account/config')->getThumbnailSrc().'" height="20" alt="PayU"/> '.Mage::helper('payu_account')->__('PayU account'));
         
         return parent::_construct();
     }

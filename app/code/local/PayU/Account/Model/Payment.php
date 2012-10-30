@@ -1,7 +1,7 @@
 <?php
 
 /**
- *    ver. 0.1.6.3
+ *    ver. 0.1.6.3.1
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -1009,7 +1009,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $payment->setIsTransactionApproved(true);
         $payment->setIsTransactionClosed(true);
 
-        $comment = $this->_order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), true)
+        $comment = $this->_order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), true)
             ->sendOrderUpdateEmail(true, "PayU - " . Mage::helper('payu_account')->__('Thank you.') . " " . Mage::helper('payu_account')->__('The transaction completed successfully.'))
             ->save();
         $transaction->save();
@@ -1023,7 +1023,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     {
         $transaction = $payment->setTransactionId($this->_transactionId);
 
-        $payment->setPreparedMessage('Transakcja błędna.')
+        $payment->setPreparedMessage("PayU - " . Mage::helper('payu_account')->__('The transaction is incorrect.'))
             ->setParentTransactionId($this->_transactionId)
             ->registerVoidNotification();
         $comment = $this->_order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true, "PayU - " . Mage::helper('payu_account')->__('The transaction is incorrect.'))

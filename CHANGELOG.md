@@ -1,3 +1,7 @@
+## 0.1.6.3.1
+
+* Fixed order status changes for Completed
+
 ## 0.1.6.3
 
 * Changed shopping process flow without authentication before summary

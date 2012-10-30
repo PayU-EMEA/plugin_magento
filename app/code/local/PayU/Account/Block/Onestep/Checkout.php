@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	ver. 0.1.6.3
+ *	ver. 0.1.6.3.1
  *	PayU One Step Checkout Block
  *
  *	@copyright  Copyright (c) 2011-2012 PayU

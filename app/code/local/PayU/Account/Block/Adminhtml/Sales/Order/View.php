@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.3
+*	ver. 0.1.6.3.1
 *	PayU Adminhtml Sales Order View
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -26,7 +26,7 @@ class PayU_Account_Block_Adminhtml_Sales_Order_View extends Mage_Adminhtml_Block
 	        ), 0, 100, 'header', 'header');
 	        
 	        $this->_addButton('payu-reject', array(
-	            'label'     => Mage::helper('payu_account')->__('Reject PayU order'),
+	            'label'     => Mage::helper('payu_account')->__('Cancel PayU order'),
 	            'onclick'   => 'setLocation(\'' . $this->getRejectPaymentUrl() . '\')',
 	            'class'     => ''
 	        ), 0, 200, 'header', 'header');
