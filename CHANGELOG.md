@@ -1,3 +1,7 @@
+## 0.1.6.3.2
+
+* Fixed empty ShippingCostList in Checkout process
+
 ## 0.1.6.3.1
 
 * Fixed order status changes for Completed

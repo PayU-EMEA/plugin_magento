@@ -1,7 +1,7 @@
 <?php
 
 /**
- *    ver. 0.1.6.3.1
+ *    ver. 0.1.6.3.2
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -164,22 +164,56 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         /** @var string Check wether the order is virtual or material */
         $orderType = ($this->_order->getIsVirtual()) ? "VIRTUAL" : "MATERIAL";
 
-        // assigning the shipping costs list
-        foreach ($allShippingRates as $rate) {
-            $shippingCostList[] = array(
-                'ShippingCost' => array(
-                    'Type' => $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle(),
-                    'CountryCode' => $orderCountryCode,
-                    'Price' => array(
-                        'Gross' => $this->toAmount($rate->getPrice()),
-                        'Net' => $this->toAmount($rate->getPrice()),
-                        'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
-                        'TaxRate' => $this->toAmount($this->calculateTaxRate()),
-                        'CurrencyCode' => $orderCurrencyCode
-                    )
-                )
-            );
-        }
+// if the standard paying method has been selected
+	    if(empty($allShippingRates)){
+
+		    // normal way of paying
+		    $allShippingRates = Mage::getStoreConfig('carriers', Mage::app()->getStore()->getId());
+
+		    $methodArr = explode("_",$this->_order->getShippingMethod());
+
+		    foreach ($allShippingRates as $key => $rate) {
+
+			    if($rate['active'] == 1 && $methodArr[0] == $key){
+				    $shippingCostList[] = array(
+					    'ShippingCost' => array(
+						    'Type' => $rate['title'] . ' - ' . $rate['name'],
+						    'CountryCode' => $orderCountryCode,
+						    'Price' => array(
+							    'Gross' => $this->toAmount($this->_order->getShippingAmount()),
+							    'Net' => $this->toAmount($this->_order->getShippingAmount()),
+							    'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
+							    'TaxRate' => $this->toAmount($this->calculateTaxRate()),
+							    'CurrencyCode' => $orderCurrencyCode
+						    )
+					    )
+				    );
+			    }
+
+		    }
+
+		    $grandTotal = $this->_order->getGrandTotal() - $this->_order->getShippingAmount();
+
+	    }else{
+		    // assigning the shipping costs list
+		    foreach ($allShippingRates as $rate) {
+			    $shippingCostList[] = array(
+				    'ShippingCost' => array(
+					    'Type' => $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle(),
+					    'CountryCode' => $orderCountryCode,
+					    'Price' => array(
+						    'Gross' => $this->toAmount($rate->getPrice()),
+						    'Net' => $this->toAmount($rate->getPrice()),
+						    'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
+						    'TaxRate' => $this->toAmount($this->calculateTaxRate()),
+						    'CurrencyCode' => $orderCurrencyCode
+					    )
+				    )
+			    );
+		    }
+
+		    $grandTotal = $this->_order->getGrandTotal();
+	    }
 
         $shippingCost = array(
             'CountryCode' => $orderCountryCode,
@@ -220,7 +254,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         // assigning the shopping cart
         $shoppingCart = array(
-            'GrandTotal' => $this->toAmount($this->_order->getGrandTotal()),
+            'GrandTotal' => $this->toAmount($grandTotal),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
