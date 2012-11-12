@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.3.1
+*	ver. 0.1.6.3.2
 *	PayU Payment Redirect Block
 *   Payment
 *
