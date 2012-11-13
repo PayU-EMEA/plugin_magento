@@ -1,3 +1,9 @@
+## 0.1.6.4
+
+* Fixed displaying a message when you add item to cart
+* Fixed advertisements localization
+* Added redirect after payment cancel
+
 ## 0.1.6.3.2
 
 * Fixed empty ShippingCostList in Checkout process

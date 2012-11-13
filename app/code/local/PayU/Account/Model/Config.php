@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.3.2
+*	ver. 0.1.6.4
 *	PayU Config Model
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -14,7 +14,7 @@
 class PayU_Account_Model_Config
 {
 	/** @var string self version */
-	protected $_pluginVersion = '0.1.6.3.2';
+	protected $_pluginVersion = '0.1.6.4';
 	
 	/** @var string minimum Magento e-commerce version */
 	protected $_minimumMageVersion = '1.6.0';
@@ -29,7 +29,6 @@ class PayU_Account_Model_Config
 	protected $_goodsUrl = "http://openpayu.com/en/goods/json";
 	
 	/** @var latest version path in goods array */
-	// @todo make it magento not osc, when magento is available
 	protected $_latestVersionPath = "plugins_magento_1.6.0";
 	
 	/** @var string latest version url */
@@ -146,7 +145,7 @@ class PayU_Account_Model_Config
     
     /** @return string advertisement banner url */
 	public function getAdvertisementSrc(){
-		return $this->getStoreConfig('payment/payu_account/payuadvertisement');
+        return $this->localize($this->getStoreConfig('payment/payu_account/payuadvertisement'));
     }
     
 	/** @return string one step checkout button url */

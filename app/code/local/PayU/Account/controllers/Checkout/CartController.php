@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.3.2
+*	ver. 0.1.6.4
 *	PayU Cart Controller
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -16,8 +16,4 @@ require_once 'Mage/Checkout/controllers/CartController.php';
 class PayU_Account_Checkout_CartController extends Mage_Checkout_CartController
 {
 
-    public function indexAction() {
-        $this->loadLayout();
-		$this->renderLayout(); 
-    }
 }
