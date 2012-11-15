@@ -1,3 +1,7 @@
+## 0.1.6.5
+
+* Added customer and shipping information in order create
+
 ## 0.1.6.4
 
 * Fixed displaying a message when you add item to cart

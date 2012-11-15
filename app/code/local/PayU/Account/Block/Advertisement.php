@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.4
+*	ver. 0.1.6.5
 *	PayU Advertisement Block
 *   Payment
 *	
