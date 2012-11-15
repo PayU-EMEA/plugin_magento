@@ -164,56 +164,56 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         /** @var string Check wether the order is virtual or material */
         $orderType = ($this->_order->getIsVirtual()) ? "VIRTUAL" : "MATERIAL";
 
-// if the standard paying method has been selected
-	    if(empty($allShippingRates)){
+        // if the standard paying method has been selected
+        if (empty($allShippingRates)) {
 
-		    // normal way of paying
-		    $allShippingRates = Mage::getStoreConfig('carriers', Mage::app()->getStore()->getId());
+            // normal way of paying
+            $allShippingRates = Mage::getStoreConfig('carriers', Mage::app()->getStore()->getId());
 
-		    $methodArr = explode("_",$this->_order->getShippingMethod());
+            $methodArr = explode("_", $this->_order->getShippingMethod());
 
-		    foreach ($allShippingRates as $key => $rate) {
+            foreach ($allShippingRates as $key => $rate) {
 
-			    if($rate['active'] == 1 && $methodArr[0] == $key){
-				    $shippingCostList[] = array(
-					    'ShippingCost' => array(
-						    'Type' => $rate['title'] . ' - ' . $rate['name'],
-						    'CountryCode' => $orderCountryCode,
-						    'Price' => array(
-							    'Gross' => $this->toAmount($this->_order->getShippingAmount()),
-							    'Net' => $this->toAmount($this->_order->getShippingAmount()),
-							    'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
-							    'TaxRate' => $this->toAmount($this->calculateTaxRate()),
-							    'CurrencyCode' => $orderCurrencyCode
-						    )
-					    )
-				    );
-			    }
+                if ($rate['active'] == 1 && $methodArr[0] == $key) {
+                    $shippingCostList[] = array(
+                        'ShippingCost' => array(
+                            'Type' => $rate['title'] . ' - ' . $rate['name'],
+                            'CountryCode' => $orderCountryCode,
+                            'Price' => array(
+                                'Gross' => $this->toAmount($this->_order->getShippingAmount()),
+                                'Net' => $this->toAmount($this->_order->getShippingAmount()),
+                                'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
+                                'TaxRate' => $this->toAmount($this->calculateTaxRate()),
+                                'CurrencyCode' => $orderCurrencyCode
+                            )
+                        )
+                    );
+                }
 
-		    }
+            }
 
-		    $grandTotal = $this->_order->getGrandTotal() - $this->_order->getShippingAmount();
+            $grandTotal = $this->_order->getGrandTotal() - $this->_order->getShippingAmount();
 
-	    }else{
-		    // assigning the shipping costs list
-		    foreach ($allShippingRates as $rate) {
-			    $shippingCostList[] = array(
-				    'ShippingCost' => array(
-					    'Type' => $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle(),
-					    'CountryCode' => $orderCountryCode,
-					    'Price' => array(
-						    'Gross' => $this->toAmount($rate->getPrice()),
-						    'Net' => $this->toAmount($rate->getPrice()),
-						    'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
-						    'TaxRate' => $this->toAmount($this->calculateTaxRate()),
-						    'CurrencyCode' => $orderCurrencyCode
-					    )
-				    )
-			    );
-		    }
+        } else {
+            // assigning the shipping costs list
+            foreach ($allShippingRates as $rate) {
+                $shippingCostList[] = array(
+                    'ShippingCost' => array(
+                        'Type' => $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle(),
+                        'CountryCode' => $orderCountryCode,
+                        'Price' => array(
+                            'Gross' => $this->toAmount($rate->getPrice()),
+                            'Net' => $this->toAmount($rate->getPrice()),
+                            'Tax' => $this->toAmount($this->_order->getShippingTaxAmount()),
+                            'TaxRate' => $this->toAmount($this->calculateTaxRate()),
+                            'CurrencyCode' => $orderCurrencyCode
+                        )
+                    )
+                );
+            }
 
-		    $grandTotal = $this->_order->getGrandTotal();
-	    }
+            $grandTotal = $this->_order->getGrandTotal();
+        }
 
         $shippingCost = array(
             'CountryCode' => $orderCountryCode,
@@ -286,6 +286,42 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             );
         }
 
+        $customer_sheet = array();
+
+        $billingAddressId = $this->_order->getBillingAddressId();
+
+        if (!empty($billingAddressId)) {
+
+            $billingAddress = $this->_order->getBillingAddress();
+
+            $customer_sheet = array(
+                'Email' => $billingAddress->getEmail(),
+                'Phone' => $billingAddress->getTelephone(),
+                'FirstName' => $billingAddress->getFirstname(),
+                'LastName' => $billingAddress->getLastname()
+            );
+
+            $shippingAddressId = $this->_order->getShippingAddressId();
+
+            if(!empty($shippingAddressId))
+                $shippingAddress = $this->_order->getShippingAddress();
+
+            $customer_sheet['Shipping'] = array(
+                'Street' => trim(implode(' ', $shippingAddress->getStreet())),
+                'PostalCode' => $shippingAddress->getPostcode(),
+                'City' => $shippingAddress->getCity(),
+                'CountryCode' => $shippingAddress->getCountry(),
+                'AddressType' => 'SHIPPING',
+                'RecipientName' => trim($shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname()),
+                'RecipientPhone' => $shippingAddress->getTelephone(),
+                'RecipientEmail' => $shippingAddress->getEmail()
+            );
+        }
+
+        if (!empty($customer_sheet))
+            $OCReq['Customer'] = $customer_sheet;
+
+
         // send message OrderCreateRequest, $result->response = OrderCreateResponse message
         $result = OpenPayU_Order::create($OCReq);
 
@@ -293,8 +329,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             /** @var array Assigning the redirect form data */
             $result = OpenPayU_OAuth::accessTokenByClientCredentials();
-            if($result->getSuccess())
-            {
+            if ($result->getSuccess()) {
                 $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
                 $lang_code = explode('_', $locale, 2);
 
@@ -641,7 +676,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     /**
      * Update order's customer information based on PayU information
-     * @var array result data from payu with billing and shipping info */
+     * @var array result data from payu with billing and shipping info
+     */
     protected function updateCustomerData($data)
     {
 
@@ -689,9 +725,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $this->_order->setShippingAddress($shipping)->save();
 
-            }
-            elseif(isset($data['Invoice']['Billing']))
-            {
+            } elseif (isset($data['Invoice']['Billing'])) {
                 $billingAddress = $data['Invoice']['Billing'];
 
                 $billing = $this->_order->getBillingAddress();
