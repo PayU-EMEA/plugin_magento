@@ -136,6 +136,6 @@ You can set external resources for the following:
 [ext5]: http://php.net/manual/en/book.xmlreader.php
 
 <!--images:-->
-[img1]: https://raw.github.com/PayU/doc_draft/master/images/2.png?login=openpayu&token=1f8c1fefb85e26d28e282ae924bf8b8f
-[img2]: https://raw.github.com/PayU/doc_draft/master/images/save_config.png?login=openpayu&token=1904d9734f5df4cba38a2ff0a3945117
-[img3]: https://raw.github.com/PayU/doc_draft/master/images/cache_flushed.png?login=openpayu&token=bf14a4c4eb8ff7e3140e1306e168040e
+
+[img2]: https://raw.github.com/PayU/plugin_magento_160/master/readme_images/save_config.png
+[img3]: https://raw.github.com/PayU/plugin_magento_160/master/readme_images/cache_flushed.png
