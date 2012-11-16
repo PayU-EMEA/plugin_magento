@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 0.1.6.5
+*	ver. 0.1.6.5.1
 *	PayU Config Model
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -14,7 +14,7 @@
 class PayU_Account_Model_Config
 {
 	/** @var string self version */
-	protected $_pluginVersion = '0.1.6.5';
+	protected $_pluginVersion = '0.1.6.5.1';
 	
 	/** @var string minimum Magento e-commerce version */
 	protected $_minimumMageVersion = '1.6.0';

@@ -1,7 +1,7 @@
 <?php
      
 /**
- *	ver. 0.1.6.5
+ *	ver. 0.1.6.5.1
  *	PayU Standard Payment Model
  *
  *	@copyright  Copyright (c) 2011-2012 PayU

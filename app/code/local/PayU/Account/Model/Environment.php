@@ -2,7 +2,7 @@
 
 
 /**
- *	ver. 0.1.6.5
+ *	ver. 0.1.6.5.1
  *	PayU Environment Model
  *
  *	@copyright  Copyright (c) 2011-2012 PayU
@@ -24,13 +24,13 @@ class PayU_Account_Model_Environment
 
 	public function toOptionArray() {
 		return array(
-		array(
+			array(
                 'value' => PayU_Account_Model_Environment::PRODUCTION,
-                'label' => Mage::helper('payu_account')->__('Production')
+                'label' => Mage::helper('payu_account')->__('No')
             ),
             array(
                 'value' => PayU_Account_Model_Environment::SANDBOX,
-                'label' => 'Sandbox'
+                'label' => Mage::helper('payu_account')->__('Yes')
             )
         );
     }

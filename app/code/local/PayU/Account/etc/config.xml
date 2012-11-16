@@ -3,7 +3,7 @@
 
 	<modules>
 		<PayU_Account>
-			<version>0.1.6.5</version>
+			<version>0.1.6.5.1</version>
 		</PayU_Account>
 	</modules>
 
@@ -115,7 +115,7 @@
 			<payu_account>
 				<active>1</active>
 				<model>payu_account/payment</model>
-				<order_status>pending</order_status>
+                <order_status>1</order_status>
 				<payment_action>authorize</payment_action>
 				<allowspecific>0</allowspecific>
 			</payu_account>

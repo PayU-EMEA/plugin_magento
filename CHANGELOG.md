@@ -1,3 +1,9 @@
+## 0.1.6.5.1
+
+* Fixed Email empty value in new order
+* Changed description labels in configuration
+* Updated order statuses list
+
 ## 0.1.6.5
 
 * Added customer and shipping information in order create

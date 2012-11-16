@@ -1,7 +1,7 @@
 <?php
 
 /**
- *    ver. 0.1.6.5
+ *    ver. 0.1.6.5.1
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -259,9 +259,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'ShoppingCartItems' => $items
         );
 
-        $orderInfo = array('MerchantPosId' => OpenPayU_Configuration::getMerchantPosId(),
+        $orderInfo = array(
+            'MerchantPosId' => OpenPayU_Configuration::getMerchantPosId(),
             'SessionId' => $sessionid,
-            'OrderUrl' => $this->_myUrl . 'cancelPayment?order=' . $this->_order->getRealOrderId(), // is url where customer will see in myaccount, and will be able to use to back to shop.
+            'OrderUrl' => $this->_myUrl . 'cancelPayment?order=' . $this->_order->getRealOrderId(),
             'OrderCreateDate' => date("c"),
             'OrderDescription' => 'Order no ' . $this->_order->getId(),
             'MerchantAuthorizationKey' => OpenPayU_Configuration::getPosAuthKey(),
@@ -271,9 +272,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         );
 
 
-        $OCReq = array('ReqId' => md5(rand()),
+        $OCReq = array(
+            'ReqId' => md5(rand()),
             'CustomerIp' => Mage::app()->getFrontController()->getRequest()->getClientIp(),
-            'NotifyUrl' => $this->_myUrl . 'orderNotifyRequest', // url where PayU service will send notification with order processing status changes
+            'NotifyUrl' => $this->_myUrl . 'orderNotifyRequest',
             'OrderCancelUrl' => $this->_myUrl . 'cancelPayment',
             'OrderCompleteUrl' => $this->_myUrl . 'completePayment',
             'Order' => $orderInfo,
@@ -282,7 +284,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if (!$this->_order->getIsVirtual()) {
             $OCReq['ShippingCost'] = array(
                 'AvailableShippingCost' => $shippingCost,
-                'ShippingCostsUpdateUrl' => $this->_myUrl . 'shippingCostRetrieve' // this is url where PayU checkout service will send shipping costs retrieve request
+                'ShippingCostsUpdateUrl' => $this->_myUrl . 'shippingCostRetrieve'
             );
         }
 
@@ -294,32 +296,35 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             $billingAddress = $this->_order->getBillingAddress();
 
-            $customer_sheet = array(
-                'Email' => $billingAddress->getEmail(),
-                'Phone' => $billingAddress->getTelephone(),
-                'FirstName' => $billingAddress->getFirstname(),
-                'LastName' => $billingAddress->getLastname()
-            );
+            $customer_mail = $billingAddress->getEmail();
 
-            $shippingAddressId = $this->_order->getShippingAddressId();
+            if (!empty($customer_mail)) {
+                $customer_sheet = array(
+                    'Email' => $billingAddress->getEmail(),
+                    'Phone' => $billingAddress->getTelephone(),
+                    'FirstName' => $billingAddress->getFirstname(),
+                    'LastName' => $billingAddress->getLastname()
+                );
 
-            if(!empty($shippingAddressId))
-                $shippingAddress = $this->_order->getShippingAddress();
+                $shippingAddressId = $this->_order->getShippingAddressId();
 
-            $customer_sheet['Shipping'] = array(
-                'Street' => trim(implode(' ', $shippingAddress->getStreet())),
-                'PostalCode' => $shippingAddress->getPostcode(),
-                'City' => $shippingAddress->getCity(),
-                'CountryCode' => $shippingAddress->getCountry(),
-                'AddressType' => 'SHIPPING',
-                'RecipientName' => trim($shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname()),
-                'RecipientPhone' => $shippingAddress->getTelephone(),
-                'RecipientEmail' => $shippingAddress->getEmail()
-            );
+                if (!empty($shippingAddressId))
+                    $shippingAddress = $this->_order->getShippingAddress();
+
+                $customer_sheet['Shipping'] = array(
+                    'Street' => trim(implode(' ', $shippingAddress->getStreet())),
+                    'PostalCode' => $shippingAddress->getPostcode(),
+                    'City' => $shippingAddress->getCity(),
+                    'CountryCode' => $shippingAddress->getCountry(),
+                    'AddressType' => 'SHIPPING',
+                    'RecipientName' => trim($shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname()),
+                    'RecipientPhone' => $shippingAddress->getTelephone(),
+                    'RecipientEmail' => $shippingAddress->getEmail()
+                );
+
+                $OCReq['Customer'] = $customer_sheet;
+            }
         }
-
-        if (!empty($customer_sheet))
-            $OCReq['Customer'] = $customer_sheet;
 
 
         // send message OrderCreateRequest, $result->response = OrderCreateResponse message
@@ -359,8 +364,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     public function newOneStep()
     {
-
-
         $checkout = Mage::getSingleton('checkout/type_onepage');
 
         $customerSession = Mage::getSingleton('customer/session');
@@ -382,10 +385,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                     0 => $this->_tempInfo,
                     1 => $this->_tempInfo
                 ),
-                'city' => 'City',
-                'postcode' => "00000",
-                'country_id' => "PL",
-                'telephone' => "000000000",
+                'city' => $this->_tempInfo,
+                'postcode' => $this->_tempInfo,
+                'country_id' => Mage::helper('core')->getDefaultCountry(),
+                'telephone' => "0000000",
                 'save_in_address_book' => 0
             );
 
