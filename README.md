@@ -36,7 +36,7 @@ See the sections below to find out about steps for each of the procedures.
 
 To install the plugin manually, simply copy folders and refresh the list of plugins:
 
-1. Copy folders from [plugin_magento_160][ext1] to your Magento root folder on the server.
+1. Copy the folders from [plugin_magento_160][ext1] to your Magento root folder on the server.
 2. In order to update the list of available plugins, clean the cache:
   * Go to Magento administration page [http://your-magento-url/admin].
   * Go to **System** > **Cache Management**.
@@ -82,15 +82,15 @@ The main parameters for plugin configuration are as follows:
 | Parameter | Values | Description | 
 |:---------:|:------:|:-----------:|
 |Enabled|Yes/No|Specifies whether the module is enabled.|
-|OneStepCheckout Enabled|Yes/No|Specifies whether buying from cart via Payu is enabled.|
+|OneStepCheckout Enabled|Yes/No|Specifies whether buying from the cart via Payu is enabled.|
 |Self-Return Enabled|Yes/No|When self-return is disabled, the payment must be confirmed manually.|
 |New Order Status|Pending/Processing/Complete/ <br /> Closed/Canceled/On Hold|Defines which status is assigned to new orders. By deafult, the *Processing* status is assigned to each new order.|
-|Order Validity Time|24h/12h/6h/1h/30min|Specifies the time during which the order is valid in the PayU system. When validity time expires, the order is cancelled, and you are notified that the transaction failed.|
+|Order Validity Time|24h/12h/6h/1h/30min|Specifies the time during which the order is valid in the PayU system. When the validity time expires, the order is cancelled, and you are notified that the transaction failed.|
 |Test Mode On|Yes/No|When you are in the test mode, the transactions are only simulated and no real payments are made. Use the test mode to see how the transactions work.|
 
 #### Parameters of production and test environments
 
-The test environment is called *Sandbox* and you can adjust it separately from the production environment to see which configuration suits you the best.
+The test environment is called *Sandbox* and you can adjust it separately from the production environment to see which configuration suits you best.
 To check the values of the parameters below, go to **Administration Panel** > **My shops** > **Your shop** > **POS** and click the name of a given POS.
 
 **Important:** If you set the [**Test Mode On**][3.1.1] parameter to *Yes*, the transactions in your shop are only simulated. No real payments are made.
