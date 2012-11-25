@@ -63,7 +63,7 @@ It is recommended to always backup your installation prior to use.
   
 ## Configuration
 
-Independently from the installation method, the configuration looks the same:
+Independently of the installation method, the configuration looks the same:
 
 1. Go to Magento administration page [http://your-magento-url/admin].
 2. Go to **System** > **Configuration** window. 
