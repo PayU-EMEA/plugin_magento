@@ -1,5 +1,7 @@
 # PayU account plugin for Magento over 1.6.0
 -------
+``This plugin is released under the GPL license.``
+
 PayU account is a web application designed as an e-wallet for shoppers willing to open an account, 
 define their payment options, see their purchase history, and manage personal profiles.
 
@@ -15,6 +17,8 @@ define their payment options, see their purchase history, and manage personal pr
 
 
 ## Prerequisites
+
+**Important:** This plugin works only with checkout points of sales (POS).
 
 The following PHP extensions are required:
 
@@ -36,9 +40,9 @@ See the sections below to find out about steps for each of the procedures.
 
 To install the plugin manually, simply copy folders and refresh the list of plugins:
 
-1. Copy the folders from [plugin_magento_160][ext1] to your Magento root folder on the server.
+1. Copy the folders from [the plugin repository][ext1] to your Magento root folder on the server.
 2. In order to update the list of available plugins, clean the cache:
-  * Go to Magento administration page [http://your-magento-url/admin].
+  * Go to the Magento administration page [http://your-magento-url/admin].
   * Go to **System** > **Cache Management**.
   * Select all cache types and click  the **Flush Magento Cache** button.<br /> 
   **Note:** If the list of plugins doesn't refresh, flush other cache as well.
@@ -65,7 +69,7 @@ It is recommended to always backup your installation prior to use.
 
 Independently of the installation method, the configuration looks the same:
 
-1. Go to Magento administration page [http://your-magento-url/admin].
+1. Go to the Magento administration page [http://your-magento-url/admin].
 2. Go to **System** > **Configuration** window. 
 3. From the **Configuration** menu on the left, in the **Sales** section, select **Payment Methods**.
 4. In the list of available methods, click PayU to expand the configuration form, and specify the [configuration parameters][3.1].
@@ -83,10 +87,10 @@ The main parameters for plugin configuration are as follows:
 |:---------:|:------:|:-----------:|
 |Enabled|Yes/No|Specifies whether the module is enabled.|
 |OneStepCheckout Enabled|Yes/No|Specifies whether buying from the cart via Payu is enabled.|
-|Self-Return Enabled|Yes/No|When self-return is disabled, the payment must be confirmed manually.|
+|Self-Return Enabled|Yes/No|If self-return is disabled, the payment must be confirmed manually.|
 |New Order Status|Pending/Processing/Complete/ <br /> Closed/Canceled/On Hold|Defines which status is assigned to new orders. By deafult, the *Processing* status is assigned to each new order.|
 |Order Validity Time|24h/12h/6h/1h/30min|Specifies the time during which the order is valid in the PayU system. When the validity time expires, the order is cancelled, and you are notified that the transaction failed.|
-|Test Mode On|Yes/No|When you are in the test mode, the transactions are only simulated and no real payments are made. Use the test mode to see how the transactions work.|
+|Test Mode On|Yes/No|If you are in the test mode, the transactions are only simulated and no real payments are made. Use the test mode to see how the transactions work.|
 
 #### Parameters of production and test environments
 
