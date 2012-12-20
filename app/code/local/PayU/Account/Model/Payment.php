@@ -1,11 +1,11 @@
 <?php
 
 /**
- *    ver. 0.1.6.5.1
+ *    ver. 1.7
  *    PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
- * @license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
+ * @license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
  *    http://www.payu.com
  *    http://www.openpayu.com
  *    http://twitter.com/openpayu
@@ -42,7 +42,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * Payment method title
      * @var string
      */
-    protected $_title = 'PayU account';
+    protected $_title = 'PayU';
 
     /**
      *
@@ -58,19 +58,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     protected $_isInitializeNeeded = true;
 
-    /**
-     *
-     * Can use internal
-     * @var boolean
-     */
-    protected $_canUseInternal = false;
-
-    /**
-     *
-     * Enter description here ...
-     * @var unknown_type
-     */
-    protected $_canUseForMultishipping = false;
 
     /**
      * Transaction id
@@ -86,20 +73,31 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     protected $_tempInfo = "AWAITING_PayU";
 
+    protected $_isGateway               = true;
+    protected $_canAuthorize            = true;
+    protected $_canCapture              = true;
+    protected $_canCapturePartial       = false;
+    protected $_canRefund               = false;
+    protected $_canVoid                 = false;
+    protected $_canUseInternal          = false;
+    protected $_canUseCheckout          = true;
+    protected $_canUseForMultishipping  = true;
+    protected $_canSaveCc = false;
+
     /**
      * PayU payment statuses
      *
      * @var string
      */
-    const     PAYMENT_STATUS_NEW = 'PAYMENT_STATUS_NEW';
-    const     PAYMENT_STATUS_CANCEL = 'PAYMENT_STATUS_CANCEL';
-    const     PAYMENT_STATUS_REJECT = 'PAYMENT_STATUS_REJECT';
-    const     PAYMENT_STATUS_INIT = 'PAYMENT_STATUS_INIT';
-    const     PAYMENT_STATUS_SENT = 'PAYMENT_STATUS_SENT';
-    const     PAYMENT_STATUS_NOAUTH = 'PAYMENT_STATUS_NOAUTH';
-    const     PAYMENT_STATUS_REJECT_DONE = 'PAYMENT_STATUS_REJECT_DONE';
-    const     PAYMENT_STATUS_END = 'PAYMENT_STATUS_END';
-    const     PAYMENT_STATUS_ERROR = 'PAYMENT_STATUS_ERROR';
+    const PAYMENT_STATUS_NEW = 'PAYMENT_STATUS_NEW';
+    const PAYMENT_STATUS_CANCEL = 'PAYMENT_STATUS_CANCEL';
+    const PAYMENT_STATUS_REJECT = 'PAYMENT_STATUS_REJECT';
+    const PAYMENT_STATUS_INIT = 'PAYMENT_STATUS_INIT';
+    const PAYMENT_STATUS_SENT = 'PAYMENT_STATUS_SENT';
+    const PAYMENT_STATUS_NOAUTH = 'PAYMENT_STATUS_NOAUTH';
+    const PAYMENT_STATUS_REJECT_DONE = 'PAYMENT_STATUS_REJECT_DONE';
+    const PAYMENT_STATUS_END = 'PAYMENT_STATUS_END';
+    const PAYMENT_STATUS_ERROR = 'PAYMENT_STATUS_ERROR';
 
     const NEW_PAYMENT_URL = "payu_account/payment/new";
 
@@ -109,11 +107,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @var string
      */
 
-    const     ORDER_STATUS_PENDING = 'ORDER_STATUS_PENDING';
-    const     ORDER_STATUS_SENT = 'ORDER_STATUS_SENT';
-    const     ORDER_STATUS_COMPLETE = 'ORDER_STATUS_COMPLETE';
-    const     ORDER_STATUS_CANCEL = 'ORDER_STATUS_CANCEL';
-    const     ORDER_STATUS_REJECT = 'ORDER_STATUS_REJECT';
+    const ORDER_STATUS_PENDING = 'ORDER_STATUS_PENDING';
+    const ORDER_STATUS_SENT = 'ORDER_STATUS_SENT';
+    const ORDER_STATUS_COMPLETE = 'ORDER_STATUS_COMPLETE';
+    const ORDER_STATUS_CANCEL = 'ORDER_STATUS_CANCEL';
+    const ORDER_STATUS_REJECT = 'ORDER_STATUS_REJECT';
 
     /**
      * Constructor
@@ -124,6 +122,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         // initialize the PayU config
         $this->initializeOpenPayUConfiguration();
+    }
+
+    public function getTitle()
+    {
+        return $this->_title;
     }
 
     /**
@@ -372,7 +375,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         // if guest payment
         if (!$customerSession->isLoggedIn()) {
-            ;
 
             $billingAddress = array
             (
@@ -602,22 +604,26 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             // update customer data of the order
             $this->updateCustomerData($orderRetrieveResponse);
-
-
         }
-
-
     }
 
     protected function orderStatusUpdateRequest($status)
     {
         $sessionId = $this->_order->getPayment()->getLastTransId();
+
+        if(empty($sessionId))
+        {
+            Mage::log("PayU sessionId empty: " . $this->getId());
+            return false;
+        }
+
         $result = OpenPayU_Order::updateStatus($sessionId, $status, true);
+
         if ($result->getSuccess())
-            return $result;
+            return true;
         else
             Mage::log("PayU error while updating status: " . $result->getError());
-        return false;
+        return $result;
     }
 
     protected function setOrderBySessionId($sess)
@@ -656,11 +662,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 if ($orderId > 0) {
 
-
                     $this->setOrderBySessionId($sessionId);
 
                     $this->retrieveAndUpdateBySessionId($sessionId);
-
                 }
 
 
@@ -778,10 +782,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $shipping = Mage::getModel('shipping/shipping');
                 $shippingRates = $shipping->collectRatesByAddress($address)->getResult();
 
-                #file_put_contents("payu.log", "shipping: " . date("H:i:s") . " " . print_r($shippingRates, 1) . "\n", FILE_APPEND);
-
                 $shippingCostList = array();
-
 
                 foreach ($shippingRates->getAllRates() as $rate) {
                     $type = $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle();
@@ -846,8 +847,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                     default:
                         break;
-
-
                 }
 
                 $payment->setAdditionalInformation('payu_order_status', $orderStatus)->save();
@@ -1191,7 +1190,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     /** Initialize PayU configuration */
     protected function initializeOpenPayUConfiguration()
     {
-
         $this->_config = $this->getConfig();
 
         $this->_myUrl = $this->_config->getBaseUrl();
@@ -1202,8 +1200,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         OpenPayU_Configuration::setClientId($this->_config->getClientId());
         OpenPayU_Configuration::setClientSecret($this->_config->getClientSecret());
         OpenPayU_Configuration::setSignatureKey($this->_config->getSignatureKey());
-
-
     }
 
 }

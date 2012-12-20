@@ -1,3 +1,10 @@
+## 1.7
+
+* Fixed problem with accepting and cancelling order in PayU [Issue #6](https://github.com/PayU/plugin_magento_160/issues/6)
+* Removed PayU.php file
+* Changed type of license
+* Added license file
+
 ## 0.1.6.5.1
 
 * Fixed Email empty value in new order

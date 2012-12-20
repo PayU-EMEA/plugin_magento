@@ -1,11 +1,11 @@
 <?php
 
 /**
-*	ver. 0.1.6.5.1
+*	ver. 1.7
 *	PayU Adminhtml Sales Order Controller
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
-*	@license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
+*	@license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
  *	http://www.payu.com
  *	http://www.openpayu.com
  *	http://twitter.com/openpayu
@@ -27,7 +27,7 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 
 		$session = Mage::getSingleton('adminhtml/session');
 		
-		if($payu->cancelOrder($order)->getSuccess()){
+		if($payu->cancelOrder($order)){
 			$session->addSuccess( Mage::helper('payu_account')->__('The order has been cancelled in PayU.') );
 		}else{
 			$session->addError( Mage::helper('payu_account')->__('There was a problem while cancelling the order in PayU.') );
@@ -47,7 +47,7 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 
 		$session = Mage::getSingleton('adminhtml/session');
 		
-		if($payu->rejectOrder($order)->getSuccess()){
+		if($payu->rejectOrder($order)){
 			$session->addSuccess( Mage::helper('payu_account')->__('The order has been rejected in PayU.') );
 		}else{
 			$session->addError( Mage::helper('payu_account')->__('There was a problem while rejecting the order in PayU.') );
@@ -64,8 +64,8 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 		
 		$payu = Mage::getModel('payu_account/payment');
 		$session = Mage::getSingleton('adminhtml/session');
-		
-		if($payu->completeOrder($order)->getSuccess()){
+
+		if($payu->completeOrder($order)){
 			$session->addSuccess(Mage::helper('payu_account')->__('The order is completing in PayU, please wait while status changes.'));
 		}else{
 			$session->addError(Mage::helper('payu_account')->__('There was a problem while completing the order in PayU.'));

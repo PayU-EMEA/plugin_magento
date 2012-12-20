@@ -3,10 +3,55 @@
 
 	<modules>
 		<PayU_Account>
-			<version>0.1.6.5.1</version>
+			<version>1.7</version>
+            <depends>
+                <Mage_Payment />
+            </depends>
 		</PayU_Account>
 	</modules>
 
+    <global>
+        <models>
+            <payu_account>
+                <class>PayU_Account_Model</class>
+            </payu_account>
+        </models>
+        <helpers>
+            <payu_account>
+                <class>PayU_Account_Helper</class>
+            </payu_account>
+        </helpers>
+        <blocks>
+            <payu_account>
+                <class>PayU_Account_Block</class>
+            </payu_account>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view>PayU_Account_Block_Adminhtml_Sales_Order_View</sales_order_view>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <resources>
+            <payu_account_setup>
+                <setup>
+                    <module>PayU_Account</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </payu_account_setup>
+            <payu_account_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </payu_account_write>
+            <payu_account_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </payu_account_read>
+        </resources>
+    </global>
 	<adminhtml>
 		<translate>
 			<modules>
@@ -18,7 +63,6 @@
 			</modules>
 		</translate>
 	</adminhtml>
-
 	<admin>
 		<routers>
 			<adminhtml>
@@ -65,50 +109,6 @@
 			</modules>
 		</translate>
 	</frontend>
-
-	<global>
-		<blocks>
-			<payu_account>
-				<class>PayU_Account_Block</class>
-			</payu_account>
-			<adminhtml>
-				<rewrite>
-					<sales_order_view>PayU_Account_Block_Adminhtml_Sales_Order_View</sales_order_view>
-				</rewrite>
-			</adminhtml>
-		</blocks>
-		<models>
-			<payu_account>
-				<class>PayU_Account_Model</class>
-			</payu_account>
-		</models>
-		<helpers>
-			<payu_account>
-				<class>PayU_Account_Helper</class>
-			</payu_account>
-		</helpers>
-		<resources>
-
-			<payu_account_setup>
-				<setup>
-					<module>PayU_Account</module>
-				</setup>
-				<connection>
-					<use>core_setup</use>
-				</connection>
-			</payu_account_setup>
-			<payu_account_write>
-				<connection>
-					<use>core_write</use>
-				</connection>
-			</payu_account_write>
-			<payu_account_read>
-				<connection>
-					<use>core_read</use>
-				</connection>
-			</payu_account_read>
-		</resources>
-	</global>
 
 	<default>
 		<payment>
