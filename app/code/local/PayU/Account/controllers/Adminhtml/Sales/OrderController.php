@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 1.7
+*	ver. 1.8
 *	PayU Adminhtml Sales Order Controller
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -46,7 +46,7 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 		$payu = Mage::getModel('payu_account/payment');
 
 		$session = Mage::getSingleton('adminhtml/session');
-		
+
 		if($payu->rejectOrder($order)){
 			$session->addSuccess( Mage::helper('payu_account')->__('The order has been rejected in PayU.') );
 		}else{

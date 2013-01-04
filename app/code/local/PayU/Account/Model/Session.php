@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	ver. 1.7
+ *	ver. 1.8
  *	PayU Session Model
  *
  *	@copyright  Copyright (c) 2011-2012 PayU

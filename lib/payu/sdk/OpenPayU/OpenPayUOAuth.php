@@ -9,6 +9,8 @@
 	http://openpayu.com
 	http://twitter.com/openpayu
 */
+if (!defined('OPENPAYU_LIBRARY'))
+    exit;
 
 class OpenPayuOAuth extends OpenPayUBase
 {
@@ -30,7 +32,9 @@ class OpenPayuOAuth extends OpenPayUBase
 
         $resp_json = json_decode($response);
         OpenPayU::addOutputConsole('oauth response', $response);
-        $access_token = $resp_json->{"access_token"};
+
+        if (isset($resp_json->{"access_token"}))
+            $access_token = $resp_json->{"access_token"};
 
         if (empty($access_token))
             throw new Exception('access_token is empty, error: ' . $response);
@@ -55,7 +59,9 @@ class OpenPayuOAuth extends OpenPayUBase
 
         $resp_json = json_decode($response);
         OpenPayU::addOutputConsole('oauth response', $response);
-        $access_token = $resp_json->{"access_token"};
+
+        if (isset($resp_json->{"access_token"}))
+            $access_token = $resp_json->{"access_token"};
 
         if (empty($access_token))
             throw new Exception('access_token is empty, error: ' . $response);
@@ -79,7 +85,8 @@ class OpenPayuOAuth extends OpenPayUBase
         $resp_json = json_decode($response);
         OpenPayU::addOutputConsole('oauth response', $response);
 
-        $access_token = $resp_json->{'access_token'};
+        if (isset($resp_json->{"access_token"}))
+            $access_token = $resp_json->{'access_token'};
 
         if (empty($access_token))
             throw new Exception('access_token is empty, error: ' . $response);
@@ -103,7 +110,8 @@ class OpenPayuOAuth extends OpenPayUBase
         $resp_json = json_decode($response);
         OpenPayU::addOutputConsole('oauth response', $response);
 
-        $access_token = $resp_json->{'access_token'};
+        if (isset($resp_json->{"access_token"}))
+            $access_token = $resp_json->{'access_token'};
 
         if (empty($access_token))
             throw new Exception('access_token is empty, error: ' . $response);

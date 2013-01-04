@@ -35,6 +35,7 @@
 "The transaction has been rejected.","Transakcja została odrzucona."
 "The transaction is in progress.","Transakcja w trakcie realizacji."
 "Transaction awaits approval.","Transakcja oczekuje na akceptację."
+"Transaction awaiting manual approval.","Transakcja oczekuje na ręczną akceptację."
 "The transaction is pending.","Transakcja w toku."
 "Transaction returned.","Transakcja zwrócona."
 "The transaction has been returned.","Transakcja została zwrócona."
@@ -54,3 +55,4 @@
 "OK: PayU account plugin is up to date.","OK: Plugin konto PayU jest aktualny."
 "The latest version of PayU plugin is","Najnowszą wersją pluginu PayU jest"
 "PayU plugin information","Informacje o wtyczce PayU"
+"Important: This plugin works only with Checkout points of sales (POS).","Ważne: Plugin działa tylko z POS-ami typu Checkout."

@@ -2,7 +2,7 @@
 
 
 /**
- *	ver. 1.7
+ *	ver. 1.8
  *	PayU Validity Time Model
  *
  *	@copyright  Copyright (c) 2011-2012 PayU

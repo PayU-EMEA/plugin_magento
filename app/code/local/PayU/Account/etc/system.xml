@@ -10,6 +10,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
+                    <comment>Important: This plugin works only with checkout points of sales (POS).</comment>
                     <fields>
                         <header1 translate="label">
                             <label>Main parameters</label>

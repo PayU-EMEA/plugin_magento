@@ -1,3 +1,12 @@
+## 1.8
+
+* SDK 1.9.2 compatible
+* Fixed PayU order cancelling
+* Fixed adding customer shipping address in orders that are not virtual
+* Fixed status changing for Payment Review after complete payment
+* Fixed updating customer data
+* Changed order number in  PayU description
+
 ## 1.7
 
 * Fixed problem with accepting and cancelling order in PayU [Issue #6](https://github.com/PayU/plugin_magento_160/issues/6)
