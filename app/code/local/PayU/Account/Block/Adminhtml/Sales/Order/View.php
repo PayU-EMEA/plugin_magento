@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 1.8
+*	ver. 1.8.1
 *	PayU Adminhtml Sales Order View
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
@@ -18,7 +18,7 @@ class PayU_Account_Block_Adminhtml_Sales_Order_View extends Mage_Adminhtml_Block
     	
     	parent::__construct();
     	
-    	if($this->getOrder()->getPayment()->getMethod() == 'payu_account'){
+    	if($this->getOrder()->getPayment()->getMethod() == 'payu_account' && !intval(Mage::getStoreConfig('payment/payu_account/selfreturn'))){
 	    	$this->_addButton('payu-complete', array(
 	            'label'     => Mage::helper('payu_account')->__('Accept PayU order'),
 	            'onclick'   => 'setLocation(\'' . $this->getCompletePaymentUrl() . '\')',

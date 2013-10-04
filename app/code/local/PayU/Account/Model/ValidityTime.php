@@ -1,8 +1,7 @@
 <?php
 
-
 /**
- *	ver. 1.8
+ *	ver. 1.8.1
  *	PayU Validity Time Model
  *
  *	@copyright  Copyright (c) 2011-2012 PayU

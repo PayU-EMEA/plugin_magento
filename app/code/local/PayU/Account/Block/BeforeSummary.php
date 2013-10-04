@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 1.8
+*	ver. 1.8.1
 *	PayU BeforeSummary Redirection Block
 *	Payment
 *	

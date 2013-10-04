@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 1.8
+*	ver. 1.8.1
 *	PayU Logo Model
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU

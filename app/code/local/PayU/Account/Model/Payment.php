@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ver. 1.8
+ * ver. 1.8.1
  * PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -193,11 +193,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         )
                     );
                 }
-
             }
-
-            $grandTotal = $this->_order->getGrandTotal() - $this->_order->getShippingAmount();
-
         } else {
             // assigning the shipping costs list
             foreach ($allShippingRates as $rate) {
@@ -215,8 +211,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                     )
                 );
             }
-
-            $grandTotal = $this->_order->getGrandTotal();
         }
 
         $shippingCost = array(
@@ -258,7 +252,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         // assigning the shopping cart
         $shoppingCart = array(
-            'GrandTotal' => $this->toAmount($grandTotal),
+            'GrandTotal' => $this->toAmount(Mage::getSingleton('checkout/cart')->getQuote()->getSubtotal()),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
@@ -1121,10 +1115,13 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $transaction = $payment->setTransactionId($this->_transactionId);
         $transaction->setPreparedMessage("PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'));
 
-        $payment->setIsTransactionApproved(true);
-        $payment->setIsTransactionClosed(true);
+        if(intval(Mage::getStoreConfig('payment/payu_account/selfreturn')))
+        {
+            $payment->setIsTransactionApproved(true);
+            $payment->setIsTransactionClosed(true);
+        }
 
-        $comment = $this->_order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), false)
+        $comment = $this->_order->setState((intval(Mage::getStoreConfig('payment/payu_account/selfreturn'))) ? Mage_Sales_Model_Order::STATE_PROCESSING : Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), false)
             ->sendOrderUpdateEmail(true, "PayU - " . Mage::helper('payu_account')->__('Thank you.') . " " . Mage::helper('payu_account')->__('The transaction completed successfully.'))
             ->save();
         $transaction->save();

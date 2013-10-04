@@ -5,6 +5,8 @@
 PayU account is a web application designed as an e-wallet for shoppers willing to open an account, 
 define their payment options, see their purchase history, and manage personal profiles.
 
+**Note:** This is an alpha release and we are still working on plugin improvements.
+
 ## Table of Contents
 
 [Prerequisites][1] <br />
