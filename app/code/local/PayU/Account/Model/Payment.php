@@ -252,7 +252,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         // assigning the shopping cart
         $shoppingCart = array(
-            'GrandTotal' => $this->toAmount(Mage::getSingleton('checkout/cart')->getQuote()->getSubtotal()),
+            'GrandTotal' => $this->toAmount($this->_order->getSubtotal()),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
