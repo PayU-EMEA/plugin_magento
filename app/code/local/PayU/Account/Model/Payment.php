@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ver. 1.8.1
+ * ver. 1.8.0
  * PayU -Standard Payment Model
  *
  * @copyright  Copyright (c) 2011-2012 PayU
@@ -193,7 +193,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         )
                     );
                 }
+
             }
+
+            $grandTotal = $this->_order->getGrandTotal() - $this->_order->getShippingAmount();
+
         } else {
             // assigning the shipping costs list
             foreach ($allShippingRates as $rate) {
@@ -211,6 +215,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                     )
                 );
             }
+
+            $grandTotal = $this->_order->getGrandTotal();
         }
 
         $shippingCost = array(
@@ -225,6 +231,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         /** @var array Here is where order items will be processed for PayU purposes */
         $items = array();
+        $productsTotal = 0;
 
         foreach ($orderItems as $key => $item) {
             /** @var array Retrieving item info */
@@ -232,7 +239,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             // Check if the item is countable one
             if ($this->toAmount($itemInfo['price_incl_tax']) > 0) {
-
                 /** Pushing the current item to ShoppingCarItems list */
                 $items[]['ShoppingCartItem'] = array(
                     'Quantity' => (int)$itemInfo['qty_ordered'],
@@ -247,12 +253,15 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         )
                     )
                 );
+                $productsTotal += $itemInfo['price_incl_tax'] * $itemInfo['qty_ordered'];
             }
         }
 
+        $grandTotal = $productsTotal;
+
         // assigning the shopping cart
         $shoppingCart = array(
-            'GrandTotal' => $this->toAmount(Mage::getSingleton('checkout/cart')->getQuote()->getSubtotal()),
+            'GrandTotal' => $this->toAmount($grandTotal),
             'CurrencyCode' => $orderCurrencyCode,
             'ShoppingCartItems' => $items
         );
@@ -1115,13 +1124,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $transaction = $payment->setTransactionId($this->_transactionId);
         $transaction->setPreparedMessage("PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'));
 
-        if(intval(Mage::getStoreConfig('payment/payu_account/selfreturn')))
-        {
-            $payment->setIsTransactionApproved(true);
-            $payment->setIsTransactionClosed(true);
-        }
+        $payment->setIsTransactionApproved(true);
+        $payment->setIsTransactionClosed(true);
 
-        $comment = $this->_order->setState((intval(Mage::getStoreConfig('payment/payu_account/selfreturn'))) ? Mage_Sales_Model_Order::STATE_PROCESSING : Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), false)
+        $comment = $this->_order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true, "PayU - " . Mage::helper('payu_account')->__('The transaction completed successfully.'), false)
             ->sendOrderUpdateEmail(true, "PayU - " . Mage::helper('payu_account')->__('Thank you.') . " " . Mage::helper('payu_account')->__('The transaction completed successfully.'))
             ->save();
         $transaction->save();
