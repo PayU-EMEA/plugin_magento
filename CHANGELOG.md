@@ -1,6 +1,12 @@
+## 1.8.2
+
+* Changed order's statuses management
+* Fixed payment acceptance
+* Fixed shipping taxes
+
 ## 1.8.1
 
-* Fixed GranTotal Amount to SubTotal
+* Fixed GrandTotal Amount to SubTotal
 * Fixed updatePaymentStatusCompleted for Self-Returns
 
 ## 1.8.0

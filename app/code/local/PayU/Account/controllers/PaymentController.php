@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	ver. 1.8.1
+ *	ver. 1.8.2
  *	PayU Standard Payment Controller
  *
  *	@copyright  Copyright (c) 2011-2012 PayU
@@ -104,8 +104,6 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
      * Complete payment action
      */
     public function completePaymentAction(){
-
-
         $this->setSession();
         $this->setOrder();
         $this->setPayment();
@@ -114,10 +112,8 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
         {
             $this->_order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
         }
-        elseif (defined('Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW')) {
-            $this->_order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, true)->save();
-        } else {
-            $this->_order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true)->save();
+        elseif (defined('Mage_Sales_Model_Order::STATE_PENDING_PAYMENT')) {
+            $this->_order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, true)->save();
         }
 
         Mage::getSingleton('checkout/session')->getQuote()->setIsActive(false)->save();

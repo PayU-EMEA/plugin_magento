@@ -1,7 +1,7 @@
 <?php
 
 /**
-*	ver. 1.8.1
+*	ver. 1.8.2
 *	PayU Button Block
 *	
 *	@copyright  Copyright (c) 2011-2012 PayU
