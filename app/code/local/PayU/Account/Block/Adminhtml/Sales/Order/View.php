@@ -4,7 +4,7 @@
 *	ver. 1.8.1
 *	PayU Adminhtml Sales Order View
 *	
-*	@copyright  Copyright (c) 2011-2012 PayU
+*	@copyright  Copyright (c) 2011-2014 PayU
 *	@license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
 *	http://www.payu.com
 *	http://www.openpayu.com
@@ -18,16 +18,20 @@ class PayU_Account_Block_Adminhtml_Sales_Order_View extends Mage_Adminhtml_Block
 
         parent::__construct();
 
-        if($this->getOrder()->getPayment()->getMethod() == 'payu_account' && $this->getOrder()->getStatus() == 'payment_review' && (int)Mage::getStoreConfig('payment/payu_account/selfreturn')){
+        //Mage::log("this->getOrder()->getPayment()->getMethod(): " . $this->getOrder()->getPayment()->getMethod(), null, "view.log");
+        //Mage::log("this->getOrder()->getStatus(): " . $this->getOrder()->getStatus(), null, "view.log");
+        //Mage::log("(int)Mage::getStoreConfig('payment/payu_account/selfreturn'): " . (int)Mage::getStoreConfig('payment/payu_account/selfreturn'), null, "view.log");
+        
+        if($this->getOrder()->getPayment()->getMethod() == 'payu_account' && $this->getOrder()->getStatus() == 'pending_payment' && (int)Mage::getStoreConfig('payment/payu_account/selfreturn') == 0){
             $this->_addButton('payu-complete', array(
-                'label'     => Mage::helper('payu_account')->__('Accept PayU order'),
+                'label'     => Mage::helper('payu_account')->__('Complete PayU payment'),
                 'onclick'   => 'setLocation(\'' . $this->getCompletePaymentUrl() . '\')',
                 'class'     => ''
             ), 0, 100, 'header', 'header');
 
-            $this->_addButton('payu-reject', array(
-                'label'     => Mage::helper('payu_account')->__('Cancel PayU order'),
-                'onclick'   => 'setLocation(\'' . $this->getRejectPaymentUrl() . '\')',
+            $this->_addButton('payu-cancel', array(
+                'label'     => Mage::helper('payu_account')->__('Cancel PayU payment'),
+                'onclick'   => 'setLocation(\'' . $this->getCancelPaymentUrl() . '\')',
                 'class'     => ''
             ), 0, 200, 'header', 'header');
         }

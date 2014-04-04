@@ -1,10 +1,10 @@
 <?php
 
 /**
-*	ver. 1.8.2
+*	ver. 1.9.0
 *	PayU Config Model
 *	
-*	@copyright  Copyright (c) 2011-2012 PayU
+*	@copyright  Copyright (c) 2011-2014 PayU
 *	@license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
  *	http://www.payu.com
  *	http://www.openpayu.com
@@ -14,16 +14,13 @@
 class PayU_Account_Model_Config
 {
 	/** @var string self version */
-	protected $_pluginVersion = '1.8.2';
+	protected $_pluginVersion = '1.9.0';
 	
 	/** @var string minimum Magento e-commerce version */
 	protected $_minimumMageVersion = '1.6.0';
 	
 	/** @var string stores information about current working environment */
 	protected $_env;
-	
-	/** @var string prefix for configuration variables depending on environment */
-	protected $_prefix;
 	
 	/** @var string represents the goods url */
 	protected $_goodsUrl = "http://openpayu.com/en/goods/json";
@@ -49,11 +46,11 @@ class PayU_Account_Model_Config
 	 */
     public function __construct($params = array())
     {
-
-    	// assign current store id
-    	$this->setStoreId();
     	// initialize the working environment    	
     	$this->setEnvironment();
+    	
+    	// assign current store id
+    	$this->setStoreId(Mage::app()->getStore()->getId());
     	// assign goods data
       	$this->setGoods();
       	// set latest version url
@@ -62,11 +59,9 @@ class PayU_Account_Model_Config
       	$this->setLatestVersion();
     }  
     
-
-    
     /** set current store Id */
-    protected function setStoreId(){
-    	$this->_storeId = Mage::app()->getStore()->getId();
+    public function setStoreId($storeId){
+        $this->_storeId = $storeId;
     }
     
     /**
@@ -80,12 +75,10 @@ class PayU_Account_Model_Config
 			//check if we work in production mode
 			case PayU_Account_Model_Environment::PRODUCTION:
 				$this->_env = "secure";
-				$this->_prefix = "";
 				break;
 			// default sandbox mode
 			default:
 				$this->_env = "sandbox";
-				$this->_prefix = $this->_env."_";
 				break;
 				
 		}
@@ -110,22 +103,22 @@ class PayU_Account_Model_Config
     
     /** @return string get Pos Auth Key */
 	public function getPosAuthKey(){
-    	return $this->getStoreConfig('payment/payu_account/'.$this->_prefix.'pos_auth_key');
+    	return $this->getStoreConfig('payment/payu_account/pos_auth_key');
     }
     
     /** @return string get (OAuth Client Name) */
 	public function getClientId(){
-		return $this->getStoreConfig('payment/payu_account/'.$this->_prefix.'oauth_client_name');
+		return $this->getStoreConfig('payment/payu_account/oauth_client_name');
     }
     
     /** @return string get (OAuth Client Secret) */
 	public function getClientSecret(){
-		return $this->getStoreConfig('payment/payu_account/'.$this->_prefix.'oauth_client_secret');
+		return $this->getStoreConfig('payment/payu_account/oauth_client_secret');
     }
     
     /** @return string get signature key */
 	public function getSignatureKey(){
-		return $this->getStoreConfig('payment/payu_account/'.$this->_prefix.'signature_key');
+		return $this->getStoreConfig('payment/payu_account/signature_key');
     }
     
     /** @return int order validity time in minutes */

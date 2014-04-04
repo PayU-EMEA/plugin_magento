@@ -3,10 +3,10 @@
 /*
 	OpenPayU Standard Library
 
-	@copyright  Copyright (c) 2011-2012 PayU
+	@copyright  Copyright (c) 2011-2014 PayU
 	@license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
 	http://www.payu.com
-	http://openpayu.com
+	http://developers.payu.com
 	http://twitter.com/openpayu
 */
 
@@ -184,4 +184,43 @@ class OpenPayU_Result
         $this->reqId = $value;
     }
 
+    public function init($attributes)
+    {
+        $attributes = OpenPayU_Util::parseArrayToObject($attributes);
+
+        if (!empty($attributes)) {
+            foreach ($attributes as $name => $value) {
+                $this->set($name, $value);
+            }
+        }
+    }
+
+    public function set($name, $value)
+    {
+        $this->{$name} = $value;
+    }
+
+    public function __get($name)
+    {
+        if (isset($this->{$name}))
+            return $this->name;
+
+        return null;
+    }
+
+    public function __call($methodName, $args) {
+        if (preg_match('~^(set|get)([A-Z])(.*)$~', $methodName, $matches)) {
+            $property = strtolower($matches[2]) . $matches[3];
+            if (!property_exists($this, $property)) {
+                throw new Exception('Property ' . $property . ' not exists');
+            }
+            switch($matches[1]) {
+                case 'get':
+                    $this->checkArguments($args, 0, 0, $methodName);
+                    return $this->get($property);
+                case 'default':
+                    throw new Exception('Method ' . $methodName . ' not exists');
+            }
+        }
+    }
 }

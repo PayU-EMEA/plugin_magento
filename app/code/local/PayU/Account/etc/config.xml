@@ -3,7 +3,7 @@
 
 	<modules>
 		<PayU_Account>
-			<version>1.8.2</version>
+			<version>1.9.0</version>
             <depends>
                 <Mage_Payment />
             </depends>

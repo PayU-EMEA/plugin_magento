@@ -3,10 +3,10 @@
 /*
 	OpenPayU Standard Library
 
-	@copyright  Copyright (c) 2011-2012 PayU
+	@copyright  Copyright (c) 2011-2014 PayU
 	@license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
 	http://www.payu.com
-	http://openpayu.com
+	http://developers.payu.com
 	http://twitter.com/openpayu
 */
 
@@ -69,12 +69,12 @@ class OpenPayU extends OpenPayUBase
     public static function buildOrderNotifyResponse($reqId)
     {
 
-        $cost = array(
-            'ResId' => $reqId,
-            'Status' => array('StatusCode' => 'OPENPAYU_SUCCESS')
+        $data = array(
+            'resId' => $reqId,
+            'status' => array('statusCode' => 'SUCCESS')
         );
 
-        $xml = OpenPayU::buildOpenPayUResponseDocument($cost, 'OrderNotifyResponse');
+        $xml = OpenPayU_Util::buildJsonFromArray($data);
         return $xml;
     }
 
@@ -87,23 +87,25 @@ class OpenPayU extends OpenPayUBase
      */
     public static function verifyResponse($data, $message)
     {
+        $document = OpenPayU_Util::parseXmlDocument(stripslashes($data));
+        $status = null;
 
-        $arr = OpenPayU::parseOpenPayUDocument(stripslashes($data));
+        if (OpenPayU_Configuration::getApiVersion() < 2)
+            $status = $document['OpenPayU']['OrderDomainResponse'][$message]['Status'];
+        else
+            $status = $document['OpenPayU'][$message]['Status'];
 
-        if (isset($arr['OpenPayU']['OrderDomainResponse'][$message]['Status']))
-            $status_code = $arr['OpenPayU']['OrderDomainResponse'][$message]['Status'];
+        if (empty($status) && OpenPayU_Configuration::getApiVersion() < 2)
+            $status = $document['OpenPayU']['HeaderResponse']['Status'];
 
-        if ($status_code == null)
-            $status_code = $arr['OpenPayU']['HeaderResponse']['Status'];
-
-        return $status_code;
+        return $status;
     }
 
     /**
      * Function returns OrderCancelResponse Status Document
      * @access public
      * @param string $data
-     * @return string $xml
+     * @return OpenPayU_Result
      */
     public static function verifyOrderCancelResponseStatus($data)
     {
@@ -114,7 +116,7 @@ class OpenPayU extends OpenPayUBase
      * Function returns OrderStatusUpdateResponse Status Document
      * @access public
      * @param string $data
-     * @return string $xml
+     * @return mixed
      */
     public static function verifyOrderStatusUpdateResponseStatus($data)
     {
@@ -125,52 +127,40 @@ class OpenPayU extends OpenPayUBase
      * Function returns OrderCreateResponse Status
      * @access public
      * @param string $data
-     * @return string $status_code
+     * @return mixed
      */
     public static function verifyOrderCreateResponse($data)
     {
-        $arr = OpenPayU::parseOpenPayUDocument(stripslashes($data));
-
-        if (isset($arr['OpenPayU']['OrderDomainResponse']['OrderCreateResponse']['Status']))
-            $status_code = $arr['OpenPayU']['OrderDomainResponse']['OrderCreateResponse']['Status'];
-
-        if (!isset($status_code))
-            $status_code = $arr['OpenPayU']['HeaderResponse']['Status'];
-
-        return $status_code;
+        return OpenPayU::verifyResponse($data, 'OrderCreateResponse');
     }
 
     /**
      * Function returns OrderRetrieveResponse Status
      * @access public
      * @param string $data
-     * @return string $status_code
+     * @return mixed
      */
     public static function verifyOrderRetrieveResponseStatus($data)
     {
-        $arr = OpenPayU::parseOpenPayUDocument(stripslashes($data));
-
-        if (isset($arr['OpenPayU']['OrderDomainResponse']['OrderRetrieveResponse']['Status']))
-            $status_code = $arr['OpenPayU']['OrderDomainResponse']['OrderRetrieveResponse']['Status'];
-
-        if ($status_code == null)
-            $status_code = $arr['OpenPayU']['HeaderResponse']['Status'];
-
-        return $status_code;
+        return OpenPayU::verifyResponse($data, 'OrderRetrieveResponse');
     }
 
     /**
      * Function returns OrderRetrieveResponse Data
      * @access public
      * @param string $data
-     * @return array $order_retrieve
+     * @return array $document
      */
     public static function getOrderRetrieveResponse($data)
     {
-        $arr = OpenPayU::parseOpenPayUDocument(stripslashes($data));
-        $order_retrieve = $arr['OpenPayU']['OrderDomainResponse']['OrderRetrieveResponse'];
+        $response = OpenPayU::parseXmlDocument(stripslashes($data));
 
-        return $order_retrieve;
+        $document = $response['OpenPayU']['OrderDomainResponse']['OrderRetrieveResponse'];
+
+        if (OpenPayU_Configuration::getApiVersion() >= 2)
+            $document = $response['OpenPayU']['OrderRetrieveResponse'];
+
+        return $document;
     }
 
     /**
@@ -197,5 +187,67 @@ class OpenPayU extends OpenPayUBase
         $xml = OpenPayU::buildOpenPayURequestDocument($data, 'OrderStatusUpdateRequest');
 
         return $xml;
+    }
+
+    protected static function build($data)
+    {
+        $instance = new OpenPayU_Result();
+        $instance->init($data);
+
+        return $instance;
+    }
+
+    /**
+     * @throws OpenPayU_Exception_Authorization
+     */
+    public static function verifyBasicAuthCredentials()
+    {
+        if (isset($_SERVER['PHP_AUTH_USER'])) {
+            $user = $_SERVER['PHP_AUTH_USER'];
+        } else {
+            OpenPayU_Exception_Authorization('Empty user name');
+        }
+
+        if (isset($_SERVER['PHP_AUTH_PW'])) {
+            $password = $_SERVER['PHP_AUTH_PW'];
+        } else {
+            OpenPayU_Exception_Authorization('Empty password');
+        }
+
+        if ($user !== OpenPayU_Configuration::getMerchantPosId() ||
+            $password !== OpenPayU_Configuration::getSignatureKey()
+        ) {
+            throw new OpenPayU_Exception_Authorization("invalid credentials");
+        }
+    }
+
+    /**
+     * @param $data
+     * @param $incomingSignature
+     * @throws OpenPayU_Exception_Authorization
+     */
+    public static function verifyDocumentSignature($data, $incomingSignature)
+    {
+        $sign = OpenPayU_Util::parseSignature($incomingSignature);
+
+        if (false === OpenPayU_Util::verifySignature(
+                $data,
+                $sign->signature,
+                OpenPayU_Configuration::getSignatureKey(),
+                $sign->algorithm
+            )
+        ) {
+            throw new OpenPayU_Exception_Authorization('Invalid signature - ' . $sign->signature);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isSecureConnection()
+    {
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+            return true;
+        return false;
     }
 }
