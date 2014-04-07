@@ -869,7 +869,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $payment->setIsTransactionClosed ( true );
             $payment->addTransaction ( Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER );
             $payment->setPreparedMessage ( "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ) );
-            $this->_order->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ), false )->sendOrderUpdateEmail ()->save ();
+            $this->_order->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ), false )->sendOrderUpdateEmail ( true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully in PayU.' ) )->save ();
         }
     }
     

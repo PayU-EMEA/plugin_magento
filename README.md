@@ -1,4 +1,4 @@
-# PayU account plugin for Magento over 1.6.0
+# PayU account plugin for Magento 1.6.0+
 -------
 ``This plugin is released under the GPL license.``
 
