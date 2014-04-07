@@ -798,8 +798,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     public function updatePaymentStatusCanceled($payment) {
         $payment->setTransactionId ( $this->_transactionId );
-        $payment->setPreparedMessage ( "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'Transaction cancelled.' ) );
-        $this->_order->setState ( Mage_Sales_Model_Order::STATE_CANCELED, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction has been cancelled.' ), true )->sendOrderUpdateEmail ()->save ();
+        $payment->setPreparedMessage ( "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'Transaction canceled.' ) );
+        $this->_order->setState ( Mage_Sales_Model_Order::STATE_CANCELED, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction has been canceled.' ), true )->sendOrderUpdateEmail ()->save ();
     }
     
     /**
