@@ -88,18 +88,13 @@ The main parameters for plugin configuration are as follows:
 | Parameter | Values | Description | 
 |:---------:|:------:|:-----------:|
 |Enabled|Yes/No|Specifies whether the module is enabled.|
-|OneStepCheckout Enabled|Yes/No|Specifies whether buying from the cart via Payu is enabled.|
 |Self-Return Enabled|Yes/No|If self-return is disabled, the payment must be confirmed manually.|
 |New Order Status|Pending/Processing/Complete/ <br /> Closed/Canceled/On Hold|Defines which status is assigned to new orders. By deafult, the *Processing* status is assigned to each new order.|
 |Order Validity Time|24h/12h/6h/1h/30min|Specifies the time during which the order is valid in the PayU system. When the validity time expires, the order is cancelled, and you are notified that the transaction failed.|
-|Test Mode On|Yes/No|If you are in the test mode, the transactions are only simulated and no real payments are made. Use the test mode to see how the transactions work.|
 
-#### Parameters of production and test environments
+#### Parameters of production environment
 
-The test environment is called *Sandbox* and you can adjust it separately from the production environment to see which configuration suits you best.
 To check the values of the parameters below, go to **Administration Panel** > **My shops** > **Your shop** > **POS** and click the name of a given POS.
-
-**Important:** If you set the [**Test Mode On**][3.1.1] parameter to *Yes*, the transactions in your shop are only simulated. No real payments are made.
 
 | Parameter | Description | 
 |:---------:|:-----------:|
@@ -114,7 +109,6 @@ You can set external resources for the following:
 
 | Parameter |Description | 
 |:---------:|:-----------:|
-|OneStepCheckout button|URL address of the button image for OneStepCheckout|
 |Small logo|URL address of the logo image that is visible in the list of payment methods|
 |PayU advertisement|URL address of the PayU advertisement for your page|
 
