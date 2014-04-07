@@ -246,7 +246,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         if($this->_order->getShippingAmount () > 0 && !empty ( $shippingCostList['shippingMethods'][0] ) ){
                 $items ['products'] ['products'] [] = array (
-                    'quantity' => 1 ,'name' => $shippingCostList['shippingMethods'][0]['name'] ,'unitPrice' => $this->toAmount ( $this->_order->getShippingAmount () ));
+                    'quantity' => 1 ,'name' => Mage::helper ( 'payu_account' )->__('Shipping') . " - " . $shippingCostList['shippingMethods'][0]['name'] ,'unitPrice' => $this->toAmount ( $this->_order->getShippingAmount () ));
         }
         
         // assigning the shopping cart
