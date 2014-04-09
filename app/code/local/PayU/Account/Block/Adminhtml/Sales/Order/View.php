@@ -18,11 +18,7 @@ class PayU_Account_Block_Adminhtml_Sales_Order_View extends Mage_Adminhtml_Block
 
         parent::__construct();
 
-        //Mage::log("this->getOrder()->getPayment()->getMethod(): " . $this->getOrder()->getPayment()->getMethod(), null, "view.log");
-        //Mage::log("this->getOrder()->getStatus(): " . $this->getOrder()->getStatus(), null, "view.log");
-        //Mage::log("(int)Mage::getStoreConfig('payment/payu_account/selfreturn'): " . (int)Mage::getStoreConfig('payment/payu_account/selfreturn'), null, "view.log");
-        
-        if($this->getOrder()->getPayment()->getMethod() == 'payu_account' && $this->getOrder()->getStatus() == 'pending_payment' && (int)Mage::getStoreConfig('payment/payu_account/selfreturn') == 0){
+        if($this->_isAllowedAction('review_payment') && $this->getOrder()->getPayment()->getMethod() == 'payu_account' && $this->getOrder()->getStatus() == 'pending_payment' && (int)Mage::getStoreConfig('payment/payu_account/selfreturn') == 0){
             $this->_addButton('payu-complete', array(
                 'label'     => Mage::helper('payu_account')->__('Complete PayU payment'),
                 'onclick'   => 'setLocation(\'' . $this->getCompletePaymentUrl() . '\')',
