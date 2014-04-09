@@ -3,7 +3,7 @@
     <modules>
         <PayU_Account>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
             <depends>
                 <Mage_Payment />
             </depends>

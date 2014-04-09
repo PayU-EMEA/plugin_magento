@@ -25,6 +25,18 @@ class OpenPayU_Order extends OpenPayU
     const SUCCESS = 'SUCCESS';
 
     /**
+     * @var array Default form parameters
+     */
+    protected static $defaultFormParams = array(
+        'formClass' => '',
+        'formId' => 'payu-payment-form',
+        'submitClass' => '',
+        'submitId' => '',
+        'submitContent' => '',
+        'submitTarget' => '_blank'
+    );
+
+    /**
      * Creates new Order
      * - Sends to PayU OrderCreateRequest
      *
@@ -36,12 +48,8 @@ class OpenPayU_Order extends OpenPayU
     public static function create($order)
     {
         $pathUrl = OpenPayU_Configuration::getServiceUrl() . self::ORDER_SERVICE;
+        $data = OpenPayU_Util::buildJsonFromArray($order);
 
-        if (OpenPayU_Configuration::getDataFormat() == 'xml') {
-            $data = OpenPayU_Util::buildXmlFromArray($order, 'OrderCreateRequest', '2.0', 'UTF-8');
-        } elseif (OpenPayU_Configuration::getDataFormat() == 'json') {
-            $data = OpenPayU_Util::buildJsonFromArray($order);
-        }
         if (empty($data)) {
             throw new OpenPayU_Exception('Empty message OrderCreateRequest');
         }
@@ -110,11 +118,7 @@ class OpenPayU_Order extends OpenPayU
             throw new OpenPayU_Exception('Empty order status data');
         }
 
-        if (OpenPayU_Configuration::getDataFormat() == 'xml') {
-            $data = OpenPayU_Util::buildXmlFromArray($orderStatusUpdate, 'OrderStatusUpdateRequest', '2.0', 'UTF-8');
-        } elseif (OpenPayU_Configuration::getDataFormat() == 'json') {
-            $data = OpenPayU_Util::buildJsonFromArray($orderStatusUpdate);
-        }
+        $data = OpenPayU_Util::buildJsonFromArray($orderStatusUpdate);
         $orderId = $orderStatusUpdate['orderId'];
 
         $pathUrl = OpenPayU_Configuration::getServiceUrl() . self::ORDER_SERVICE . $orderId . '/status';
@@ -141,13 +145,6 @@ class OpenPayU_Order extends OpenPayU
 
         $headers = OpenPayU_Util::getRequestHeaders();
 
-        if (isset($headers['Content-Type'])) {
-            if (strstr($headers['Content-Type'], 'application/xml')) {
-                OpenPayU_Configuration::setDataFormat('xml');
-            } elseif (strstr($headers['Content-Type'], 'application/json')) {
-                OpenPayU_Configuration::setDataFormat('json');
-            }
-        }
         $incomingSignature = OpenPayU_HttpCurl::getSignature($headers);
 
         if ($sslConnection) {
@@ -166,17 +163,12 @@ class OpenPayU_Order extends OpenPayU
      * @param string $messageName
      * @return null|OpenPayU_Result
      */
-    public
-    static function verifyResponse($response, $messageName)
+    public static function verifyResponse($response, $messageName)
     {
         $data = array();
         $httpStatus = $response['code'];
 
-        if (OpenPayU_Configuration::getDataFormat() == 'xml') {
-            $message = OpenPayU_Util::parseXmlDocument($response['response']);
-        } elseif (OpenPayU_Configuration::getDataFormat() == 'json') {
-            $message = OpenPayU_Util::convertJsonToArray($response['response'], true);
-        }
+        $message = OpenPayU_Util::convertJsonToArray($response['response'], true);
 
         if (isset($message[$messageName])) {
             $data['status'] = isset($message['status']['statusCode']) ? $message['status']['statusCode'] : null;
@@ -203,10 +195,11 @@ class OpenPayU_Order extends OpenPayU
      * Generate a form body for hosted order
      *
      * @access public
-     * @param $order A array containing full Order
+     * @param $order An array containing full Order
+     * @param $params An optional array with form elements' params
      * @return string Response html form
      */
-    public static function hostedOrderForm($order)
+    public static function hostedOrderForm($order, $params = array())
     {
         $orderFormUrl = OpenPayU_Configuration::getServiceUrl() . 'order';
 
@@ -222,10 +215,12 @@ class OpenPayU_Order extends OpenPayU
             OpenPayU_Configuration::getSignatureKey()
         );
 
-        $htmlOutput = sprintf("<form method=\"POST\" action=\"%s\" id=\"payu-payment-form\">\n", $orderFormUrl);
+        $formParams = array_merge(self::$defaultFormParams, $params);
+
+        $htmlOutput = sprintf("<form method=\"POST\" action=\"%s\" id=\"%s\" class=\"%s\">\n", $orderFormUrl, $formParams['formId'], $formParams['formClass']);
         $htmlOutput .= $htmlFormFields;
         $htmlOutput .= sprintf('<input type="hidden" name="OpenPayu-Signature" value="%s" />', $signature);
-        $htmlOutput .= sprintf("<button type=\"submit\" formtarget=\"_blank\" />");
+        $htmlOutput .= sprintf("<button type=\"submit\" formtarget=\"%s\" id=\"%s\" class=\"%s\">%s</button>", $formParams['submitTarget'], $formParams['submitId'], $formParams['submitClass'], $formParams['submitContent']);
         $htmlOutput .= "</form>\n";
 
         return $htmlOutput;
