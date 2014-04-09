@@ -1,10 +1,10 @@
 <?php
 
 /**
-*	ver. 1.8.2
+*	ver. 1.9.0
 *	PayU Adminhtml Sales Order Controller
 *	
-*	@copyright  Copyright (c) 2011-2012 PayU
+*	@copyright  Copyright (c) 2011-2014 PayU
 *	@license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
  *	http://www.payu.com
  *	http://www.openpayu.com
@@ -22,15 +22,13 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 	public function cancelPayUOrderAction(){
 		
 		$order = Mage::getModel('sales/order')->load(Mage::app()->getRequest()->getParam('order_id'));
-		
 		$payu = Mage::getModel('payu_account/payment');
-
 		$session = Mage::getSingleton('adminhtml/session');
 		
 		if($payu->cancelOrder($order)){
-			$session->addSuccess( Mage::helper('payu_account')->__('The order has been cancelled in PayU.') );
+			$session->addSuccess( Mage::helper('payu_account')->__('The order is awaiting for cancelation in PayU, please wait while status changes.') );
 		}else{
-			$session->addError( Mage::helper('payu_account')->__('There was a problem while cancelling the order in PayU.') );
+			$session->addError( Mage::helper('payu_account')->__('There was a problem while canceling the order in PayU.') );
 		}
 		$this->_redirect('*/sales_order/view', array('order_id' => $order->getId()));
 		
@@ -42,9 +40,7 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 	public function rejectPayUOrderAction(){
 		
 		$order = Mage::getModel('sales/order')->load(Mage::app()->getRequest()->getParam('order_id'));
-		
 		$payu = Mage::getModel('payu_account/payment');
-
 		$session = Mage::getSingleton('adminhtml/session');
 
 		if($payu->rejectOrder($order)){
@@ -60,8 +56,8 @@ class PayU_Account_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_
 	 *  
 	 */
 	public function completePayUOrderAction(){
-		$order = Mage::getModel('sales/order')->load(Mage::app()->getRequest()->getParam('order_id'));
 		
+	    $order = Mage::getModel('sales/order')->load(Mage::app()->getRequest()->getParam('order_id'));
 		$payu = Mage::getModel('payu_account/payment');
 		$session = Mage::getSingleton('adminhtml/session');
 

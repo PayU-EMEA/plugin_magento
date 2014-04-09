@@ -3,10 +3,10 @@
 /*
 	OpenPayU Standard Library
 
-	@copyright  Copyright (c) 2011-2012 PayU
+	@copyright  Copyright (c) 2011-2014 PayU
 	@license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
 	http://www.payu.com
-	http://openpayu.com
+	http://developers.payu.com
 	http://twitter.com/openpayu
 */
 
@@ -26,6 +26,16 @@ class OpenPayUNetwork
     }
 
     /**
+     * The function gets EndPointUrl param of OpenPayU
+     * @access public
+     * @return string;
+     */
+    public static function getOpenPayuEndPoint()
+    {
+        return self::$openPayuEndPointUrl;
+    }
+
+    /**
      * This function checks the availability of cURL
      * @access private
      * @return bool
@@ -41,13 +51,14 @@ class OpenPayUNetwork
     /**
      * The function returns the parameter EndPointUrl OpenPayU
      * @access public
+     * @deprecated
      * @return string
-     * @throws Exception
+     * @throws OpenPayU_Exception_Configuration
      */
-    public static function getOpenPayuEndPoint()
+    public static function OpenPayU_Exception_Configuration()
     {
         if (empty(self::$openPayuEndPointUrl))
-            throw new Exception('OpenPayUNetwork::$openPayuEndPointUrl is empty');
+            throw new OpenPayU_Exception_Configuration('OpenPayUNetwork::$openPayuEndPointUrl is empty');
 
         return self::$openPayuEndPointUrl;
     }
@@ -55,18 +66,19 @@ class OpenPayUNetwork
     /**
      * This function sends data to the EndPointUrl OpenPayU
      * @access public
+     * @deprecated
      * @param string $doc
      * @return string
-     * @throws Exception
+     * @throws OpenPayU_Exception_Configuration
      */
     public static function sendOpenPayuDocument($doc)
     {
 
         if (empty(self::$openPayuEndPointUrl))
-            throw new Exception('OpenPayUNetwork::$openPayuEndPointUrl is empty');
+            throw new OpenPayU_Exception_Configuration('OpenPayUNetwork::$openPayuEndPointUrl is empty');
 
         if (!self::isCurlInstalled())
-            throw new Exception('cURL is not available');
+            throw new OpenPayU_Exception_Configuration('cURL is not available');
 
         $xml = urlencode($doc);
         return OpenPayU::sendData(self::$openPayuEndPointUrl, 'DOCUMENT=' . $xml);
@@ -80,18 +92,19 @@ class OpenPayUNetwork
      * @param string $signatureKey
      * @param string $algorithm
      * @return string
-     * @throws Exception
+     * @throws OpenPayU_Exception_Configuration
+     * @deprecated
      */
     public static function sendOpenPayuDocumentAuth($doc, $merchantPosId, $signatureKey, $algorithm = 'MD5')
     {
         if (empty(self::$openPayuEndPointUrl))
-            throw new Exception('OpenPayUNetwork::$openPayuEndPointUrl is empty');
+            throw new OpenPayU_Exception_Configuration('OpenPayUNetwork::$openPayuEndPointUrl is empty');
 
         if (empty($signatureKey))
-            throw new Exception('Merchant Signature Key should not be null or empty.');
+            throw new OpenPayU_Exception_Configuration('Merchant Signature Key should not be null or empty.');
 
         if (empty($merchantPosId))
-            throw new Exception('MerchantPosId should not be null or empty.');
+            throw new OpenPayU_Exception_Configuration('MerchantPosId should not be null or empty.');
 
         $tosigndata = $doc . $signatureKey;
         $xml = urlencode($doc);
@@ -109,7 +122,7 @@ class OpenPayUNetwork
             ';content=DOCUMENT';
 
         if (!self::isCurlInstalled())
-            throw new Exception('curl is not available');
+            throw new OpenPayU_Exception_Configuration('curl is not available');
 
         return OpenPayU::sendDataAuth(self::$openPayuEndPointUrl, 'DOCUMENT=' . $xml, $authData);
     }
@@ -117,6 +130,7 @@ class OpenPayUNetwork
     /**
      * This function sends auth data to the EndPointUrl OpenPayU
      * @access public
+     * @deprecated
      * @param string $url
      * @param string $doc
      * @param string $authData
@@ -134,7 +148,7 @@ class OpenPayUNetwork
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('OpenPayu-Signature:' . $authData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-OpenPayU-Signature:' . $authData));
 
         $response = curl_exec($ch);
 

@@ -1,3 +1,12 @@
+## 1.9.0
+
+* Added discounted price calculation
+* SDK 2.0.0 compatible
+* Fixed Self-return flow
+* Fix for coupon total amount and order summary
+* Fix for user rights and Accept/Cancel buttons
+
+
 ## 1.8.2
 
 * Changed order's statuses management
