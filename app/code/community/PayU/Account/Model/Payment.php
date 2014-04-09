@@ -867,11 +867,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $this->_myUrl = $this->_config->getBaseUrl ();
         
         OpenPayU_Configuration::setApiVersion ( 2 );
-        OpenPayU_Configuration::setDataFormat ( 'json' );
         OpenPayU_Configuration::setEnvironment ( 'secure' );
         OpenPayU_Configuration::setMerchantPosId ( $this->_config->getMerchantPosId () );
         OpenPayU_Configuration::setSignatureKey ( $this->_config->getSignatureKey () );
-        OpenPayU_Configuration::setHashAlgorithm ( 'MD5' );
     
     }
 
