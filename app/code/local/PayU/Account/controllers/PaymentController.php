@@ -63,16 +63,6 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
     }
 
     /**
-     * Before PayU summary action
-     */
-    public function beforeSummaryAction(){
-        $this->setSession();
-        $this->setOrder();
-        $this->setPayment(true);
-        $this->getResponse()->setBody($this->getLayout()->createBlock('payu_account/beforeSummary')->setOrder($this->_order)->toHtml());
-    }
-
-    /**
      * Processes PayU OrderNotifyRequest
      */
     public function orderNotifyRequestAction(){
@@ -124,6 +114,36 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
         else
             $this->_redirect('checkout/onepage/success',array('_secure' => true));
 
+    }
+    
+    /**
+     * Continue payment action
+     */
+    public function continuePaymentAction(){
+        
+        $this->setSession();
+        $this->setOrder();
+        $this->setPayment();
+    
+        Mage::log("I am in continue URL",null,'continueUrl.log');
+        Mage::log($_GET,null,'continueUrl.log');
+        
+        /* if(isset($_GET['error']))
+        {
+            $this->_order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
+        }
+        elseif (defined('Mage_Sales_Model_Order::STATE_PENDING_PAYMENT')) {
+            $this->_order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, true)->save();
+        }
+    
+        Mage::getSingleton('checkout/session')->getQuote()->setIsActive(false)->save();
+        Mage::getSingleton('checkout/session')->setSuccess( Mage::helper('payu_account')->__('Thank you.') );
+    
+        if(isset($_GET['error']))
+            $this->_redirect('checkout/onepage/failure',array('_secure' => true));
+        else
+            $this->_redirect('checkout/onepage/success',array('_secure' => true)); */
+    
     }
 
     /**

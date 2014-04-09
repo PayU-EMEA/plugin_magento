@@ -69,9 +69,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @var Mage_Sales_Model_Order
      */
     protected $_order;
-    
     protected $_tempInfo = "AWAITING_PayU";
-    
     protected $_isGateway = true;
     protected $_canOrder = true;
     protected $_canAuthorize = true;
@@ -86,11 +84,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canReviewPayment = true;
     protected $_payUOrderResult = null;
     
-    /**
-     * PayU payment statuses
-     *
-     * @var string
-     */
     const PAYMENT_STATUS_NEW = 'PAYMENT_STATUS_NEW';
     const PAYMENT_STATUS_CANCEL = 'PAYMENT_STATUS_CANCEL';
     const PAYMENT_STATUS_REJECT = 'PAYMENT_STATUS_REJECT';
@@ -103,12 +96,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     
     const NEW_PAYMENT_URL = "payu_account/payment/new";
     
-    /**
-     * PayU order statuses
-     *
-     * @var string
-     */
-    
     const ORDER_STATUS_COMPLETE = 'ORDER_STATUS_COMPLETE';
     const ORDER_STATUS_CANCEL = 'ORDER_STATUS_CANCEL';
     const ORDER_STATUS_REJECT = 'ORDER_STATUS_REJECT';
@@ -119,61 +106,33 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     const ORDER_V2_REJECTED = 'REJECTED';
     const ORDER_V2_COMPLETED = 'COMPLETED';
     const ORDER_V2_WAITING_FOR_CONFIRMATION = 'WAITING_FOR_CONFIRMATION';
-    
-    
-    /**
-     * Constructor
-     */
+
     public function __construct() {
         parent::__construct ();
-        
-        // initialize the PayU config
         $this->initializeOpenPayUConfiguration ();
     }
-    
-    /**
-     *
-     * @return string
-     */
+
     public function getTitle() {
         return $this->_title;
     }
     
     /**
-     * Initializes the payment .
-     * @param
-     *            Mage_Sales_Model_Order
-     * @param
-     *            Mage_Shipping_Model_Shipping
+     * Initializes the payment.
+     * @param Mage_Sales_Model_Order
+     * @param Mage_Shipping_Model_Shipping
      * @return array
      */
     public function orderCreateRequest(Mage_Sales_Model_Order $order, $allShippingRates) {
         $this->_order = $order;
-        
-        /**
-         * @var string Order Currency Code
-         */
+
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode ();
-        
-        /**
-         * @var string Country Code
-         */
         $orderCountryCode = $this->_order->getBillingAddress ()->getCountry ();
-        
-        /**
-         * @var array assign the shipping info for created order
-         */
         $shippingCostList = array ();
-        
-        /**
-         *
-         * @var string Check wether the order is virtual or material
-         */
+
         $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
-        // if the standard paying method has been selected
         if (empty ( $allShippingRates )) {
-            // normal way of paying
+
             $allShippingRates = Mage::getStoreConfig ( 'carriers', Mage::app ()->getStore ()->getId () );
             
             $methodArr = explode ( "_", $this->_order->getShippingMethod () );
@@ -190,7 +149,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $grandTotal = $this->_order->getGrandTotal () /*- $this->_order->getShippingAmount ()*/;
         
         } else {
-            // assigning the shipping costs list
             foreach ( $allShippingRates as $rate ) {
                 $gross = $this->toAmount ( $rate->getPrice () );
                 
@@ -207,16 +165,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'countryCode' => $orderCountryCode,'shipToOtherCountry' => 'true','shippingCostList' => $shippingCostList 
         );
         
-        /**
-         *
-         * @var string All items included in the order
-         */
         $orderItems = $this->_order->getAllVisibleItems ();
         
-        /**
-         *
-         * @var array Here is where order items will be processed for PayU purposes
-         */
         $items = array ();
         $productsTotal = 0;
         
@@ -271,6 +221,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['notifyUrl'] = $this->_myUrl . 'orderNotifyRequest';
         $OCReq ['cancelUrl'] = $this->_myUrl . 'cancelPayment';
         $OCReq ['completeUrl'] = $this->_myUrl . 'completePayment';
+        $OCReq ['continueUrl'] = $this->_myUrl . 'continuePayment';
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
         $OCReq ['extOrderId'] = $this->_order->getId ();
@@ -310,6 +261,13 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
 
         $result = OpenPayU_Order::create($OCReq);
+        
+        $retrieve = OpenPayU_Order::retrieve($result->getResponse ()->orderId);
+        
+        if($retrieve->getResponse()->orders->orders[0]->totalAmount != $OCReq ['totalAmount']){
+            Mage::throwException ( Mage::helper ( 'payu_account' )->__ ( 'There was a problem with initializing the payment, please contact the store administrator. ' . $result->getError () ) );
+        }
+        
         
         if ($result->getStatus () == 'SUCCESS') {
             
@@ -819,7 +777,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @param $payment
      */
     public function updatePaymentStatusSent($payment) {
-        if ($this->_order->getStatus () != Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW) {
+        if ($this->_order->getState () != Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW) {
             $payment->setTransactionId ( $this->_transactionId );
             $payment->setIsTransactionApproved ( false );
             $payment->setIsTransactionClosed ( false );
@@ -847,7 +805,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @param $payment
      */
     public function updatePaymentStatusPending($payment) {
-        if ($this->_order->getStatus () != Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
+        if ($this->_order->getState () != Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
             $payment->setTransactionId ( $this->_transactionId );
             $payment->setIsTransactionApproved ( false );
             $payment->setIsTransactionClosed ( false );
@@ -863,7 +821,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @param $payment
      */
     public function updatePaymentStatusCompleted($payment) {
-        if ($this->_order->getStatus () != Mage_Sales_Model_Order::STATE_PROCESSING) {
+        if ($this->_order->getState () != Mage_Sales_Model_Order::STATE_PROCESSING) {
             $payment->setTransactionId ( $this->_transactionId );
             $payment->setIsTransactionApproved ( true );
             $payment->setIsTransactionClosed ( true );
