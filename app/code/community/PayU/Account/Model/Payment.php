@@ -131,22 +131,26 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
+        Mage::log($allShippingRates, null, 'allShippingRates.log');
+        
         if (empty ( $allShippingRates )) {
 
             $allShippingRates = Mage::getStoreConfig ( 'carriers', Mage::app ()->getStore ()->getId () );
             
             $methodArr = explode ( "_", $this->_order->getShippingMethod () );
             
+            Mage::log($allShippingRates, null, 'allShippingRates.log');
+            
             foreach ( $allShippingRates as $key => $rate ) {
-                if ($rate ['active'] == 1 && $methodArr [0] == $key) {
+                if ($rate ['active'] == 1 && $rate ['showmethod'] == 1 && isset ( $rate ['price'] ) /* && $methodArr [0] == $key */) {
                     $shippingCostList ['shippingMethods'] [] = array (
-                            'name' => $rate ['name'],'country' => $orderCountryCode,'price' => $this->toAmount ( $this->_order->getShippingAmount () ) 
+                            'name' => $rate ['title'] . " " . $rate ['name'],'country' => $rate ['specificcountry'],'price' => $this->toAmount ( $rate ['price'] ) 
                     );
                 }
             
             }
             
-            $grandTotal = $this->_order->getGrandTotal () /*- $this->_order->getShippingAmount ()*/;
+            $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount ();
         
         } else {
             foreach ( $allShippingRates as $rate ) {
@@ -186,7 +190,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             // Check if the item is countable one
             if ($this->toAmount ( $itemInfo ['price_incl_tax'] ) > 0) {
-
                 $items ['products'] ['products'] [] = array (
                         'quantity' => ( int ) $itemInfo ['qty_ordered'],'name' => $itemInfo ['name'],'unitPrice' => $this->toAmount ( $itemInfo ['price_incl_tax'] ) 
                                 );
@@ -194,10 +197,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             }
         }
         
-        if($this->_order->getShippingAmount () > 0 && !empty ( $shippingCostList['shippingMethods'][0] ) ){
-                $items ['products'] ['products'] [] = array (
-                    'quantity' => 1 ,'name' => Mage::helper ( 'payu_account' )->__('Shipping costs') . " - " . $shippingCostList['shippingMethods'][0]['name'] ,'unitPrice' => $this->toAmount ( $this->_order->getShippingAmount () ));
-        }
+        //if($this->_order->getShippingAmount () > 0 && !empty ( $shippingCostList['shippingMethods'][0] ) ){
+        //        $items ['products'] ['products'] [] = array (
+        //            'quantity' => 1 ,'name' => Mage::helper ( 'payu_account' )->__('Shipping costs') . " - " . $shippingCostList['shippingMethods'][0]['name'] ,'unitPrice' => $this->toAmount ( $this->_order->getShippingAmount () ));
+        //}
         
         // assigning the shopping cart
         $shoppingCart = array (
@@ -225,6 +228,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
         $OCReq ['extOrderId'] = $this->_order->getId ();
+        $OCReq ['shippingMethods'] = $shippingCostList;
         unset ( $OCReq ['shoppingCart'] );
         
         $customer_sheet = array ();
@@ -259,8 +263,14 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $OCReq ['buyer'] = $customer_sheet;
             }
         }
+        
+        Mage::log($OCReq, null, 'createRequest.log');
 
         $result = OpenPayU_Order::create($OCReq);
+        
+        Mage::log($result, null, 'createdRequest.log');
+        
+        
         
         $retrieve = OpenPayU_Order::retrieve($result->getResponse ()->orderId);
         
@@ -329,7 +339,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $billingAddress = array (
                     'address_id' => 5,'firstname' => $this->_tempInfo,'lastname' => $this->_tempInfo,'company' => "",'street' => array (
                             0 => $this->_tempInfo,1 => $this->_tempInfo 
-                    ),'city' => $this->_tempInfo,'postcode' => $this->_tempInfo,'country_id' => Mage::helper ( 'core' )->getDefaultCountry (),'telephone' => "0000000",'save_in_address_book' => 0 
+                    ) ,'region_id' => '',
+    'region' => '','city' => $this->_tempInfo,'postcode' => $this->_tempInfo,'country_id' => Mage::helper ( 'core' )->getDefaultCountry (),'telephone' => "0000000",'save_in_address_book' => 0 
             );
             
             $checkout->saveBilling ( $billingAddress, false );
@@ -501,9 +512,14 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         // get Payment status from response
         $payUPaymentStatus = $response->orders->orders[0]->status;
         
-        Mage::log($payUPaymentStatus, null, "orderNotifyJSONResponse.log");
-        
         $this->updatePaymentStatus ( $payUPaymentStatus, $payUOrderStatus );
+        
+        Mage::log($response, null, 'orderRetrieved.log');
+        
+        if(!empty($response->orders->orders[0]->buyer)){
+            $this->updateCustomerData($response->orders->orders[0]->buyer);
+            //$this->updateShippingInfo($response->orders->orders[0]->buyer);
+        }
     
     }
     
@@ -549,8 +565,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $data = stripslashes ( trim ( $body ) );    
         
         $result = OpenPayU_Order::consumeNotification ( $data );
-        
         $response = $result->getResponse();
+        
+        Mage::log($response, null, 'orderNotifyResponse.log');
         
         if ($response->order->orderId) {
             
@@ -563,17 +580,142 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             $rsp = OpenPayU::buildOrderNotifyResponse ( $response->order->orderId );
             
-            if (!empty($rsp)) {
-                if (OpenPayU_Configuration::getDataFormat() == 'xml') {
-                    header("Content-Type: text/xml");
-                    echo $rsp;
-                } elseif (OpenPayU_Configuration::getDataFormat() == 'json') {
-                    header("Content-Type: application/json");
-                    Mage::log($rsp, null, "orderNotifyJSONResponse.log");
-                    echo $rsp;
-                }
-            }
+            header("Content-Type: application/json");
+            echo $rsp;
         
+        }
+    
+    }
+    
+    /**
+     * Update order's customer information based on PayU information
+     * @var array result data from payu with billing and shipping info
+     */
+    protected function updateCustomerData($data)
+    {
+        
+        Mage::log($data, null, 'updateCustomerData.log');
+        
+        try {
+            
+            $customerRecord = $data;
+    
+            $this->_order->setCustomerFirstname($customerRecord->firstName);
+            $this->_order->setCustomerLastname($customerRecord->lastName);
+            $this->_order->setCustomerEmail($customerRecord->email);
+    
+            if (isset($data->delivery) && !empty( $data->delivery )) {
+    
+                Mage::log($data->delivery, null, 'updateDelivery.log');
+                
+                $shippingAddress = $data->delivery;
+    
+                /* $billing = $this->_order->getBillingAddress();
+    
+                $billing->setCity($shippingAddress->city);
+                $billing->setStreet($shippingAddress->street);
+                $billing->setPostcode($shippingAddress->postalCode);
+                $billing->setCountryId($shippingAddress->countryCode);
+                
+                $this->_order->setBillingAddress($billing)->save(); */
+    
+                $recipient = explode(" ", $shippingAddress->recipientName);
+    
+                $shipping = $this->_order->getShippingAddress();
+    
+                $shipping->setFirstname($recipient[0]);
+                $shipping->setLastname($recipient[1]);
+                //$shipping->setTelephone($customerRecord['phone']);
+                $shipping->setCity($shippingAddress->city);
+                $shipping->setStreet($shippingAddress->street);
+                $shipping->setPostcode($shippingAddress->postalCode);
+                $shipping->setCountryId($shippingAddress->countryCode);
+    
+                $this->_order->setShippingAddress($shipping)->save();
+    
+            }
+    
+            /* if (isset($data['billing']) && !empty( $data['billing'] )) {
+                $billingAddress = $data['billing'];
+    
+                $billing = $this->_order->getBillingAddress();
+    
+                $recipient = explode(" ", $billingAddress['recipientName']);
+                
+                $billing->setFirstname($recipient[0]);
+                $billing->setLastname($recipient[1]);
+                $billing->setCompany($billingAddress['recipientName']);
+                $billing->setTelephone($customerRecord['phone']);
+                $billing->setCity($billingAddress['city']);
+                $billing->setStreet($billingAddress['street']);
+                $billing->setPostcode($billingAddress['postalCode']);
+                $billing->setCountryId($billingAddress['countryCode']);
+                //$this->_order->setCustomerTaxvat($billingAddress['TIN']);
+    
+                $this->_order->setBillingAddress($billing)->save();
+            }
+            else
+            { 
+                $billing = $this->_order->getBillingAddress();
+    
+                $billing->setFirstname($customerRecord['firstName']);
+                $billing->setLastname($customerRecord['lastName']);
+                $billing->setTelephone($customerRecord['phone']);
+    
+                $this->_order->setBillingAddress($billing)->save();
+            }  */
+    
+            if (!$this->_order->getEmailSent()) {
+                $this->_order->sendNewOrderEmail();
+                $this->_order->setEmailSent(1);
+            }
+    
+            $this->_order->save();
+    
+        } catch (Error $e) {
+            Mage::logException("Can not update order data: " . $e);
+        }
+    
+    }
+    
+    /**
+     *
+     * Update shipping info after notifyRequest
+     * @param array $data
+     */
+    protected function updateShippingInfo($data)
+    {
+        try {
+            $typeChosen = $data['Shipping']['ShippingType'];
+            $cost = $data['Shipping']['ShippingCost']['Gross'];
+    
+            if (!empty($typeChosen)) {
+    
+                $quote = Mage::getModel('sales/quote')->load($this->_order->getQuoteId());
+                $address = $quote->getShippingAddress();
+    
+                $shipping = Mage::getModel('shipping/shipping');
+                $shippingRates = $shipping->collectRatesByAddress($address)->getResult();
+    
+                $shippingCostList = array();
+    
+                foreach ($shippingRates->getAllRates() as $rate) {
+                    $type = $rate->getCarrierTitle() . ' - ' . $rate->getMethodTitle();
+    
+                    if ($type == $typeChosen) {
+                        $this->_order->setShippingDescription($typeChosen);
+                        $this->_order->setShippingMethod($rate->getCarrier() . "_" . $rate->getMethod());
+                        $current = $this->_order->getShippingAmount();
+                        $this->_order->setShippingAmount($cost / 100);
+                        $this->_order->setGrandTotal($this->_order->getGrandTotal() + $this->_order->getShippingAmount() - $current);
+                        $this->_order->save();
+                    }
+                }
+    
+            }
+    
+        } catch (Exception $e) {
+            Mage::logException("shipping info error: " . $e);
         }
     
     }
@@ -870,6 +1012,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         OpenPayU_Configuration::setEnvironment ( 'secure' );
         OpenPayU_Configuration::setMerchantPosId ( $this->_config->getMerchantPosId () );
         OpenPayU_Configuration::setSignatureKey ( $this->_config->getSignatureKey () );
+        OpenPayU_Configuration::setSender("Magento ver " . Mage::getVersion() . "/Plugin ver " . $this->_config->getPluginVersion());
     
     }
 
