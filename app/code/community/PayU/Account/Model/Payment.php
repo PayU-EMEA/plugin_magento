@@ -64,6 +64,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_transactionId;
     
     /**
+     * Pay method
+     */
+    protected $_payuPayMethod;
+    
+    /**
      * Currently processed order
      *
      * @var Mage_Sales_Model_Order
@@ -511,6 +516,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     
         // get Payment status from response
         $payUPaymentStatus = $response->orders->orders[0]->status;
+        
+        if(isset($response->orders->orders[0]->payMethod->type))
+            $this->_payuPayMethod = $response->orders->orders[0]->payMethod->type;
         
         $this->updatePaymentStatus ( $payUPaymentStatus, $payUOrderStatus );
         
@@ -968,8 +976,24 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $payment->setIsTransactionApproved ( true );
             $payment->setIsTransactionClosed ( true );
             $payment->addTransaction ( Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER );
-            $payment->setPreparedMessage ( "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ) );
-            $this->_order->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ), false )->sendOrderUpdateEmail ( true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully in PayU.' ) )->save ();
+            
+            if(isset($this->_payuPayMethod)){
+                
+                if($this->_payuPayMethod == "PBL")
+                    $method = Mage::helper( 'payu_account' )->__ ('Pay by link');
+                
+                if($this->_payuPayMethod == "CARD")
+                    $method = Mage::helper( 'payu_account' )->__ ('Pay with card');
+                
+            }
+                
+            if(isset($method)){
+                $payment->setPreparedMessage ( "PayU - " . $method . " " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ) );
+                $this->_order->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . $method . " " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ), false )->sendOrderUpdateEmail ( true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully in PayU.' ) )->save ();                
+            }else{
+                $payment->setPreparedMessage ( "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ) );
+                $this->_order->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully.' ), false )->sendOrderUpdateEmail ( true, "PayU - " . Mage::helper ( 'payu_account' )->__ ( 'The transaction completed successfully in PayU.' ) )->save ();
+            }
         }
     }
     
