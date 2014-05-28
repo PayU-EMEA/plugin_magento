@@ -151,7 +151,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             }
             
-            $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount ();
         
         } else {
             foreach ( $allShippingRates as $rate ) {
@@ -163,8 +162,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             }
             
-            $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount ();
         }
+        
+        $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount () - $order->getShippingTaxAmount();
         
         $shippingCost = array (
                 'countryCode' => $orderCountryCode,'shipToOtherCountry' => 'true','shippingCostList' => $shippingCostList 
