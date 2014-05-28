@@ -20,7 +20,7 @@ class PayU_Account_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @return int
 	 */
 	public function toAmount($val){
-		return (int)($val*100);
+		return round($val*100);
 	}
 	
 	/**
