@@ -136,15 +136,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
-        Mage::log($allShippingRates, null, 'allShippingRates.log');
-        
         if (empty ( $allShippingRates )) {
 
             $allShippingRates = Mage::getStoreConfig ( 'carriers', Mage::app ()->getStore ()->getId () );
             
             $methodArr = explode ( "_", $this->_order->getShippingMethod () );
-            
-            Mage::log($allShippingRates, null, 'allShippingRates.log');
             
             foreach ( $allShippingRates as $key => $rate ) {
                 if ($rate ['active'] == 1 && $rate ['showmethod'] == 1 && isset ( $rate ['price'] ) /* && $methodArr [0] == $key */) {
@@ -233,7 +229,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
         $OCReq ['extOrderId'] = $this->_order->getId ();
-        $OCReq ['shippingMethods'] = $shippingCostList;
+        if(!empty($shippingCostList))
+        	$OCReq ['shippingMethods'] = $shippingCostList;
         unset ( $OCReq ['shoppingCart'] );
         
         $customer_sheet = array ();
@@ -268,14 +265,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $OCReq ['buyer'] = $customer_sheet;
             }
         }
-        
-        Mage::log($OCReq, null, 'createRequest.log');
 
         $result = OpenPayU_Order::create($OCReq);
-        
-        Mage::log($result, null, 'createdRequest.log');
-        
-        
         
         $retrieve = OpenPayU_Order::retrieve($result->getResponse ()->orderId);
         
@@ -522,8 +513,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         $this->updatePaymentStatus ( $payUPaymentStatus, $payUOrderStatus );
         
-        Mage::log($response, null, 'orderRetrieved.log');
-        
         if(!empty($response->orders->orders[0]->buyer)){
             $this->updateCustomerData($response->orders->orders[0]->buyer);
             //$this->updateShippingInfo($response->orders->orders[0]->buyer);
@@ -575,8 +564,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $result = OpenPayU_Order::consumeNotification ( $data );
         $response = $result->getResponse();
         
-        Mage::log($response, null, 'orderNotifyResponse.log');
-        
         if ($response->order->orderId) {
             
             $this->_transactionId = $response->order->orderId;
@@ -602,8 +589,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected function updateCustomerData($data)
     {
         
-        Mage::log($data, null, 'updateCustomerData.log');
-        
         try {
             
             $customerRecord = $data;
@@ -613,8 +598,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $this->_order->setCustomerEmail($customerRecord->email);
     
             if (isset($data->delivery) && !empty( $data->delivery )) {
-    
-                Mage::log($data->delivery, null, 'updateDelivery.log');
                 
                 $shippingAddress = $data->delivery;
     
