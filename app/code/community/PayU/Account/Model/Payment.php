@@ -136,34 +136,14 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
-        if (empty ( $allShippingRates )) {
+		  if($order->getShippingInclTax() > 0) {
+				$shippingCostList ['shippingMethods'] [] = array(
+					'name' => $order->getShippingDescription(),
+					'country' => $orderCountryCode,
+					'price' => $this->toAmount($order->getShippingInclTax()),
+				);
+		  }
 
-            $allShippingRates = Mage::getStoreConfig ( 'carriers', Mage::app ()->getStore ()->getId () );
-            
-            $methodArr = explode ( "_", $this->_order->getShippingMethod () );
-            
-            foreach ( $allShippingRates as $key => $rate ) {
-                if ($rate ['active'] == 1 && $rate ['showmethod'] == 1 && isset ( $rate ['price'] ) /* && $methodArr [0] == $key */) {
-                    $shippingCostList ['shippingMethods'] [] = array (
-                            'name' => $rate ['title'] . " " . $rate ['name'],'country' => $rate ['specificcountry'],'price' => $this->toAmount ( $rate ['price'] ) 
-                    );
-                }
-            
-            }
-            
-        
-        } else {
-            foreach ( $allShippingRates as $rate ) {
-                $gross = $this->toAmount ( $rate->getPrice () );
-                
-                $shippingCostList ['shippingMethods'] [] = array (
-                        'name' => $rate->getMethodTitle (),'country' => $orderCountryCode,'price' => $gross 
-                );
-            
-            }
-            
-        }
-        
         $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount () - $order->getShippingTaxAmount();
         
         $shippingCost = array (
