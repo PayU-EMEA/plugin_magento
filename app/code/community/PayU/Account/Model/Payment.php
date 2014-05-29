@@ -133,38 +133,42 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode ();
         $orderCountryCode = $this->_order->getBillingAddress ()->getCountry ();
         $shippingCostList = array ();
-
-        $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
-        if (empty ( $allShippingRates )) {
-
-            $allShippingRates = Mage::getStoreConfig ( 'carriers', Mage::app ()->getStore ()->getId () );
-            
-            $methodArr = explode ( "_", $this->_order->getShippingMethod () );
-            
-            foreach ( $allShippingRates as $key => $rate ) {
-                if ($rate ['active'] == 1 && $rate ['showmethod'] == 1 && isset ( $rate ['price'] ) /* && $methodArr [0] == $key */) {
-                    $shippingCostList ['shippingMethods'] [] = array (
-                            'name' => $rate ['title'] . " " . $rate ['name'],'country' => $rate ['specificcountry'],'price' => $this->toAmount ( $rate ['price'] ) 
-                    );
-                }
-            
-            }
+        if (empty ( $allShippingRates ) || Mage::getSingleton ( 'customer/session' )->isLoggedIn()) {
+        	
+        	if($order->getShippingInclTax() > 0) {
+        		$shippingCostList ['shippingMethods'] [] = array(
+        		 'name' => $order->getShippingDescription(),
+        		 'country' => $orderCountryCode,
+        		 'price' => $this->toAmount($order->getShippingInclTax()),
+        		);
+        	}
+        	
+        	$grandTotal = $this->_order->getGrandTotal () - $order->getShippingInclTax();
             
         
         } else {
-            foreach ( $allShippingRates as $rate ) {
-                $gross = $this->toAmount ( $rate->getPrice () );
+            
+        	$firstPrice = 0;
+        	
+        	foreach ( $allShippingRates as $key => $rate ) {
+                
+        		$gross = $this->toAmount ( $rate->getPrice () );
+        		
+        		if($key == 0)
+        			$firstPrice = $rate->getPrice ();
                 
                 $shippingCostList ['shippingMethods'] [] = array (
-                        'name' => $rate->getMethodTitle (),'country' => $orderCountryCode,'price' => $gross 
+                        'name' => $rate->getMethodTitle (),
+                		'country' => $orderCountryCode,
+                		'price' => $gross 
                 );
-            
+
             }
-            
+
+            $grandTotal = $this->_order->getGrandTotal () - $firstPrice;
+
         }
-        
-        $grandTotal = $this->_order->getGrandTotal () - $this->_order->getShippingAmount () - $order->getShippingTaxAmount();
         
         $shippingCost = array (
                 'countryCode' => $orderCountryCode,'shipToOtherCountry' => 'true','shippingCostList' => $shippingCostList 
