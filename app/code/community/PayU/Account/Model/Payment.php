@@ -11,7 +11,7 @@
  *          http://twitter.com/openpayu
  */
 
-require_once ('lib/payu/sdk_v2/openpayu.php');
+require_once (Mage::getBaseDir('lib').'/payu/sdk_v2/openpayu.php');
 
 class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract 
 
