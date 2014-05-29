@@ -11,7 +11,7 @@
  *	http://twitter.com/openpayu
 */
 
-require_once 'Mage/Checkout/controllers/CartController.php';
+require_once Mage::getModuleDir('controllers', 'Mage_Checkout').'/CartController.php';
 
 class PayU_Account_Checkout_CartController extends Mage_Checkout_CartController
 {
