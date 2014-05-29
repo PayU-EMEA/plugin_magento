@@ -133,8 +133,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $this->_order->getOrderCurrencyCode ();
         $orderCountryCode = $this->_order->getBillingAddress ()->getCountry ();
         $shippingCostList = array ();
-
-        $orderType = ($this->_order->getIsVirtual ()) ? "VIRTUAL" : "MATERIAL";
         
         if (empty ( $allShippingRates ) || Mage::getSingleton ( 'customer/session' )->isLoggedIn()) {
         	
@@ -151,10 +149,10 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         } else {
             
+        	$firstPrice = 0;
+        	
         	foreach ( $allShippingRates as $key => $rate ) {
                 
-        		$firstPrice = 0;
-        		
         		$gross = $this->toAmount ( $rate->getPrice () );
         		
         		if($key == 0)
@@ -165,11 +163,11 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 		'country' => $orderCountryCode,
                 		'price' => $gross 
                 );
-            
+
             }
-            
+
             $grandTotal = $this->_order->getGrandTotal () - $firstPrice;
-            
+
         }
         
         $shippingCost = array (
