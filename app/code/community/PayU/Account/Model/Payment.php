@@ -499,26 +499,18 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected function retrieveAndUpdateByOrderRetrieved( $orderRetrieved ) {
     
         $this->setOrderByOrderId ( $orderRetrieved->extOrderId );
+
+        $payUOrderStatus = $orderRetrieved->status;
     
-        $result = OpenPayU_Order::retrieve ( $orderRetrieved->orderId );
-    
-        $response = $result->getResponse() ;
-    
-        $orderRetrieveResponse = $response;
-    
-        // get Payment status from response
-        $payUOrderStatus = $response->orders->orders[0]->status;
-    
-        // get Payment status from response
-        $payUPaymentStatus = $response->orders->orders[0]->status;
+        $payUPaymentStatus = $orderRetrieved->status;
         
-        if(isset($response->orders->orders[0]->payMethod->type))
-            $this->_payuPayMethod = $response->orders->orders[0]->payMethod->type;
+        if(isset($orderRetrieved->payMethod->type))
+            $this->_payuPayMethod = $orderRetrieved->payMethod->type;
         
         $this->updatePaymentStatus ( $payUPaymentStatus, $payUOrderStatus );
         
-        if(!empty($response->orders->orders[0]->buyer)){
-            $this->updateCustomerData($response->orders->orders[0]->buyer);
+        if(!empty($orderRetrieved->buyer)){
+            $this->updateCustomerData($orderRetrieved->buyer);
             //$this->updateShippingInfo($response->orders->orders[0]->buyer);
         }
     
@@ -566,6 +558,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $data = stripslashes ( trim ( $body ) );    
         
         $result = OpenPayU_Order::consumeNotification ( $data );
+        
         $response = $result->getResponse();
         
         if ($response->order->orderId) {
