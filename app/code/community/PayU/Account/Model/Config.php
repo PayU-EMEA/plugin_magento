@@ -127,8 +127,10 @@ class PayU_Account_Model_Config
 		$validityTime = $this->getStoreConfig('payment/payu_account/validity_time');
 		
 		if($validityTime)
-    		$validityTime;
-    	return "1440";
+    		return $validityTime;
+    	
+		return "1440";
+		
     }
     
     /** @return string small logo src */
