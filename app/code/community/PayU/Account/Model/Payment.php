@@ -555,7 +555,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     public function orderNotifyRequest() {
         
         $body = file_get_contents ( 'php://input' );
-        $data = stripslashes ( trim ( $body ) );    
+        $data = trim ( $body );    
         
         $result = OpenPayU_Order::consumeNotification ( $data );
         
