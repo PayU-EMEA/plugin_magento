@@ -80,7 +80,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canAuthorize = true;
     protected $_canCapture = true;
     protected $_canCapturePartial = true;
-    protected $_canRefund = false;
+    protected $_canRefund = true;
+    protected $_canRefundInvoicePartial = true;
     protected $_canVoid = false;
     protected $_canUseInternal = false;
     protected $_canUseCheckout = true;
@@ -286,6 +287,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             // assign current transaction id
             $this->_transactionId = $result->getResponse ()->orderId;
+            $order->getPayment()->setLastTransId($this->_transactionId);
             
             
             $locale = Mage::getStoreConfig ( 'general/locale/code', Mage::app ()->getStore ()->getId () );
@@ -320,6 +322,34 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         return $ret;
     
+    }
+
+
+    /**
+     * Refund payment
+     *
+     * @param Varien_Object $payment
+     * @param float $amount
+     * @return $this
+     */
+    public function refund(Varien_Object $payment, $amount){
+        $order = $payment->getOrder();
+        $this->_order = $order;
+        $amount = $amount*100;
+        $result = OpenPayU_Refund::create($this->_order->getPayment ()->getLastTransId(), 'Magento payu refund', $amount);
+
+        Mage::log($this->_order->getPayment ()->getLastTransId(),null, 'orderRefund.log');
+
+        Mage::log($result,null, 'orderRefund.log');
+
+        if ($result->getStatus() == 'SUCCESS') {
+            return $this;
+        }
+
+        $serverMsg = OpenPayU_Util::statusDesc($result->getStatus());
+        $errorMsg = $this->_getHelper()->__($serverMsg);
+        Mage::throwException($errorMsg);
+
     }
     
     /**

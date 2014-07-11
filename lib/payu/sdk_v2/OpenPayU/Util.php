@@ -345,4 +345,44 @@ class OpenPayU_Util
         return $data;
     }
 
+    public static function statusDesc($response){
+
+        $msg = '';
+
+        switch ($response){
+            case 'SUCCESS':
+                $msg = 'Request has been processed correctly.';
+            break;
+            case 'DATA_NOT_FOUND':
+                $msg = 'Data indicated in the request is not available in the PayU system.';
+            break;
+            case 'WARNING_CONTINUE_3_DS':
+                $msg = '3DS authorization required.Redirect the Buyer to PayU to continue the 3DS process by calling OpenPayU.authorize3DS().';
+            break;
+            case 'WARNING_CONTINUE_CVV':
+                $msg = 'CVV/CVC authorization required. Call OpenPayU.authorizeCVV() method.';
+            break;
+            case 'ERROR_SYNTAX':
+                $msg = 'BIncorrect request syntax. Supported formats are JSON or XML.';
+            break;
+            case 'ERROR_VALUE_INVALID':
+                $msg = 'One or more required values are incorrect.';
+            break;
+            case 'ERROR_VALUE_MISSING':
+                $msg = 'One or more required values are missing.';
+            break;
+            case 'BUSINESS_ERROR':
+                $msg = 'PayU system is unavailable. Try again later.';
+            break;
+            case 'ERROR_INTERNAL':
+                $msg = 'PayU system is unavailable. Try again later.';
+            break;
+            case 'GENERAL_ERROR':
+                $msg = 'Unexpected error. Try again later.';
+            break;
+        }
+
+        return $msg;
+    }
+
 }
