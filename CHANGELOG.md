@@ -1,5 +1,6 @@
 ## 2.0.1
 
+* Refund functionality added
 * Added discounted price calculation
 * SDK 2.0.0 compatible
 * Fixed Self-return flow
