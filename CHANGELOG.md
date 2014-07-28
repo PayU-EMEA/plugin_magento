@@ -1,4 +1,4 @@
-## 1.9.0
+## 2.0.1
 
 * Added discounted price calculation
 * SDK 2.0.0 compatible
