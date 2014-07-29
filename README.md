@@ -9,6 +9,7 @@ define their payment options, see their purchase history, and manage personal pr
 
 ## Table of Contents
 
+[Features](#features)
 [Prerequisites][1] <br />
 [Installation][2]
 * [Installing Manually][2.1]
@@ -16,6 +17,13 @@ define their payment options, see their purchase history, and manage personal pr
 
 [Configuration][3]
 * [Configuration Parameters][3.1]
+
+##Features
+The PayU payments Magento plugin adds the PayU payment option and enables you to process the following operations in your e-shop:
+
+* Creating a payment order (with discounts included)
+* Cancelling a payment order
+* Conducting a refund operation (for a whole or partial order)
 
 
 ## Prerequisites
