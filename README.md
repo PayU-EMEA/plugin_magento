@@ -9,7 +9,7 @@ define their payment options, see their purchase history, and manage personal pr
 
 ## Table of Contents
 
-[Features](#features)
+[Features](#features) <br />
 [Prerequisites][1] <br />
 [Installation][2]
 * [Installing Manually][2.1]
