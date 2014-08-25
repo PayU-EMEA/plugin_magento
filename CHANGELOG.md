@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Rounding numbers fixed
+
 ## 2.0.1
 
 * Refund functionality added
