@@ -340,8 +340,8 @@ class OpenPayU_Util
      */
     public static function setSenderProperty($data)
     {
-        $data['properties']['properties'][0]['name'] = 'sender';
-        $data['properties']['properties'][0]['value'] = OpenPayU_Configuration::getFullSenderName();
+        $data['properties'][0]['name'] = 'sender';
+        $data['properties'][0]['value'] = OpenPayU_Configuration::getFullSenderName();
         return $data;
     }
 

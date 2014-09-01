@@ -11,7 +11,7 @@
  *          http://twitter.com/openpayu
  */
 
-require_once (Mage::getBaseDir('lib').'/payu/sdk_v2/openpayu.php');
+require_once (Mage::getBaseDir('lib').'/payu/sdk_v21/openpayu.php');
 
 class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract 
 
@@ -196,7 +196,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             // Check if the item is countable one
             if ($this->toAmount ( $itemInfo ['price_incl_tax'] ) > 0) {
-                $items ['products'] ['products'] [] = array (
+                $items ['products'] [] = array (
                         'quantity' => ( int ) $itemInfo ['qty_ordered'],'name' => $itemInfo ['name'],'unitPrice' => $this->toAmount ( $itemInfo ['price_incl_tax'] ) 
                                 );
                 $productsTotal += $itemInfo ['price_incl_tax'] * $itemInfo ['qty_ordered'];
@@ -218,8 +218,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         );
         
         if($is_discount){
-            $items ['products'] ['products'] = array();
-            $items ['products'] ['products'] [] = array (
+            $items ['products'] = array();
+            $items ['products'][] = array (
                     'quantity' => 1,'name' => Mage::helper ( 'payu_account' )->__('Order # ') . $this->_order->getId (),'unitPrice' => $this->toAmount ( $grandTotal )
             );
         }
@@ -229,15 +229,14 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['customerIp'] = Mage::app ()->getFrontController ()->getRequest ()->getClientIp ();
         $OCReq ['notifyUrl'] = $this->_myUrl . 'orderNotifyRequest';
         $OCReq ['cancelUrl'] = $this->_myUrl . 'cancelPayment';
-        $OCReq ['completeUrl'] = $this->_myUrl . 'completePayment';
+//        $OCReq ['completeUrl'] = $this->_myUrl . 'completePayment';
         $OCReq ['continueUrl'] = $this->_myUrl . 'continuePayment';
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
         $OCReq ['extOrderId'] = $this->_order->getId ();
         if(!empty($shippingCostList))
-        	$OCReq ['shippingMethods'] = $shippingCostList;
+        	$OCReq ['shippingMethods'] = $shippingCostList['shippingMethods'];
         unset ( $OCReq ['shoppingCart'] );
-        
         $customer_sheet = array ();
         
         $billingAddressId = $this->_order->getBillingAddressId ();
@@ -275,7 +274,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         $retrieve = OpenPayU_Order::retrieve($result->getResponse ()->orderId);
         
-        if($retrieve->getResponse()->orders->orders[0]->totalAmount != $OCReq ['totalAmount']){
+        if($retrieve->getResponse()->orders[0]->totalAmount != $OCReq ['totalAmount']){
             Mage::throwException ( Mage::helper ( 'payu_account' )->__ ( 'There was a problem with initializing the payment, please contact the store administrator. ' . $result->getError () ) );
         }
         
@@ -337,8 +336,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $this->_order = $order;
         $amount = $amount*100;
         $result = OpenPayU_Refund::create($this->_order->getPayment ()->getLastTransId(), 'Magento payu refund', $amount);
-
-        Mage::log($this->_order->getPayment ()->getLastTransId(),null, 'orderRefund.log');
 
         Mage::log($result,null, 'orderRefund.log');
 
@@ -588,7 +585,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $data = trim ( $body );    
         
         $result = OpenPayU_Order::consumeNotification ( $data );
-        
         $response = $result->getResponse();
         
         if ($response->order->orderId) {
@@ -599,11 +595,9 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             
             $this->setOrderByOrderId ( $orderId );
             $this->retrieveAndUpdateByOrderRetrieved ( $response->order );
-            
-            $rsp = OpenPayU::buildOrderNotifyResponse ( $response->order->orderId );
-            
-            header("Content-Type: application/json");
-            echo $rsp;
+
+            //the response should be status 200
+            header("HTTP/1.1 200 OK");
         
         }
     
@@ -1038,7 +1032,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * Initialize PayU configuration
      */
     protected function initializeOpenPayUConfiguration() {
-        
+
         $this->_config = $this->getConfig ();
         $this->_myUrl = $this->_config->getBaseUrl ();
         
