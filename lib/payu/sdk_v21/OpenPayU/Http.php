@@ -99,11 +99,17 @@ class OpenPayU_Http
                 break;
 
             case 400:
-                throw new OpenPayU_Exception(trim($message->status->statusCode . (isset($message->status->statusDesc) ?
-                    ' - ' . $message->Status->statusDesc : '')), $statusCode);
+                throw new OpenPayU_Exception(trim($message->Status->StatusCode . (isset($message->Status->StatusDesc) ?
+                    ' - ' . $message->Status->StatusDesc : '')), $statusCode);
                 break;
+
+            case 401:
+                throw new OpenPayU_Exception_Authorization(trim($message->Status->StatusCode .
+                    (isset($message->Status->StatusDesc) ? ' - ' . $message->Status->StatusDesc : '')), $statusCode);
+                break;
+
             case 403:
-                throw new OpenPayU_Exception_Authorization(trim($message->status->statusCode), $statusCode);
+                throw new OpenPayU_Exception_Authorization(trim($message->Status->StatusCode), $statusCode);
                 break;
 
             case 404:
@@ -117,8 +123,8 @@ class OpenPayU_Http
             case 500:
                 throw new OpenPayU_Exception_ServerError('PayU system is unavailable or your order is not processed.
                 Error:
-                [' . (isset($message->status->statusDesc) ?
-                    $message->status->statusDesc : '') . ']', $statusCode);
+                [' . (isset($message->Status->StatusDesc) ?
+                    $message->Status->StatusDesc : '') . ']', $statusCode);
                 break;
 
             case 503:

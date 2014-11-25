@@ -133,14 +133,13 @@ class OpenPayU_Order extends OpenPayU
      */
     public static function consumeNotification($data)
     {
-        $sslConnection = self::isSecureConnection();;
+        $sslConnection = self::isSecureConnection();
 
         if (empty($data)) {
             throw new OpenPayU_Exception('Empty value of data');
         }
 
         $headers = OpenPayU_Util::getRequestHeaders();
-
         $incomingSignature = OpenPayU_HttpCurl::getSignature($headers);
 
         if ($sslConnection) {
@@ -178,7 +177,7 @@ class OpenPayU_Order extends OpenPayU
 
         $result = self::build($data);
 
-            if ($httpStatus == 200 || $httpStatus == 201 || $httpStatus == 422 || $httpStatus == 302 || $httpStatus
+            if ($httpStatus == 200 || $httpStatus == 201 || $httpStatus == 422 || $httpStatus == 301 || $httpStatus == 302 || $httpStatus
                 == 400 || $httpStatus == 404)
         {
             return $result;
@@ -199,7 +198,7 @@ class OpenPayU_Order extends OpenPayU
      */
     public static function hostedOrderForm($order, $params = array())
     {
-        $orderFormUrl = OpenPayU_Configuration::getServiceUrl() . 'order';
+        $orderFormUrl = OpenPayU_Configuration::getServiceUrl() . 'orders';
 
         $usortedFormFieldValuesAsArray = array();
         $htmlFormFields = OpenPayU_Util::convertArrayToHtmlForm($order, "", $usortedFormFieldValuesAsArray);

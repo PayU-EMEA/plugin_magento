@@ -274,8 +274,8 @@ class OpenPayU_Util
         }else{
             return apache_request_headers();
         }
-    }
 
+    }
     /**
      * @param $array
      * @param string $namespace
@@ -326,7 +326,6 @@ class OpenPayU_Util
      */
     public static function changeFormFieldFormat($namespace, $key)
     {
-        $key = ucfirst($key);
 
         if ($key === $namespace && $key[strlen($key) - 1] == 's') {
             return substr($key, 0, -1);

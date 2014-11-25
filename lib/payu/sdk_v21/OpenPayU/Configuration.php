@@ -25,7 +25,7 @@ class OpenPayU_Configuration
     public static $authUrl = '';
     public static $serviceDomain = '';
 
-    private static $apiVersion = 2.1;
+    private static $apiVersion = 2;
     private static $_availableHashAlgorithm = array('MD5', 'SHA', 'SHA1', 'SHA-1', 'SHA-256', 'SHA256', 'SHA_256');
     private static $hashAlgorithm = 'SHA-1';
 
@@ -87,23 +87,19 @@ class OpenPayU_Configuration
      * @param string $country
      * @throws OpenPayU_Exception_Configuration
      */
-    public static function setEnvironment($value = 'secure', $domain = 'payu.com', $country = 'pl')
+    public static function setEnvironment($value = 'secure', $domain = 'payu.com', $country = 'pl', $api = 'api/', $version = 'v2_1/')
     {
         $value = strtolower($value);
         $domain = strtolower($domain) . '/';
-        $country = strtolower($country) . '/';
-        $service = 'standard/';
 
         if (!in_array($value, self::$_availableEnvironment))
             throw new OpenPayU_Exception_Configuration($value . ' - is not valid environment');
 
-        $api = 'api/';
-        $version = 'v2_1/';
 
         if ($value == 'secure') {
             self::$env = $value;
 
-            self::$serviceDomain = 'payu.com/';
+            self::$serviceDomain = $domain;
 
             self::$serviceUrl = 'https://' . $value . '.' . $domain . $api . $version;
             self::$summaryUrl = self::$serviceUrl . 'co/summary';
@@ -301,6 +297,6 @@ class OpenPayU_Configuration
      */
     private static function getComposerFilePath()
     {
-        return '../../'.self::COMPOSER_JSON;
+        return realpath(dirname(__FILE__)) .'/../../'.self::COMPOSER_JSON;
     }
 }
