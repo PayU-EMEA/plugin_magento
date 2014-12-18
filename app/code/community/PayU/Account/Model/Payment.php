@@ -233,7 +233,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['continueUrl'] = $this->_myUrl . 'continuePayment';
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
-        $OCReq ['extOrderId'] = $this->_order->getId ();
+        $OCReq ['extOrderId'] = $this->_order->getId ().'-'.microtime();
         if(!empty($shippingCostList))
         	$OCReq ['shippingMethods'] = $shippingCostList['shippingMethods'];
         unset ( $OCReq ['shoppingCart'] );
@@ -271,14 +271,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
 
         $result = OpenPayU_Order::create($OCReq);
-        
-        $retrieve = OpenPayU_Order::retrieve($result->getResponse ()->orderId);
-        
-        if($retrieve->getResponse()->orders[0]->totalAmount != $OCReq ['totalAmount']){
-            Mage::throwException ( Mage::helper ( 'payu_account' )->__ ( 'There was a problem with initializing the payment, please contact the store administrator. ' . $result->getError () ) );
-        }
-        
-        
+
         if ($result->getStatus () == 'SUCCESS') {
             
             // store session identifier in session info
