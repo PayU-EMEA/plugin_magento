@@ -579,21 +579,26 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         $result = OpenPayU_Order::consumeNotification ( $data );
         $response = $result->getResponse();
-        
         if ($response->order->orderId) {
             
             $this->_transactionId = $response->order->orderId;
 
-            $orderId = $response->order->extOrderId;
+            $extOrderIdExploded = $pieces = explode("-", $response->order->extOrderId);
+            $orderId = $extOrderIdExploded[0];
+//            Mage::log(print_r($orderId, true),null, 'notification.log');
             
             $this->setOrderByOrderId ( $orderId );
-            $this->retrieveAndUpdateByOrderRetrieved ( $response->order );
 
+            if($response->order->status == 'COMPLETED' && $this->_order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING){
+                header("HTTP/1.1 200 OK");
+                exit;
+            }
+
+            $this->retrieveAndUpdateByOrderRetrieved ( $response->order );
             //the response should be status 200
             header("HTTP/1.1 200 OK");
-        
         }
-    
+        exit;
     }
     
     /**
@@ -724,42 +729,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
     
     }
-    
-    /**
-     * Update order status
-     *
-     * @param string new order status
-     */
-    protected function updateOrderStatus($orderStatus) {
-        
-        $payment = $this->_order->getPayment ();
-        $currentState = $payment->getAdditionalInformation ( 'payu_order_status' );
-        
-        // change the order status if needed
-        if ($currentState != $orderStatus) {
-            try {
-                switch ($orderStatus) {
-                    
-                    case self::ORDER_V2_CANCELED :
-                        $this->updatePaymentStatusCanceled ( $payment );
-                        break;
-                    
-                    case self::ORDER_V2_REJECTED :
-                        $this->updatePaymentStatusDenied ( $payment );
-                        break;
-                    
-                    case self::ORDER_V2_COMPLETED :
-                        $this->updatePaymentStatusCompleted ( $payment );
-                        break;
-                }
-                
-                $payment->setAdditionalInformation ( 'payu_order_status', $orderStatus )->save ();
-            
-            } catch ( Exception $e ) {
-                Mage::logException ( $e );
-            }
-        }
-    }
+
     
     /**
      * Update payment status
@@ -771,18 +741,13 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         $payment = $this->_order->getPayment ();
         $currentState = $payment->getAdditionalInformation ( 'payu_payment_status' );
-        
-        if($currentState == self::ORDER_V2_COMPLETED && $paymentStatus == self::ORDER_V2_PENDING)
+
+        if(($currentState == self::ORDER_V2_COMPLETED && $paymentStatus == self::ORDER_V2_PENDING) || ($currentState == self::ORDER_V2_COMPLETED && $paymentStatus == self::ORDER_V2_COMPLETED))
             return;
-        
+
         if ($currentState != $paymentStatus) {
             try {
                 switch ($paymentStatus) {
-                    
-                    case self::PAYMENT_STATUS_NEW:
-                        $this->updatePaymentStatusNew ( $payment );
-                        break;
-                        
                     case self::ORDER_V2_NEW:
                         $this->updatePaymentStatusNew ( $payment );
                         break;
@@ -790,47 +755,21 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                     case self::ORDER_V2_PENDING:
                         $this->updatePaymentStatusPending ( $payment );
                         break;
-                    
-                    case self::PAYMENT_STATUS_CANCEL:
-                        $this->updatePaymentStatusCanceled ( $payment );
-                        break;
                         
                     case self::ORDER_V2_CANCELED:
                         $this->updatePaymentStatusCanceled ( $payment );
-                        break;
-                    
-                    case self::PAYMENT_STATUS_REJECT:
-                        $this->updatePaymentStatusDenied ( $payment );
                         break;
                         
                     case self::ORDER_V2_REJECTED:
                         $this->updatePaymentStatusDenied ( $payment );
                         break;
-                    
-                    case self::PAYMENT_STATUS_SENT:
-                        $this->updatePaymentStatusSent ( $payment );
-                        break;
-                    
-                    case self::PAYMENT_STATUS_REJECT_DONE:
-                        $this->updatePaymentStatusReturned ( $payment );
-                        break;
                         
                     case self::ORDER_V2_COMPLETED:
                         $this->updatePaymentStatusCompleted ( $payment );
                         break;
-                    
-                    case self::PAYMENT_STATUS_END :
-                        $this->updatePaymentStatusCompleted ( $payment );
-                        break;
-                    
-                    case self::PAYMENT_STATUS_ERROR :
-                        $this->updatePaymentStatusError ( $payment );
-                        break;
                 }
-                
                 // set current PayU status information and save
                 $payment->setAdditionalInformation ( 'payu_payment_status', $paymentStatus )->save ();
-            
             } catch ( Exception $e ) {
                 Mage::logException ( $e );
             }
@@ -973,15 +912,13 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $payment->setIsTransactionApproved ( true );
             $payment->setIsTransactionClosed ( true );
             $payment->addTransaction ( Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER );
-            
             if(isset($this->_payuPayMethod)){
                 
                 if($this->_payuPayMethod == "PBL")
                     $method = Mage::helper( 'payu_account' )->__ ('Pay by link');
                 
-                if($this->_payuPayMethod == "CARD")
+                if($this->_payuPayMethod == "CARD_TOKEN")
                     $method = Mage::helper( 'payu_account' )->__ ('Pay with card');
-                
             }
                 
             if(isset($method)){
@@ -1029,7 +966,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $this->_config = $this->getConfig ();
         $this->_myUrl = $this->_config->getBaseUrl ();
         
-        OpenPayU_Configuration::setApiVersion ( 2 );
+        OpenPayU_Configuration::setApiVersion ( 2.1 );
         OpenPayU_Configuration::setEnvironment ( 'secure' );
         OpenPayU_Configuration::setMerchantPosId ( $this->_config->getMerchantPosId () );
         OpenPayU_Configuration::setSignatureKey ( $this->_config->getSignatureKey () );

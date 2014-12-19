@@ -124,15 +124,10 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action {
         $this->setSession();
         $this->setOrder();
         $this->setPayment();
-    
-        Mage::log("I am in continue URL",null,'continueUrl.log');
-        Mage::log($_GET,null,'continueUrl.log');
 
-         if(isset($_GET['error']))
-        {
+        if(isset($_GET['error'])){
             $this->_order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
-        }
-        elseif (defined('Mage_Sales_Model_Order::STATE_PENDING_PAYMENT')) {
+        }elseif ($this->_order->getState() != Mage_Sales_Model_Order::STATE_PROCESSING && defined('Mage_Sales_Model_Order::STATE_PENDING_PAYMENT')) {
             $this->_order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, true)->save();
         }
 
