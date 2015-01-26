@@ -14,7 +14,7 @@
 class PayU_Account_Model_Config
 {
 	/** @var string self version */
-	protected $_pluginVersion = '2.1.1';
+	protected $_pluginVersion = '2.1.3.1';
 	
 	/** @var string minimum Magento e-commerce version */
 	protected $_minimumMageVersion = '1.6.0';
@@ -129,7 +129,7 @@ class PayU_Account_Model_Config
 		if($validityTime)
     		return $validityTime;
     	
-		return "1440";
+		return "86400";
 		
     }
     
