@@ -229,7 +229,6 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq ['customerIp'] = Mage::app ()->getFrontController ()->getRequest ()->getClientIp ();
         $OCReq ['notifyUrl'] = $this->_myUrl . 'orderNotifyRequest';
         $OCReq ['cancelUrl'] = $this->_myUrl . 'cancelPayment';
-//        $OCReq ['completeUrl'] = $this->_myUrl . 'completePayment';
         $OCReq ['continueUrl'] = $this->_myUrl . 'continuePayment';
         $OCReq ['currencyCode'] = $orderCurrencyCode;
         $OCReq ['totalAmount'] = $shoppingCart ['grandTotal'];
