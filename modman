@@ -1,0 +1,9 @@
+#PayU plugin
+app/etc/modules/PayU_Account.xml    app/etc/modules/PayU_Account.xml
+
+lib/payu/*              lib/payu/
+app/locale/pl_PL/*      app/locale/pl_PL/
+app/code/community/PayU/*   app/code/community/PayU/
+
+app/design/frontend/base/default/template/payu_account/*    app/design/frontend/base/default/template/payu_account/
+app/design/frontend/base/default/layout/payu_account.xml    app/design/frontend/base/default/layout/payu_account.xml
