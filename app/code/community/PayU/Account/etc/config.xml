@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 
-	<modules>
-		<PayU_Account>
-			<version>2.1.3</version>
+    <modules>
+        <PayU_Account>
+            <version>2.1.3</version>
             <depends>
-                <Mage_Payment />
+                <Mage_Payment/>
             </depends>
-		</PayU_Account>
-	</modules>
+        </PayU_Account>
+    </modules>
 
     <global>
         <models>
@@ -31,94 +31,66 @@
                 </rewrite>
             </adminhtml>
         </blocks>
-        <resources>
-            <payu_account_setup>
-                <setup>
-                    <module>PayU_Account</module>
-                </setup>
-                <connection>
-                    <use>core_setup</use>
-                </connection>
-            </payu_account_setup>
-            <payu_account_write>
-                <connection>
-                    <use>core_write</use>
-                </connection>
-            </payu_account_write>
-            <payu_account_read>
-                <connection>
-                    <use>core_read</use>
-                </connection>
-            </payu_account_read>
-        </resources>
     </global>
-	<adminhtml>
-		<translate>
-			<modules>
-				<PayU_Account>
-					<files>
-						<default>PayU_Account.csv</default>
-					</files>
-				</PayU_Account>
-			</modules>
-		</translate>
-	</adminhtml>
-	<admin>
-		<routers>
-			<adminhtml>
-				<args>
-					<modules>
-						<PayU_Account before="Mage_Adminhtml">PayU_Account_Adminhtml</PayU_Account>
-					</modules>
-				</args>
-			</adminhtml>
-		</routers>
-	</admin>
-
-	<frontend>
-		<routers>
-			<checkout>
-				<args>
-					<modules>
-						<PayU_Account before="Mage_Checkout">PayU_Account_Checkout</PayU_Account>
-					</modules>
-				</args>
-			</checkout>
-			<PayU>
-				<use>standard</use>
-				<args>
-					<module>PayU_Account</module>
-					<frontName>payu_account</frontName>
-				</args>
-			</PayU>
-		</routers>
-		<layout>
-			<updates>
-				<payu_account module="PayU_Account">
-					<file>payu_account.xml</file>
-				</payu_account>
-			</updates>
-		</layout>
-		<translate>
-			<modules>
-				<PayU_Account>
-					<files>
-						<default>PayU_Account.csv</default>
-					</files>
-				</PayU_Account>
-			</modules>
-		</translate>
-	</frontend>
-
-	<default>
-		<payment>
-			<payu_account>
-				<active>1</active>
-				<model>payu_account/payment</model>
-                <order_status>1</order_status>
-				<payment_action>authorize</payment_action>
-				<allowspecific>0</allowspecific>
-			</payu_account>
-		</payment>
-	</default>
+    <adminhtml>
+        <translate>
+            <modules>
+                <PayU_Account>
+                    <files>
+                        <default>PayU_Account.csv</default>
+                    </files>
+                </PayU_Account>
+            </modules>
+        </translate>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <PayU_Account before="Mage_Adminhtml">PayU_Account_Adminhtml</PayU_Account>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <frontend>
+        <routers>
+            <payu_account>
+                <use>standard</use>
+                <args>
+                    <module>PayU_Account</module>
+                    <frontName>payu_account</frontName>
+                </args>
+            </payu_account>
+        </routers>
+        <layout>
+            <updates>
+                <payu_account module="PayU_Account">
+                    <file>payu_account.xml</file>
+                </payu_account>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <PayU_Account>
+                    <files>
+                        <default>PayU_Account.csv</default>
+                    </files>
+                </PayU_Account>
+            </modules>
+        </translate>
+    </frontend>
+    <default>
+        <payment>
+            <payu_account>
+                <active>1</active>
+                <title>PayU</title>
+                <model>payu_account/payment</model>
+                <order_status></order_status>
+                <payment_action>order</payment_action>
+                <allowspecific>0</allowspecific>
+            </payu_account>
+        </payment>
+    </default>
 </config>

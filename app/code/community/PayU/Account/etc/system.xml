@@ -24,34 +24,33 @@
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
                         <onestepcheckoutenabled translate="label">
                             <label>OneStepCheckout Enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>2</sort_order>
+                            <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </onestepcheckoutenabled>
-                        <selfreturn translate="label">
-                            <label>Self-Return Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </selfreturn>
                         <order_status translate="label">
                             <label>New Order Status</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>3</sort_order>
+                            <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -59,34 +58,25 @@
                         <validity_time translate="label comment">
                             <label>Order Validity Time</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>payu_account/validityTime</source_model>
-                            <sort_order>5</sort_order>
+                            <source_model>payu_account/system_config_source_validityTime</source_model>
+                            <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </validity_time>
-                        <!--<environment translate="label">
-                            <label>Test Mode Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>payu_account/environment</source_model>
-                            <sort_order>6</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </environment>-->
                         <header2 translate="label">
                             <label>Parameters of production environment</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>7</sort_order>
+                            <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </header2>
                         <oauth_client_name translate="label">
                             <label>POS ID (pos_id)</label>
-							<comment>Point of Sale identifier</comment>
+                            <comment>Point of Sale identifier</comment>
                             <frontend_type>text</frontend_type>
-                            <sort_order>8</sort_order>
+                            <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -95,7 +85,7 @@
                             <label>Second key (MD5)</label>
                             <comment>Symmetrical key for encrypting communication</comment>
                             <frontend_type>text</frontend_type>
-                            <sort_order>11</sort_order>
+                            <sort_order>110</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -103,7 +93,7 @@
                         <header4 translate="label">
                             <label>Settings of external resources</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>18</sort_order>
+                            <sort_order>180</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -111,17 +101,26 @@
                         <payuthumbnail translate="label">
                             <label>Small logo</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>payu_account/thumbnail</source_model>
-                            <sort_order>20</sort_order>
+                            <source_model>payu_account/system_config_source_thumbnail</source_model>
+                            <sort_order>200</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </payuthumbnail>
+                        <payubutton translate="label">
+                            <label>Button</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>payu_account/system_config_source_button</source_model>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payubutton>
                         <payuadvertisement translate="label">
                             <label>PayU advertisement</label>
-                            <source_model>payu_account/advertisement</source_model>
+                            <source_model>payu_account/system_config_source_advertisement</source_model>
                             <frontend_type>select</frontend_type>
-                            <sort_order>21</sort_order>
+                            <sort_order>220</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -129,7 +128,7 @@
                         <header5 translate="label">
                             <label>PayU Plugin Information</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>22</sort_order>
+                            <sort_order>230</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -138,7 +137,7 @@
                             <label></label>
                             <frontend_type>multiline</frontend_type>
                             <frontend_model>payu_account/updateInfo</frontend_model>
-                            <sort_order>23</sort_order>
+                            <sort_order>240</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
