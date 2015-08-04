@@ -23,11 +23,6 @@ class PayU_Account_Model_Config
     protected $_minimumMageVersion = '1.6.0';
 
     /**
-     * @var string represents the goods url
-     */
-    protected $_goodsUrl = "http://openpayu.com/en/goods/json";
-
-    /**
      * @var string latest version path in goods array
      */
     protected $_latestVersionPath = "plugins_magento_1.6.0";
@@ -45,7 +40,117 @@ class PayU_Account_Model_Config
     /**
      * @var array The goods resources are stored here
      */
-    protected $_goods;
+    protected $_goods = array(
+        'lang'              => 'en',
+        'media'             => array(
+            'adverts' => array(
+                'billboard'        => array(
+                    1 => 'http://static.payu.com/en/standard/partners/ad/billboard/billboard750_100_1.jpg',
+                    2 => 'http://static.payu.com/en/standard/partners/ad/billboard/billboard750_100_2.jpg',
+                    3 => 'http://static.payu.com/en/standard/partners/ad/billboard/billboard750_100_3.jpg',
+                ),
+                'double_billboard' => array(
+                    1 => 'http://static.payu.com/en/standard/partners/ad/billboard/double_billboard750_200_1.jpg',
+                    2 => 'http://static.payu.com/en/standard/partners/ad/billboard/double_billboard750_200_2.jpg',
+                    3 => 'http://static.payu.com/en/standard/partners/ad/billboard/double_billboard750_200_3.jpg',
+                ),
+                'skyscraper'       => array(
+                    1 => 'http://static.payu.com/en/standard/partners/ad/skyscraper/skyscraper160_600_1.jpg',
+                    2 => 'http://static.payu.com/en/standard/partners/ad/skyscraper/skyscraper160_200_1.jpg',
+                    3 => 'http://static.payu.com/en/standard/partners/ad/skyscraper/skyscraper160_200_2.jpg',
+                    4 => 'http://static.payu.com/en/standard/partners/ad/skyscraper/skyscraper160_200_3.jpg',
+                ),
+            ),
+            'buttons' => array(
+                1  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_01.png',
+                2  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_02.png',
+                3  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_03.png',
+                4  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_04.png',
+                5  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_long_01.png',
+                6  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_long_02.png',
+                7  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_long_03.png',
+                8  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_long_04.png',
+                9  => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_small_01.png',
+                10 => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_small_02.png',
+                11 => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_small_03.png',
+                12 => 'http://static.payu.com/en/standard/partners/buttons/payu_account_button_small_04.png',
+            ),
+            'logos'   => array(
+                1 => 'http://static.payu.com/en/standard/partners/logos/payu-account-logo-trans.png',
+            ),
+        ),
+        'plugins'           => array(
+            'osc'        => array(
+                '2.3.1' => array(
+                    'version'    => '1.0.5',
+                    'info'       => 'http://www.openpayu.com/en/goods/plugin/osc/231/105/json/',
+                    'repository' => 'github.com/payu/plugin_osc_231',
+                ),
+            ),
+            'magento'    => array(
+                '1.6.0' => array(
+                    'version'    => '1.8.1',
+                    'info'       => 'http://www.openpayu.com/en/goods/plugin/magento/160/181/json/',
+                    'repository' => 'github.com/PayU/plugin_magento_160',
+                ),
+            ),
+            'opencart'   => array(
+                '1.5.3' => array(
+                    'version'    => '0.1.5',
+                    'info'       => 'http://www.openpayu.com/en/goods/plugin/opencart/153/015/json/',
+                    'repository' => 'github.com/payu/plugin_opencart_153',
+                ),
+            ),
+            'prestashop' => array(
+                '1.4.4' => array(
+                    'version'    => '1.9.9',
+                    'info'       => 'http://www.openpayu.com/en/goods/plugin/prestashop/144/199/json/',
+                    'repository' => 'github.com/payu/plugin_prestashop_144',
+                ),
+            ),
+        ),
+        'business_partners' => array(
+            'payu_pl'          => array(
+                'name' => 'PayU Poland - PayU',
+                'type' => 'platnosci',
+            ),
+            'payu_ro_epayment' => array(
+                'name'    => 'PayU Romania - ePayment',
+                'type'    => 'epayment',
+                'lu_url'  => 'https://secure.epayment.ro/order/lu.php',
+                'idn_url' => 'https://secure.epayment.ro/order/idn.php',
+                'irn_url' => 'https://secure.epayment.ro/order/irn.php',
+            ),
+            'payu_ru_epayment' => array(
+                'name'    => 'PayU Russia - ePayment',
+                'type'    => 'epayment',
+                'lu_url'  => 'https://secure.payu.ru/order/lu.php',
+                'idn_url' => 'https://secure.payu.ru/order/idn.php',
+                'irn_url' => 'https://secure.payu.ru/order/irn.php',
+            ),
+            'payu_ua_epayment' => array(
+                'name'    => 'PayU Ukraine - ePayment',
+                'type'    => 'epayment',
+                'lu_url'  => 'https://secure.payu.ua/order/lu.php',
+                'idn_url' => 'https://secure.payu.ua/order/idn.php',
+                'irn_url' => 'https://secure.payu.ua/order/irn.php',
+            ),
+            'payu_tr_epayment' => array(
+                'name'    => 'PayU Turkey - ePayment',
+                'type'    => 'epayment',
+                'lu_url'  => 'https://secure.payu.com.tr/order/lu.php',
+                'idn_url' => 'https://secure.payu.com.tr/order/idn.php',
+                'irn_url' => 'https://secure.payu.com.tr/order/irn.php',
+            ),
+            'payu_hu_epayment' => array(
+                'name'    => 'PayU Hungary - ePayment',
+                'type'    => 'epayment',
+                'lu_url'  => 'https://secure.payu.hu/order/lu.php',
+                'idn_url' => 'https://secure.payu.hu/order/idn.php',
+                'irn_url' => 'https://secure.payu.hu/order/irn.php',
+            ),
+        ),
+    );
 
     /**
      * @var int
@@ -61,8 +166,6 @@ class PayU_Account_Model_Config
     {
         // assign current store id
         $this->setStoreId(Mage::app()->getStore()->getId());
-        // assign goods data
-        $this->setGoods();
         // set latest version url
         $this->setLatestVersionUrl();
         // set latest version data
@@ -277,15 +380,6 @@ class PayU_Account_Model_Config
     protected function setLatestVersion()
     {
         $this->_latestVersion = $this->getArrayFromJsonResponse($this->_latestVersionUrl);
-        return $this;
-    }
-
-    /** assign goods resources array
-     * @return $this
-     */
-    protected function setGoods()
-    {
-        $this->_goods = $this->getArrayFromJsonResponse($this->_goodsUrl);
         return $this;
     }
 
