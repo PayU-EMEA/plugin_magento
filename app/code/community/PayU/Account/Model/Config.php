@@ -27,15 +27,33 @@ class PayU_Account_Model_Config
      */
     protected $_latestVersionPath = "plugins_magento_1.6.0";
 
-    /**
-     * @var string latest version url
-     */
-    protected $_latestVersionUrl;
 
     /**
      * @var array latest plugin version info
      */
-    protected $_latestVersion;
+    protected $_latestVersion = array(
+        'lang'        => 'en',
+        'version'     => '1.8.1',
+        'description' => 'PayU Account is a web application designed as an e-wallet for shoppers willing to open an account, define their payment options, see their purchase history and manage personal profiles.',
+        'docs'        => array(
+            'guides'   => array(
+                0 => array(
+                    'name' => 'Implementation guide',
+                    'url'  => 'http://developers.payu.com/en/',
+                ),
+                1 => array(
+                    'name' => 'Quick guide',
+                    'url'  => 'http://developers.payu.com/en/',
+                ),
+            ),
+            'websites' => array(
+                0 => array(
+                    'name' => 'Information site',
+                    'url'  => 'http://www.corporate.payu.com/',
+                ),
+            ),
+        ),
+    );
 
     /**
      * @var array The goods resources are stored here
@@ -166,10 +184,6 @@ class PayU_Account_Model_Config
     {
         // assign current store id
         $this->setStoreId(Mage::app()->getStore()->getId());
-        // set latest version url
-        $this->setLatestVersionUrl();
-        // set latest version data
-        $this->setLatestVersion();
     }
 
     /**
@@ -353,15 +367,6 @@ class PayU_Account_Model_Config
         return $this->_minimumMageVersion;
     }
 
-    /** assign latest version
-     * @return $this
-     */
-    protected function setLatestVersionUrl()
-    {
-        $this->_latestVersionUrl = $this->getGoods($this->localize($this->_latestVersionPath . "_info", "_"));
-        return $this;
-    }
-
     /**
      * Change locale of given string
      *
@@ -372,28 +377,6 @@ class PayU_Account_Model_Config
     protected function localize($string, $s = "/")
     {
         return Mage::helper('payu_account')->localize($string, $s);
-    }
-
-    /** assign latest version data
-     * @return $this
-     */
-    protected function setLatestVersion()
-    {
-        $this->_latestVersion = $this->getArrayFromJsonResponse($this->_latestVersionUrl);
-        return $this;
-    }
-
-    /**
-     * Converts json response to array
-     *
-     * @param $url string
-     * @return array
-     */
-    protected function getArrayFromJsonResponse($url)
-    {
-        $httpClient = new Varien_Http_Client($url);
-        $response   = $httpClient->request(Varien_Http_Client::GET);
-        return Mage::helper('core')->jsonDecode($response->getBody());
     }
 
     /**
