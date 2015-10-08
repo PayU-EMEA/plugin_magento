@@ -672,9 +672,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         break;
 
                     case OpenPayU_Order::STATUS_PENDING:
-                        if ($currentState != OpenPayU_Order::STATUS_COMPLETED) {
-                            $this->_updatePaymentStatusPending($payment);
-                        }
+                        $this->_updatePaymentStatusPending($payment);
                         break;
 
                     case OpenPayU_Order::STATUS_CANCELED:
