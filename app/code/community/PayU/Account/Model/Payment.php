@@ -664,7 +664,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $payment      = $this->getOrder()->getPayment();
         $currentState = $payment->getAdditionalInformation('payu_payment_status');
 
-        if ($currentState != $paymentStatus && $paymentStatus != OpenPayU_Order::STATUS_COMPLETED) {
+        if ($currentState != OpenPayU_Order::STATUS_COMPLETED && $currentState != $paymentStatus) {
             try {
                 switch ($paymentStatus) {
                     case OpenPayU_Order::STATUS_NEW:
