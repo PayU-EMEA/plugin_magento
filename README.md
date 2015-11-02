@@ -59,8 +59,8 @@ To install the plugin manually, simply copy folders and refresh the list of plug
   * Select all cache types and click  the **Flush Magento Cache** button.<br /> 
   **Note:** If the list of plugins doesn't refresh, flush other cache as well.
 
-      **Results**<br />
-     ![cache_flush_cusscess][img3]
+  **Results**<br />  ![cache_flush_cusscess][img3]<br />
+3. If you have enabled compilation **System** > **Tools** > **Compilation** you have to click **Run Compilation Process**. 
 
 ### Installing with Magento Connect 
 
