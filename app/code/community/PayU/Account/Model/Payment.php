@@ -328,7 +328,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $locale   = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
                 $langCode = explode('_', $locale, 2);
                 $response = array(
-                    'redirectUri' => $result->getResponse()->redirectUri,
+                    'redirectUri' => $result->getResponse()->redirectUri . '&lang='.strtolower($langCode[1]),
                     'url'         => OpenPayu_Configuration::getSummaryUrl(),
                     'sessionId'   => $result->getResponse()->orderId,
                     'lang'        => strtolower($langCode [1])
