@@ -1,3 +1,6 @@
+## 2.1.10
+ * Replace http to https for static resources
+
 ## 2.1.9
  * Add lang to redirectUri
 
