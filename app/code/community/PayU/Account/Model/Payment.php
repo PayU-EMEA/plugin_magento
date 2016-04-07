@@ -188,7 +188,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $orderCurrencyCode = $order->getOrderCurrencyCode();
         $orderCountryCode  = $order->getBillingAddress()->getCountry();
         $shippingCostList  = array();
-        if (empty ($allShippingRates) || Mage::getSingleton('customer/session')->isLoggedIn()) {
+        if (empty ($allShippingRates)) {
 
             if ($order->getShippingInclTax() > 0) {
                 $shippingCostList ['shippingMethods'] [] = array(
@@ -198,24 +198,18 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 );
             }
 
-            $grandTotal = $order->getGrandTotal() - $order->getShippingInclTax();
         } else {
-            $firstPrice = 0;
-            foreach ($allShippingRates as $key => $rate) {
-                $gross = $this->_toAmount($rate->getPrice());
-                if ($key == 0) {
-                    $firstPrice = $rate->getPrice();
-                }
 
+            foreach ($allShippingRates as $key => $rate) {
                 $shippingCostList ['shippingMethods'] [] = array(
                     'name'    => $rate->getMethodTitle(),
                     'country' => $orderCountryCode,
-                    'price'   => $gross
+                    'price'   => $this->_toAmount($rate->getPrice()),
                 );
-
             }
-            $grandTotal = $order->getGrandTotal() - $firstPrice;
+
         }
+        $grandTotal = $order->getGrandTotal() - $order->getShippingInclTax();
 
         $orderItems    = $order->getAllVisibleItems();
         $items         = array();
