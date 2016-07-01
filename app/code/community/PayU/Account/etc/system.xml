@@ -3,14 +3,14 @@
     <sections>
         <payment>
             <groups>
-                <payu_account translate="label" module="paygate">
-                    <label>PayU account</label>
+                <payu_account translate="label comment" module="paygate">
+                    <label>PayU</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>670</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <comment>Important: This plugin works only with checkout points of sales (POS).</comment>
+                    <comment>Important: This plugin works only with REST (Checkout) points of sales (POS).</comment>
                     <fields>
                         <header1 translate="label">
                             <label>Main parameters</label>
@@ -21,7 +21,7 @@
                             <show_in_store>1</show_in_store>
                         </header1>
                         <active translate="label">
-                            <label>Enabled</label>
+                            <label>Enable plugin?</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
@@ -29,50 +29,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </active>
-                        <title translate="label">
-                            <label>Title</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>15</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </title>
-                        <onestepcheckoutenabled translate="label">
-                            <label>OneStepCheckout Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </onestepcheckoutenabled>
-                        <order_status translate="label">
-                            <label>New Order Status</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>40</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </order_status>
-                        <validity_time translate="label comment">
-                            <label>Order Validity Time</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>payu_account/system_config_source_validityTime</source_model>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </validity_time>
                         <header2 translate="label">
-                            <label>Parameters of production environment</label>
+                            <label>POS Parameters</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </header2>
-                        <oauth_client_name translate="label">
+                        <pos_id translate="label">
                             <label>POS ID (pos_id)</label>
                             <comment>Point of Sale identifier</comment>
                             <frontend_type>text</frontend_type>
@@ -80,51 +45,32 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </oauth_client_name>
+                        </pos_id>
                         <signature_key translate="label">
                             <label>Second key (MD5)</label>
                             <comment>Symmetrical key for encrypting communication</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </signature_key>
+                        <oauth_client_id translate="label">
+                            <label>OAuth protocol - client_id</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oauth_client_id>
+                        <oauth_client_secret translate="label">
+                            <label>OAuth protocol - client_secret</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>110</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </signature_key>
-                        <header4 translate="label">
-                            <label>Settings of external resources</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>180</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </header4>
-                        <payuthumbnail translate="label">
-                            <label>Small logo</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>payu_account/system_config_source_thumbnail</source_model>
-                            <sort_order>200</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </payuthumbnail>
-                        <payubutton translate="label">
-                            <label>Button</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>payu_account/system_config_source_button</source_model>
-                            <sort_order>210</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </payubutton>
-                        <payuadvertisement translate="label">
-                            <label>PayU advertisement</label>
-                            <source_model>payu_account/system_config_source_advertisement</source_model>
-                            <frontend_type>select</frontend_type>
-                            <sort_order>220</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </payuadvertisement>
+                        </oauth_client_secret>
                         <header5 translate="label">
                             <label>PayU Plugin Information</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
