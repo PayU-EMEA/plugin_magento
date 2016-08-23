@@ -6,4 +6,6 @@ app/locale/pl_PL/*          app/locale/pl_PL/
 app/code/community/PayU/*   app/code/community/PayU/
 
 app/design/frontend/base/default/template/payu_account/*    app/design/frontend/base/default/template/payu_account/
-app/design/frontend/base/default/layout/payu_account.xml    app/design/frontend/base/default/layout/payu_account.xml
+
+skin/frontend/base/default/css/payu                    skin/frontend/base/default/css/payu
+skin/frontend/base/default/images/payu                 skin/frontend/base/default/images/payu
