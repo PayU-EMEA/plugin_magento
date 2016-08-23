@@ -1,15 +1,10 @@
 <?php
 
 /**
- *    ver. 1.9.0
- *    PayU Form Block
- *   Payment
+ * PayU Form Block
  *
- * @copyright  Copyright (c) 2011-2014 PayU
- * @license    http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
- *    http://www.payu.com
- *    http://www.openpayu.com
- *    http://twitter.com/openpayu
+ * @copyright Copyright (c) 2011-2016 PayU
+ * @license http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
  */
 class PayU_Account_Block_Form extends Mage_Payment_Block_Form
 {
@@ -21,15 +16,27 @@ class PayU_Account_Block_Form extends Mage_Payment_Block_Form
 
 
     /**
+     * Prepare layout.
+     * Add files to use PayU
+     *
+     * @return PayU_Account_Block_Form
+     */
+    protected function _prepareLayout()
+    {
+        if ($head = $this->getLayout()->getBlock('head')) {
+            $head->addCss('css/payu/payu.css');
+        }
+        return parent::_prepareLayout();
+    }
+
+    /**
      * Set template and redirect message
      */
     protected function _construct()
     {
         $this->setTemplate('payu_account/form.phtml');
-        $this->setMethodTitle('');
-        $this->setMethodLabelAfterHtml(
-            "<img src='{$this->getThumbnailSrc()}' height='20' alt='{$this->__('PayU account')}'/> {$this->__('PayU account')}"
-        );
+        $this->setMethodTitle($this->__('Pay with PayU'));
+        $this->setMethodLabelAfterHtml('<img src="' . $this->getPayuLogo() . '" alt="PayU" class="formPayuLogo" />');
 
         return parent::_construct();
     }
@@ -46,8 +53,8 @@ class PayU_Account_Block_Form extends Mage_Payment_Block_Form
     /**
      * @return string
      */
-    public function getThumbnailSrc()
+    private function getPayuLogo()
     {
-        return Mage::getModel('payu_account/config')->getThumbnailSrc();
+        return $this->getSkinUrl('images/payu/payu_logo.png');
     }
 }

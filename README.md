@@ -4,56 +4,46 @@
 
 **If you have any questions or issues, feel free to contact our technical support: tech@payu.pl.**
 
-PayU account is a web application designed as an e-wallet for shoppers willing to open an account, 
-define their payment options, see their purchase history, and manage personal profiles.
-
-**Note:** This is an alpha release and we are still working on plugin improvements.
-
 ## Table of Contents
 
-[Features](#features) <br />
-[Prerequisites][1] <br />
-[Installation][2]
-* [Installing Manually][2.1]
-* [Installing with Magento Connect][2.2]
-
-[Configuration][3]
-* [Configuration Parameters][3.1]
+1. [Features](#features)
+1. [Prerequisites](#prerequisites)
+1. [Installation](#installation)
+    * [Installing Manually](#installing-manually)
+    * [Installing with Magento Connect](#installing-with-magento-connect)
+1. [Configuration](#configuration)
 
 ##Features
 The PayU payments Magento plugin adds the PayU payment option and enables you to process the following operations in your e-shop:
 
 * Creating a payment order (with discounts included)
-* Cancelling a payment order
+* Receive or canceling a payment order (when auto-receive is disable)
 * Conducting a refund operation (for a whole or partial order)
 
+##Prerequisites
 
-## Prerequisites
-
-**Important:** This plugin works only with checkout points of sales (POS).
+**Important:** This plugin works only with REST API (checkout) points of sales (POS).
 
 The following PHP extensions are required:
 
 * [cURL][ext2] to connect and communicate to many different types of servers with many different types of protocols.
 * [hash][ext3] to process directly or incrementally the arbitrary length messages by using a variety of hashing algorithms.
-* [XMLWriter][ext4] to wrap the libxml xmlWriter API.
-* [XMLReader][ext5] that acts as a cursor going forward on the document stream and stopping at each node on the way.
 
-## Installation
+##Installation
 
 There are two ways in which you can install the plugin:
 
-* [manual installation][2.1] by copying and pasting folders from the repository
-* [Magento Connect installation][2.2] from the administration page
+* [manual installation](#installing-manually) by copying and pasting folders from the repository
+* [Magento Connect installation](#installing-with-magento-connect) from the administration page
 
 See the sections below to find out about steps for each of the procedures.
 
-### Installing Manually
+###Installing Manually
 
 To install the plugin manually, simply copy folders and refresh the list of plugins:
 
 1. Copy the folders from [the plugin repository][ext1] to your Magento root folder on the server.
-2. In order to update the list of available plugins, clean the cache:
+1. In order to update the list of available plugins, clean the cache:
   * Go to the Magento administration page [http://your-magento-url/admin].
   * Go to **System** > **Cache Management**.
   * Select all cache types and click  the **Flush Magento Cache** button.<br /> 
@@ -62,7 +52,7 @@ To install the plugin manually, simply copy folders and refresh the list of plug
   **Results**<br />  ![cache_flush_cusscess][img3]<br />
 3. If you have enabled compilation **System** > **Tools** > **Compilation** you have to click **Run Compilation Process**. 
 
-### Installing with Magento Connect 
+###Installing with Magento Connect 
 
 The Mangento Connect tool allows you to install the plugin from the administration page. 
 
@@ -77,14 +67,14 @@ It is recommended to always backup your installation prior to use.
 5. Click the **PayU** icon and install the plugin by clicking the **Install Now** button.<br />
 **Note:** If you are new to Magento Connect, when you click **Install Now** you are asked to register and log in to get the extension key.<br />
   
-## Configuration
+##Configuration
 
 Independently of the installation method, the configuration looks the same:
 
 1. Go to the Magento administration page [http://your-magento-url/admin].
 2. Go to **System** > **Configuration** window. 
 3. From the **Configuration** menu on the left, in the **Sales** section, select **Payment Methods**.
-4. In the list of available methods, click PayU to expand the configuration form, and specify the [configuration parameters][3.1].
+4. In the list of available methods, click PayU to expand the configuration form, and specify the [configuration parameters](#configuration).
 5. Click ![save_config][img2] in the top right corner of the page.
 
 ### Configuration Parameters
@@ -98,52 +88,27 @@ The main parameters for plugin configuration are as follows:
 | Parameter | Values | Description | 
 |:---------:|:------:|:-----------:|
 |Enabled|Yes/No|Specifies whether the module is enabled.|
-|Self-Return Enabled|Yes/No|If self-return is disabled, the payment must be confirmed manually.|
-|New Order Status|Pending/Processing/Complete/ <br /> Closed/Canceled/On Hold|Defines which status is assigned to new orders. By deafult, the *Processing* status is assigned to each new order.|
-|Order Validity Time|24h/12h/6h/1h/30min|Specifies the time during which the order is valid in the PayU system. When the validity time expires, the order is cancelled, and you are notified that the transaction failed.|
 
-#### Parameters of production environment
+#### POS parameters
 
 To check the values of the parameters below, go to **Administration Panel** > **My shops** > **Your shop** > **POS** and click the name of a given POS.
 
 | Parameter | Description | 
 |:---------:|:-----------:|
 |POS ID|Unique ID of the POS|
-|Key|Unique MD5 key
-|POS Auth Key|Transaction authorization key|
-|Second Key| MD5 key for securing communication|
-
-#### Settings of external resources
-
-You can set external resources for the following:
-
-| Parameter |Description | 
-|:---------:|:-----------:|
-|Small logo|URL address of the logo image that is visible in the list of payment methods|
-|PayU advertisement|URL address of the PayU advertisement for your page|
+|Second Key|MD5 key for securing communication|
+|OAuth - client_id|client_id for OAuth|
+|OAuth - client_secret|client_secret for OAuth|
 
 <!--LINKS-->
 
 <!--topic urls:-->
-
-[1]: https://github.com/PayU/plugin_magento_160#prerequisites
-[2]: https://github.com/PayU/plugin_magento_160#installation
-[2.1]: https://github.com/PayU/plugin_magento_160#installing-manually
-[2.2]: https://github.com/PayU/plugin_magento_160#installing-with-magento-connect
-[3]: https://github.com/PayU/plugin_magento_160#configuration
-[3.1]: https://github.com/PayU/plugin_magento_160#configuration-parameters
-[3.1.1]: https://github.com/PayU/plugin_magento_160#main-parameters
-[3.1.2]: https://github.com/PayU/plugin_magento_160#parameters-of-production-and-test-environments
-[3.1.3]: https://github.com/PayU/plugin_magento_160#settings-of-external-resources
-
 
 <!--external links:-->
 
 [ext1]: https://github.com/PayU/plugin_magento_160
 [ext2]: http://php.net/manual/en/book.curl.php
 [ext3]: http://php.net/manual/en/book.hash.php
-[ext4]: http://php.net/manual/en/book.xmlwriter.php
-[ext5]: http://php.net/manual/en/book.xmlreader.php
 
 <!--images:-->
 
