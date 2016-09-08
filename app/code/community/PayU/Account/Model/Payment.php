@@ -201,7 +201,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $OCReq = array(
             'merchantPosId' => OpenPayU_Configuration::getMerchantPosId(),
             'orderUrl' => Mage::getUrl('sales/order/view', array('order_id' => $order->getId())),
-            'description' => $this->_helper()->__('Order #%s', $order->getId()),
+            'description' => $this->_helper()->__('Order #%s', $order->getRealOrderId()),
             'products' => $items,
             'customerIp' => Mage::app()->getFrontController()->getRequest()->getClientIp(),
             'notifyUrl' => $this->getConfig()->getUrl('orderNotifyRequest'),
