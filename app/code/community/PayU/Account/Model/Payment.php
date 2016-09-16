@@ -198,12 +198,18 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             );
         }
 
+        $clientIp = Mage::app()->getFrontController()->getRequest()->getClientIp();
+
+        if($clientIp) {
+            $clientIp = trim(array_shift(explode(',', $clientIp, 2)));
+        }
+
         $OCReq = array(
             'merchantPosId' => OpenPayU_Configuration::getMerchantPosId(),
             'orderUrl' => Mage::getUrl('sales/order/view', array('order_id' => $order->getId())),
             'description' => $this->_helper()->__('Order #%s', $order->getId()),
             'products' => $items,
-            'customerIp' => Mage::app()->getFrontController()->getRequest()->getClientIp(),
+            'customerIp' => $clientIp,
             'notifyUrl' => $this->getConfig()->getUrl('orderNotifyRequest'),
             'continueUrl' => $this->getConfig()->getUrl('continuePayment'),
             'currencyCode' => $order->getOrderCurrencyCode(),
