@@ -203,7 +203,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'orderUrl' => Mage::getUrl('sales/order/view', array('order_id' => $order->getId())),
             'description' => $this->_helper()->__('Order #%s', $order->getRealOrderId()),
             'products' => $items,
-            'customerIp' => Mage::app()->getFrontController()->getRequest()->getClientIp(),
+            'customerIp' => trim(strtok(Mage::app()->getFrontController()->getRequest()->getClientIp(), ',')),
             'notifyUrl' => $this->getConfig()->getUrl('orderNotifyRequest'),
             'continueUrl' => $this->getConfig()->getUrl('continuePayment'),
             'currencyCode' => $order->getOrderCurrencyCode(),
