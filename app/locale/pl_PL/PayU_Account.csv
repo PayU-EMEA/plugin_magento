@@ -26,3 +26,4 @@
 "There was a problem with the payment initialization - "%s", please contact system administrator.","Wystąpił problem podczas inicjalizacji płatności - %s, prosimy o kontakt z obsługą sklepu."
 "Refund for order: %s","Zwrot do zamówienia %s"
 "Payu refund - amount: %s, status: %s","Zwrot Payu - kwota: %s, status: %s"
+"You will be redirected to PayU after submitting the order.","Zostaniesz przekierowany do PayU po złożeniu zamówienia"
