@@ -276,6 +276,8 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             Mage::logException($e);
         }
+
+        $order->sendNewOrderEmail()->save();
         return $response;
     }
 
@@ -358,7 +360,12 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $body = file_get_contents('php://input');
         $data = trim($body);
 
-        $result = OpenPayU_Order::consumeNotification($data);
+        try {
+            $result = OpenPayU_Order::consumeNotification($data);
+        } catch (Exception $e) {
+            header('X-PHP-Response-Code: 500', true, 500);
+            die($e->getMessage());
+        }
         $response = $result->getResponse();
         $orderRetrieved = $response->order;
 
@@ -460,6 +467,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             ->save();
 
         $payment->getOrder()
+            ->sendOrderUpdateEmail(true, $comment)
             ->cancel()
             ->save();
 
@@ -490,6 +498,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     private function _updatePaymentStatusCompleted(Mage_Sales_Model_Order_Payment $payment)
     {
+
         $comment = $this->_helper()->__('The transaction completed successfully.');
 
         $payment->setTransactionId($this->_transactionId)
@@ -502,6 +511,15 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $this->getOrder()
             ->save();
+
+        if ($invoice = $payment->getCreatedInvoice()) {
+            $comment = $this->_helper()->__('Notified customer about invoice #%s.', $invoice->getIncrementId());
+            $this->getOrder()
+                ->queueNewOrderEmail()
+                ->addStatusHistoryComment($comment)
+                ->setIsCustomerNotified(true)
+                ->save();
+        }
 
     }
 
