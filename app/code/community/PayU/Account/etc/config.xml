@@ -2,7 +2,7 @@
 <config>
     <modules>
         <PayU_Account>
-            <version>2.2.0</version>
+            <version>2.2.1</version>
             <depends>
                 <Mage_Payment/>
             </depends>

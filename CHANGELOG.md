@@ -1,3 +1,14 @@
+## 2.2.1
+ * Fix customerIp and translate
+ * Catch consumeNotification exception
+ * Add email notification
+
+## 2.2.0
+ * Update SDK
+ * Add Outh
+ * Refactor
+ * Cleanup unused code
+
 ## 2.1.10
  * Replace http to https for static resources
 
