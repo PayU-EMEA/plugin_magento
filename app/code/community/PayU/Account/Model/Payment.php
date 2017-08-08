@@ -83,7 +83,7 @@ class PayU_Account_Model_Payment extends Mage_Payment_Model_Method_Abstract
             OpenPayU_Configuration::setOauthClientId($this->getConfig()->getClientId());
             OpenPayU_Configuration::setOauthClientSecret($this->getConfig()->getClientSecret());
         }
-
+        OpenPayU_Configuration::setOauthTokenCache(new OauthCacheFile(Mage::getBaseDir('cache')));
         OpenPayU_Configuration::setSender('Magento ver ' . Mage::getVersion() . '/Plugin ver ' . $this->getConfig()->getPluginVersion());
     }
 
