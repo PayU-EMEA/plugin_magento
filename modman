@@ -9,3 +9,4 @@ app/design/frontend/base/default/template/payu_account/*    app/design/frontend/
 
 skin/frontend/base/default/css/payu                    skin/frontend/base/default/css/payu
 skin/frontend/base/default/images/payu                 skin/frontend/base/default/images/payu
+skin/adminhtml/default/default/images/payu             skin/adminhtml/default/default/images/payu

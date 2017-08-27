@@ -6,11 +6,12 @@
                 <payu_account translate="label comment" module="paygate">
                     <label>PayU</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>670</sort_order>
+                    <sort_order>680</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <comment>Important: This plugin works only with REST (Checkout) points of sales (POS).</comment>
+                    <frontend_model>payu/adminhtml_block_system_config_form_fieldset</frontend_model>
                     <fields>
                         <header1 translate="label">
                             <label>Main parameters</label>
@@ -30,7 +31,7 @@
                             <show_in_store>1</show_in_store>
                         </active>
                         <header2 translate="label">
-                            <label>POS Parameters</label>
+                            <label>POS parameters</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
@@ -39,7 +40,6 @@
                         </header2>
                         <pos_id translate="label">
                             <label>POS ID (pos_id)</label>
-                            <comment>Point of Sale identifier</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
@@ -48,7 +48,6 @@
                         </pos_id>
                         <signature_key translate="label">
                             <label>Second key (MD5)</label>
-                            <comment>Symmetrical key for encrypting communication</comment>
                             <frontend_type>text</frontend_type>
                             <sort_order>90</sort_order>
                             <show_in_default>1</show_in_default>
@@ -80,9 +79,9 @@
                             <show_in_store>0</show_in_store>
                         </header5>
                         <payuupdate translate="label">
-                            <label></label>
+                            <label>You are currently using version</label>
                             <frontend_type>multiline</frontend_type>
-                            <frontend_model>payu_account/updateInfo</frontend_model>
+                            <frontend_model>payu/updateInfo</frontend_model>
                             <sort_order>240</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
@@ -90,6 +89,92 @@
                         </payuupdate>
                     </fields>
                 </payu_account>
+                <payu_card translate="label comment" module="paygate">
+                    <label>PayU - Cards</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>681</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment>Important: This plugin works only with REST (Checkout) points of sales (POS).</comment>
+                    <frontend_model>payu/adminhtml_block_system_config_form_fieldset</frontend_model>
+                    <fields>
+                        <header1 translate="label">
+                            <label>Main parameters</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header1>
+                        <active translate="label">
+                            <label>Enable plugin?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <header2 translate="label">
+                            <label>POS parameters</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header2>
+                        <pos_id translate="label">
+                            <label>POS ID (pos_id)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </pos_id>
+                        <signature_key translate="label">
+                            <label>Second key (MD5)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </signature_key>
+                        <oauth_client_id translate="label">
+                            <label>OAuth protocol - client_id</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oauth_client_id>
+                        <oauth_client_secret translate="label">
+                            <label>OAuth protocol - client_secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oauth_client_secret>
+                        <header5 translate="label">
+                            <label>PayU Plugin Information</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </header5>
+                        <payuupdate translate="label">
+                            <label>You are currently using version</label>
+                            <frontend_type>multiline</frontend_type>
+                            <frontend_model>payu/updateInfo</frontend_model>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </payuupdate>
+                    </fields>
+                </payu_card>
             </groups>
         </payment>
     </sections>

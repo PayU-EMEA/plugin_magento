@@ -1,11 +1,11 @@
 <?php
 
 /**
- * PayU Standard Payment Controller
+ * PayU Payment Controller
  *
- * @copyright Copyright (c) 2011-2016 PayU
- * @license http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
+ * @copyright Copyright (c) PayU
  */
+
 class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
 {
     /**
@@ -19,13 +19,12 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
     }
 
     /**
-     * @return PayU_Account_Model_Payment
+     * Get Payu Model
      */
-    public function getPayment()
+    public function getPayuModel($method)
     {
-        return Mage::getModel('payu_account/payment');
+        return Mage::getModel('payu/method_' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $method)))));
     }
-
 
     /**
      * Initializes new One Page payment
@@ -42,7 +41,7 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
                 Mage::throwException($this->__('No order for processing found'));
             }
 
-            $redirectData = $this->getPayment()->orderCreateRequest($order);
+            $redirectData = $this->getPayuModel($order->getPayment()->getMethod())->orderCreateRequest($order);
 
             $this->_redirectUrl($redirectData['redirectUri']);
 
@@ -54,7 +53,7 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
 
         }
 
-        $this->_errorAction();
+        $this->_redirectAction('failure');
     }
 
     /**
@@ -63,7 +62,7 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
     public function orderNotifyRequestAction()
     {
         try {
-            $this->getPayment()->orderNotifyRequest();
+            $this->getPayuModel($this->getRequest()->getParam('method'))->orderNotifyRequest();
         } catch (Exception $e) {
             Mage::logException($e);
         }
@@ -80,18 +79,16 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
             Mage::logException($e);
         }
 
-        if (isset($_GET['error'])) {
-            $this->_redirect('checkout/onepage/failure', array('_secure' => true));
-        } else {
-            $this->_redirect('checkout/onepage/success', array('_secure' => true));
-        }
+        $this->_redirectAction($this->getRequest()->getParam('error') ? 'failure' : 'success');
+
     }
 
     /**
-     * Error payment action
+     * @param string $action
      */
-    public function _errorAction()
+    private function _redirectAction($action)
     {
-        $this->_redirect('checkout/onepage/failure', array('_secure' => true));
+        echo $action;
+        $this->_redirect('checkout/onepage/' . $action, array('_secure' => true));
     }
 }

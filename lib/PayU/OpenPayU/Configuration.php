@@ -3,14 +3,14 @@
 /**
  * OpenPayU Standard Library
  *
- * @copyright  Copyright (c) 2011-2016 PayU
+ * @copyright  Copyright (c) 2011-2017 PayU
  * @license    http://opensource.org/licenses/LGPL-3.0  Open Software License (LGPL 3.0)
  * http://www.payu.com
  * http://developers.payu.com
  */
 class OpenPayU_Configuration
 {
-    private static $_availableEnvironment = array('custom', 'secure');
+    private static $_availableEnvironment = array('custom', 'secure', 'sandbox');
     private static $_availableHashAlgorithm = array('SHA', 'SHA-256', 'SHA-384', 'SHA-512');
 
     private static $env = 'secure';
@@ -26,6 +26,10 @@ class OpenPayU_Configuration
     private static $signatureKey = '';
 
     /**
+     * OAuth protocol - default type
+     */
+    private static $oauthGrantType = OauthGrantType::CLIENT_CREDENTIAL;
+    /**
      * OAuth protocol - client_id
      */
     private static $oauthClientId = '';
@@ -34,6 +38,16 @@ class OpenPayU_Configuration
      * OAuth protocol - client_secret
      */
     private static $oauthClientSecret = '';
+
+    /**
+     * OAuth protocol - email
+     */
+    private static $oauthEmail = '';
+
+    /**
+     * OAuth protocol - extCustomerId
+     */
+    private static $oauthExtCustomerId;
 
     /**
      * OAuth protocol - endpoint address
@@ -45,6 +59,26 @@ class OpenPayU_Configuration
      */
     private static $oauthTokenCache = null;
 
+    /**
+     * Proxy - host
+     */
+    private static $proxyHost = null;
+
+    /**
+     * Proxy - port
+     */
+    private static $proxyPort = null;
+
+    /**
+     * Proxy - user
+     */
+    private static $proxyUser = null;
+
+    /**
+     * Proxy - password
+     */
+    private static $proxyPassword = null;
+
     private static $serviceUrl = '';
     private static $hashAlgorithm = 'SHA-256';
 
@@ -52,7 +86,7 @@ class OpenPayU_Configuration
 
     const API_VERSION = '2.1';
     const COMPOSER_JSON = "/composer.json";
-    const DEFAULT_SDK_VERSION = 'PHP SDK 2.2.2';
+    const DEFAULT_SDK_VERSION = 'PHP SDK 2.2.4';
     const OAUTH_CONTEXT = 'pl/standard/user/oauth/authorize';
 
     /**
@@ -100,12 +134,15 @@ class OpenPayU_Configuration
             throw new OpenPayU_Exception_Configuration($environment . ' - is not valid environment');
         }
 
+        self::$env = $environment;
+
         if ($environment == 'secure') {
-            self::$env = $environment;
             self::$serviceUrl = 'https://' . $environment . '.' . $domain . $api . $version;
             self::$oauthEndpoint = 'https://' . $environment . '.' . $domain . self::OAUTH_CONTEXT;
+        } else if ($environment == 'sandbox') {
+            self::$serviceUrl = 'https://secure.snd.' . $domain . $api . $version;
+            self::$oauthEndpoint = 'https://secure.snd.' . $domain . self::OAUTH_CONTEXT;
         } else if ($environment == 'custom') {
-            self::$env = $environment;
             self::$serviceUrl = $domain . $api . $version;
             self::$oauthEndpoint = $domain . self::OAUTH_CONTEXT;
         }
@@ -170,6 +207,27 @@ class OpenPayU_Configuration
     /**
      * @return string
      */
+    public static function getOauthGrantType()
+    {
+        return self::$oauthGrantType;
+    }
+
+    /**
+     * @param string $oauthGrantType
+     * @throws OpenPayU_Exception_Configuration
+     */
+    public static function setOauthGrantType($oauthGrantType)
+    {
+        if ($oauthGrantType !== OauthGrantType::CLIENT_CREDENTIAL && $oauthGrantType !== OauthGrantType::TRUSTED_MERCHANT) {
+            throw new OpenPayU_Exception_Configuration('Oauth grand type "' . $oauthGrantType . '"" is not available');
+        }
+
+        self::$oauthGrantType = $oauthGrantType;
+    }
+
+    /**
+     * @return string
+     */
     public static function getOauthClientId()
     {
         return self::$oauthClientId;
@@ -188,7 +246,7 @@ class OpenPayU_Configuration
      */
     public static function setOauthClientId($oauthClientId)
     {
-        self::$oauthClientId = $oauthClientId;
+        self::$oauthClientId = trim($oauthClientId);
     }
 
     /**
@@ -196,7 +254,39 @@ class OpenPayU_Configuration
      */
     public static function setOauthClientSecret($oauthClientSecret)
     {
-        self::$oauthClientSecret = $oauthClientSecret;
+        self::$oauthClientSecret = trim($oauthClientSecret);
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getOauthEmail()
+    {
+        return self::$oauthEmail;
+    }
+
+    /**
+     * @param mixed $oauthEmail
+     */
+    public static function setOauthEmail($oauthEmail)
+    {
+        self::$oauthEmail = $oauthEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getOauthExtCustomerId()
+    {
+        return self::$oauthExtCustomerId;
+    }
+
+    /**
+     * @param mixed $oauthExtCustomerId
+     */
+    public static function setOauthExtCustomerId($oauthExtCustomerId)
+    {
+        self::$oauthExtCustomerId = $oauthExtCustomerId;
     }
 
     /**
@@ -217,6 +307,70 @@ class OpenPayU_Configuration
             throw new OpenPayU_Exception_Configuration('Oauth token cache class is not instance of OauthCacheInterface');
         }
         self::$oauthTokenCache = $oauthTokenCache;
+    }
+
+    /**
+     * @return string | null
+     */
+    public static function getProxyHost()
+    {
+        return self::$proxyHost;
+    }
+
+    /**
+     * @param string | null $proxyHost
+     */
+    public static function setProxyHost($proxyHost)
+    {
+        self::$proxyHost = $proxyHost;
+    }
+
+    /**
+     * @return int | null
+     */
+    public static function getProxyPort()
+    {
+        return self::$proxyPort;
+    }
+
+    /**
+     * @param int | null $proxyPort
+     */
+    public static function setProxyPort($proxyPort)
+    {
+        self::$proxyPort = $proxyPort;
+    }
+
+    /**
+     * @return string | null
+     */
+    public static function getProxyUser()
+    {
+        return self::$proxyUser;
+    }
+
+    /**
+     * @param string | null $proxyUser
+     */
+    public static function setProxyUser($proxyUser)
+    {
+        self::$proxyUser = $proxyUser;
+    }
+
+    /**
+     * @return string | null
+     */
+    public static function getProxyPassword()
+    {
+        return self::$proxyPassword;
+    }
+
+    /**
+     * @param string | null $proxyPassword
+     */
+    public static function setProxyPassword($proxyPassword)
+    {
+        self::$proxyPassword = $proxyPassword;
     }
 
     /**

@@ -4,9 +4,6 @@
         <PayU_Account>
             <active>true</active>
             <codePool>community</codePool>
-            <depends>
-                <Mage_Payment/>
-            </depends>
         </PayU_Account>
     </modules>
 </config>

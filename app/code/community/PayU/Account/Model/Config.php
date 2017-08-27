@@ -11,7 +11,7 @@ class PayU_Account_Model_Config
     /**
      * @var string self version
      */
-    protected $_pluginVersion = '2.2.1';
+    protected $_pluginVersion = '2.3.0';
 
     /**
      * @var string minimum Magento e-commerce version
@@ -24,6 +24,11 @@ class PayU_Account_Model_Config
     protected $_storeId;
 
     /**
+     * @var string
+     */
+    private $_method;
+
+    /**
      * Constructor
      *
      * @param $params
@@ -32,6 +37,8 @@ class PayU_Account_Model_Config
     {
         // assign current store id
         $this->setStoreId(Mage::app()->getStore()->getId());
+
+        $this->_method = $params['method'];
     }
 
     /**
@@ -47,7 +54,7 @@ class PayU_Account_Model_Config
     /** @return string get Merchant POS Id */
     public function getMerchantPosId()
     {
-        return $this->getStoreConfig('payment/payu_account/pos_id');
+        return $this->getStoreConfig('payment/' . $this->_method . '/pos_id');
     }
 
     /**
@@ -55,7 +62,7 @@ class PayU_Account_Model_Config
      */
     public function getSignatureKey()
     {
-        return $this->getStoreConfig('payment/payu_account/signature_key');
+        return $this->getStoreConfig('payment/' . $this->_method . '/signature_key');
     }
 
     /**
@@ -63,7 +70,7 @@ class PayU_Account_Model_Config
      */
     public function getClientId()
     {
-        return $this->getStoreConfig('payment/payu_account/oauth_client_id');
+        return $this->getStoreConfig('payment/' . $this->_method . '/oauth_client_id');
     }
 
     /**
@@ -71,7 +78,7 @@ class PayU_Account_Model_Config
      */
     public function getClientSecret()
     {
-        return $this->getStoreConfig('payment/payu_account/oauth_client_secret');
+        return $this->getStoreConfig('payment/' . $this->_method . '/oauth_client_secret');
     }
 
     /**
@@ -83,19 +90,15 @@ class PayU_Account_Model_Config
     }
 
     /**
+     * @param string $action
+     * @param array $params
+     *
      * @return string base module url
      */
-    public function getUrl($action)
+    public function getUrl($action, $params = array())
     {
-        return Mage::getUrl("payu_account/payment/$action", array('_secure' => true));
-    }
-
-    /**
-     * @return string check if is one step checkout method enabled
-     */
-    public function getIsOneStepCheckoutEnabled()
-    {
-        return $this->getStoreConfig('payment/payu_account/onestepcheckoutenabled');
+        $params['_secure'] = true;
+        return Mage::getUrl("payu/payment/$action", $params);
     }
 
     /**
