@@ -10,9 +10,8 @@
 1. [Features](#features)
 1. [Prerequisites](#prerequisites)
 1. [Installation](#installation)
-    * [Installing Manually](#installing-manually)
-    * [Installing with Magento Connect](#installing-with-magento-connect)
 1. [Configuration](#configuration)
+    * [Parameters](#parameters)
 
 ## Features
 The PayU payments Magento plugin adds the PayU payment option and enables you to process the following operations in your e-shop:
@@ -21,6 +20,7 @@ The PayU payments Magento plugin adds the PayU payment option and enables you to
   * Conducting a refund operation (for a whole or partial order)
 
 Moduł dodaje dwie metody płatności:
+  
 ![methods][img0]
   * **Zapłać przez PayU** - przekierowanie na stronę wyboru metod płatności w PayU
   * **Zapłać kartą** - bezpośrednie przekierowanie na formularz płatności kartą
@@ -67,12 +67,12 @@ W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `
 Independently of the installation method, the configuration looks the same:
 
 1. Go to the Magento administration page [http://shop-url/admin].
-2. Go to **System** > **Configuration** window.
+2. Go to **System** > **Configuration**.
 3. From the **Configuration** menu on the left, in the **Sales** section, select **Payment Methods**.
-4. In the list of available methods, click PayU to expand the configuration form, and specify the [configuration parameters](#configuration).
-5. Click ![save_config][img2] in the top right corner of the page.
+4. In the list of available methods, click **PayU** or **PayU - cards** to expand the configuration form.
+5. Click `Save config`.
 
-### Configuration Parameters
+### Parameters
 
 #### Main parameters
 
@@ -94,7 +94,7 @@ Independently of the installation method, the configuration looks the same:
 <!--topic urls:-->
 
 <!--external links:-->
-[ext0]: README.EN.md
+[ext0]: README.md
 [ext1]: https://github.com/PayU/plugin_magento_160
 [ext2]: http://php.net/manual/en/book.curl.php
 [ext3]: http://php.net/manual/en/book.hash.php

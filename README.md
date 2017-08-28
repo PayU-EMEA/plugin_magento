@@ -22,13 +22,14 @@ Możliwe są następujące operacje:
   * Utworzenie zwrotu online (pełnego lub częściowego)
 
 Moduł dodaje dwie metody płatności:
+  
 ![methods][img0]
   * **Zapłać przez PayU** - przekierowanie na stronę wyboru metod płatności w PayU
   * **Zapłać kartą** - bezpośrednie przekierowanie na formularz płatności kartą
 
 ## Wymagania
 
-**Ważne:** Moduł ta działa tylko z punktem płatności typu `REST API` (Checkout).
+**Ważne:** Moduł ten działa tylko z punktem płatności typu `REST API` (Checkout).
 
 Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia PHP: [cURL][ext1] i [hash][ext2].
 
@@ -66,7 +67,7 @@ W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `
 1. Przejdź do  **System** > **Configuration**.
 3. Na stronie **Configuration** w menu po lewej stronie w sekcji **Sales** wybierz **Payment Methods**.
 4. Na liście dostępnych metod płatności należy wybrać **PayU** lub **PayU - karty** w celu konfiguracji parametrów wtyczki.
-5. Naciśnij przycisk `Save config`
+5. Naciśnij przycisk `Save config`.
 
 ### Parametry
 
