@@ -5,8 +5,6 @@ abstract class PayU_Account_Block_Form_Abstract extends Mage_Payment_Block_Form 
 
     protected function _construct()
     {
-        $this->setTemplate('payu_account/form.phtml');
-
         parent::_construct();
     }
 
