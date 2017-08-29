@@ -76,6 +76,7 @@ W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `
 | Parameter | Opis |
 |---------|-----------|
 | Czy włączyć wtyczkę? | Określa czy metoda płatności będzie dostępna w sklepie na liście płatności. |
+| Tryb testowy (Sandbox) | Określa czy płatności będą realizowane na środowisku testowym (sandbox) PayU. |
 
 #### Parametry punktu płatności (POS)
 
@@ -86,6 +87,17 @@ W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `
 | OAuth - client_id | client_id dla protokołu OAuth z systemu PayU |
 | OAuth - client_secret | client_secret for OAuth z systemu PayU |
 
+#### Parametry punktu płatności (POS) - Tryb testowy (Sandbox)
+Dostępne gdy parametr `Tryb testowy (Sandbox)` jest ustawiony na `Tak`.
+
+| Parameter | Opis |
+|---------|-----------|
+| Id punktu płatności| Identyfikator POS-a z systemu PayU |
+| Drugi klucz MD5 | Drugi klucz MD5 z systemu PayU |
+| OAuth - client_id | client_id dla protokołu OAuth z systemu PayU |
+| OAuth - client_secret | client_secret for OAuth z systemu PayU |
+
+
 <!--LINKS-->
 
 <!--topic urls:-->
@@ -95,7 +107,6 @@ W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `
 [ext1]: http://php.net/manual/en/book.curl.php
 [ext2]: http://php.net/manual/en/book.hash.php
 [ext3]: https://github.com/PayU/plugin_magento_160
-[ext4]: https://www.magentocommerce.com/magento-connect/payu-cee-payment-extension.html
 
 <!--images:-->
 [img0]: readme_images/methods.png

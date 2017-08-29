@@ -54,39 +54,39 @@ class PayU_Account_Model_Config
     /** @return string get Merchant POS Id */
     public function getMerchantPosId()
     {
-        return $this->getStoreConfig('payment/' . $this->_method . '/pos_id');
+        return $this->getStoreConfig('pos_id');
     }
 
     /**
-     * @return string get signature key
+     * @return string get Signature Key
      */
     public function getSignatureKey()
     {
-        return $this->getStoreConfig('payment/' . $this->_method . '/signature_key');
+        return $this->getStoreConfig('signature_key');
     }
 
     /**
-     * @return string get (OAuth Client Name)
+     * @return string get OAuth Client Id
      */
     public function getClientId()
     {
-        return $this->getStoreConfig('payment/' . $this->_method . '/oauth_client_id');
+        return $this->getStoreConfig('oauth_client_id');
     }
 
     /**
-     * @return string get (OAuth Client Secret)
+     * @return string get OAuth Client Secret
      */
     public function getClientSecret()
     {
-        return $this->getStoreConfig('payment/' . $this->_method . '/oauth_client_secret');
+        return $this->getStoreConfig('oauth_client_secret');
     }
 
     /**
-     * @return string one step checkout button url
+     * @return string get Sandbox
      */
-    public function getButtonSrc()
+    public function isSandbox()
     {
-        return 'https://static.payu.com/pl/standard/partners/buttons/payu_account_button_01.png';
+        return (bool)Mage::getStoreConfig('payment/' . $this->_method . '/sandbox', $this->_storeId);
     }
 
     /**
@@ -98,7 +98,7 @@ class PayU_Account_Model_Config
     public function getUrl($action, $params = array())
     {
         $params['_secure'] = true;
-        return Mage::getUrl("payu/payment/$action", $params);
+        return Mage::getUrl('payu/payment/' . $action, $params);
     }
 
     /**
@@ -124,7 +124,6 @@ class PayU_Account_Model_Config
      */
     protected function getStoreConfig($name)
     {
-        return Mage::getStoreConfig($name, $this->_storeId);
+        return Mage::getStoreConfig('payment/' . $this->_method . '/' . ($this->isSandbox() ? 'sandbox_' : '') . $name, $this->_storeId);
     }
-
 }

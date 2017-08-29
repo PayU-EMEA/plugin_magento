@@ -62,12 +62,14 @@
         <payment>
             <payu_account>
                 <active>0</active>
+                <sandbox>0</sandbox>
                 <title>PayU</title>
                 <model>payu/method_payuAccount</model>
                 <group>payu</group>
             </payu_account>
             <payu_card>
                 <active>0</active>
+                <sandbox>0</sandbox>
                 <title>PayU - Cards</title>
                 <model>payu/method_payuCard</model>
                 <group>payu</group>

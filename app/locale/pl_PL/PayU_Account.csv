@@ -27,3 +27,5 @@
 "Refund for order: %s","Zwrot do zamówienia %s"
 "Payu refund - amount: %s, status: %s","Zwrot Payu - kwota: %s, status: %s"
 "You will be redirected to PayU after submitting the order.","Zostaniesz przekierowany do PayU po złożeniu zamówienia"
+"Sandbox mode","Tryb testowy (Sandbox)"
+"POS parameters - Sandbox mode","Parametry punktu płatności (POS) - Tryb testowy (Sandbox)"

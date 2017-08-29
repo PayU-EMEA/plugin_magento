@@ -546,7 +546,7 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
      */
     protected function _initializeOpenPayUConfiguration()
     {
-        OpenPayU_Configuration::setEnvironment('secure');
+        OpenPayU_Configuration::setEnvironment($this->_payuConfig->isSandbox() ? 'sandbox' : 'secure');
         OpenPayU_Configuration::setMerchantPosId($this->_payuConfig->getMerchantPosId());
         OpenPayU_Configuration::setSignatureKey($this->_payuConfig->getSignatureKey());
         if ($this->_payuConfig->getClientId() && $this->_payuConfig->getClientSecret()) {

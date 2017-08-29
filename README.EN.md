@@ -79,6 +79,7 @@ Independently of the installation method, the configuration looks the same:
 | Parameter | Description |
 |---------|-----------|
 | Enable plugin? | Defines the availability of the payment method on the payment method list during checkout. |
+| Sandbox mode | Defines if payments will be created in PayU sandbox instead of production (live) environment. |
 
 #### POS parameters
 
@@ -88,6 +89,17 @@ Independently of the installation method, the configuration looks the same:
 |Second Key|MD5 key for securing communication|
 |OAuth - client_id|client_id for OAuth|
 |OAuth - client_secret|client_secret for OAuth|
+
+#### POS parameters - Sandbox mode
+Available when parameter `Sandbox mode` is set to `Yes`.
+
+| Parameter | Description |
+|---------|-----------|
+|POS ID|Unique ID of the POS|
+|Second Key|MD5 key for securing communication|
+|OAuth - client_id|client_id for OAuth|
+|OAuth - client_secret|client_secret for OAuth|
+
 
 <!--LINKS-->
 
