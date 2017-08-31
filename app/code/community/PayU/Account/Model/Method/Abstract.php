@@ -538,7 +538,7 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
     {
         $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
         $langCode = explode('_', $locale, 2);
-        return strtolower($langCode[1]);
+        return strtolower($langCode[0]);
     }
 
     /**
