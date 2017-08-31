@@ -2,28 +2,30 @@
 <config>
     <modules>
         <PayU_Account>
-            <version>2.2.1</version>
-            <depends>
-                <Mage_Payment/>
-            </depends>
+            <version>2.3.0</version>
         </PayU_Account>
     </modules>
     <global>
         <models>
-            <payu_account>
+            <payu>
                 <class>PayU_Account_Model</class>
-            </payu_account>
+            </payu>
         </models>
         <helpers>
-            <payu_account>
+            <payu>
                 <class>PayU_Account_Helper</class>
-            </payu_account>
+            </payu>
         </helpers>
         <blocks>
-            <payu_account>
+            <payu>
                 <class>PayU_Account_Block</class>
-            </payu_account>
+            </payu>
         </blocks>
+        <payment>
+            <groups>
+                <payu>PayU</payu>
+            </groups>
+        </payment>
     </global>
     <adminhtml>
         <translate>
@@ -38,21 +40,21 @@
     </adminhtml>
     <frontend>
         <routers>
-            <payu_account>
+            <payu>
                 <use>standard</use>
                 <args>
                     <module>PayU_Account</module>
-                    <frontName>payu_account</frontName>
+                    <frontName>payu</frontName>
                 </args>
-            </payu_account>
+            </payu>
         </routers>
         <translate>
             <modules>
-                <PayU_Account>
+                <payu>
                     <files>
                         <default>PayU_Account.csv</default>
                     </files>
-                </PayU_Account>
+                </payu>
             </modules>
         </translate>
     </frontend>
@@ -60,9 +62,18 @@
         <payment>
             <payu_account>
                 <active>0</active>
+                <sandbox>0</sandbox>
                 <title>PayU</title>
-                <model>payu_account/payment</model>
+                <model>payu/method_payuAccount</model>
+                <group>payu</group>
             </payu_account>
+            <payu_card>
+                <active>0</active>
+                <sandbox>0</sandbox>
+                <title>PayU - Cards</title>
+                <model>payu/method_payuCard</model>
+                <group>payu</group>
+            </payu_card>
         </payment>
     </default>
 </config>

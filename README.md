@@ -1,116 +1,112 @@
-# PayU account plugin for Magento 1.6.0+
--------
-``This plugin is released under the GPL license.``
+[**English version**][ext0]
 
-**If you have any questions or issues, feel free to contact our technical support: tech@payu.pl.**
+# Moduł PayU dla Magento 1.6.0+
+``Moduł jest wydawany na licencji GPL.``
 
-## Table of Contents
+**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym wsparciem pod adresem: tech@payu.pl.**
 
-1. [Features](#features)
-1. [Prerequisites](#prerequisites)
-1. [Installation](#installation)
-    * [Installing Manually](#installing-manually)
-    * [Installing with Magento Connect](#installing-with-magento-connect)
-1. [Configuration](#configuration)
+## Spis treści
 
-##Features
-The PayU payments Magento plugin adds the PayU payment option and enables you to process the following operations in your e-shop:
+1. [Cechy](#cechy)
+1. [Wymagania](#wymagania)
+1. [Instalacja](#instalacja)
+1. [Konfiguracja](#konfiguracja)
+    * [Parametry](#parametry)
 
-* Creating a payment order (with discounts included)
-* Receive or canceling a payment order (when auto-receive is disable)
-* Conducting a refund operation (for a whole or partial order)
+## Cechy
+Moduł płatności PayU dodaje do Magento opcję płatności PayU.
 
-##Prerequisites
+Możliwe są następujące operacje:
+  * Utworzenie płatności (wraz z rabatami)
+  * Odebranie lub odrzucenie płatności (w przypadku wyłączonego autoodbioru)
+  * Utworzenie zwrotu online (pełnego lub częściowego)
 
-**Important:** This plugin works only with REST API (checkout) points of sales (POS).
-
-The following PHP extensions are required:
-
-* [cURL][ext2] to connect and communicate to many different types of servers with many different types of protocols.
-* [hash][ext3] to process directly or incrementally the arbitrary length messages by using a variety of hashing algorithms.
-
-##Installation
-
-There are two ways in which you can install the plugin:
-
-* [manual installation](#installing-manually) by copying and pasting folders from the repository
-* [Magento Connect installation](#installing-with-magento-connect) from the administration page
-
-See the sections below to find out about steps for each of the procedures.
-
-###Installing Manually
-
-To install the plugin manually, simply copy folders and refresh the list of plugins:
-
-1. Copy the folders from [the plugin repository][ext1] to your Magento root folder on the server.
-1. In order to update the list of available plugins, clean the cache:
-  * Go to the Magento administration page [http://your-magento-url/admin].
-  * Go to **System** > **Cache Management**.
-  * Select all cache types and click  the **Flush Magento Cache** button.<br /> 
-  **Note:** If the list of plugins doesn't refresh, flush other cache as well.
-
-  **Results**<br />  ![cache_flush_cusscess][img3]<br />
-3. If you have enabled compilation **System** > **Tools** > **Compilation** you have to click **Run Compilation Process**. 
-
-###Installing with Magento Connect 
-
-The Mangento Connect tool allows you to install the plugin from the administration page. 
-
-**Before you start**<br />
-It is recommended to always backup your installation prior to use.
-
-1. Go to Magento administration page [http://your-magento-url/admin].
-2. Go to **System** > **Magento Connect** > **Magento Connect Manager**.
-3. In the Install New Extensions section, click Search for modules via Magento Connect.<br /> 
-*Option:* Paste the extension key to install.
-4. Use the search box to find PayU.
-5. Click the **PayU** icon and install the plugin by clicking the **Install Now** button.<br />
-**Note:** If you are new to Magento Connect, when you click **Install Now** you are asked to register and log in to get the extension key.<br />
+Moduł dodaje dwie metody płatności:
   
-##Configuration
+![methods][img0]
+  * **Zapłać przez PayU** - przekierowanie na stronę wyboru metod płatności w PayU
+  * **Zapłać kartą** - bezpośrednie przekierowanie na formularz płatności kartą
 
-Independently of the installation method, the configuration looks the same:
+## Wymagania
 
-1. Go to the Magento administration page [http://your-magento-url/admin].
-2. Go to **System** > **Configuration** window. 
-3. From the **Configuration** menu on the left, in the **Sales** section, select **Payment Methods**.
-4. In the list of available methods, click PayU to expand the configuration form, and specify the [configuration parameters](#configuration).
-5. Click ![save_config][img2] in the top right corner of the page.
+**Ważne:** Moduł ten działa tylko z punktem płatności typu `REST API` (Checkout).
 
-### Configuration Parameters
+Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia PHP: [cURL][ext1] i [hash][ext2].
 
-The tables below present the descriptions of the configuration form parameters.
+## Instalacja
 
-#### Main parameters
+### Opcja 1
+**Przeznaczona dla użytkowników z dostępem poprzez FTP do instalacji Magento**
 
-The main parameters for plugin configuration are as follows:
+1. Pobierz moduł z [repozytorium GitHub][ext3] jako plik zip
+1. Rozpakuj pobrany plik
+1. Połącz się z serwerem ftp i skopiuj katalogi `app`, `lib` oraz `skin` z rozpakowanego pliku do katalogu głównego swojego sklepu Magento
+1. W celu aktualizacji listy dostępnych wtyczek należy wyczyścić cache:
+    * Przejdź do strony administracyjnej swojego sklepu Magento [http://adres-sklepu/admin].
+    * Przejdź do **System** > **Cache Management**.
+    * Naciśnij przycisk **Flush Magento Cache**.
+1. Jeżeli używasz opcji kompilacji po przejściu do **System** > **Tools** > **Compilation** należy nacisnąć przycisk **Run Compilation Process**.
 
-| Parameter | Values | Description | 
-|:---------:|:------:|:-----------:|
-|Enabled|Yes/No|Specifies whether the module is enabled.|
+### Opcja 2
+**Z użyciem Magento Connect**
 
-#### POS parameters
+1. Przejdź do strony administracyjnej swojego sklepu Magento [http://adres-sklepu/admin].
+1. Przejdź do **System** > **Magento Connect** > **Magento Connect Manager**.
+1. W sekcji **Install New Extensions section** do pola `Paste the extension key to install` należy wkleić `http://connect20.magentocommerce.com/community/PayU_Account` i wcisnąć przycisk `Install`
+1. Po chwili pojawi się informacji o wtyczce. W celu instalacji należy nacisnąć przycisk `Proceed`
 
-To check the values of the parameters below, go to **Administration Panel** > **My shops** > **Your shop** > **POS** and click the name of a given POS.
+### Opcja 3
+**Z użyciem skryptu modman**
 
-| Parameter | Description | 
-|:---------:|:-----------:|
-|POS ID|Unique ID of the POS|
-|Second Key|MD5 key for securing communication|
-|OAuth - client_id|client_id for OAuth|
-|OAuth - client_secret|client_secret for OAuth|
+Moduł PayU zawiera konfigurację umożliwiającą instalację poprzez skrypt `modman`.
+W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `modman`.
+
+## Konfiguracja
+
+1. Przejdź do strony administracyjnej swojego sklepu Magento [http://adres-sklepu/admin].
+1. Przejdź do  **System** > **Configuration**.
+3. Na stronie **Configuration** w menu po lewej stronie w sekcji **Sales** wybierz **Payment Methods**.
+4. Na liście dostępnych metod płatności należy wybrać **PayU** lub **PayU - karty** w celu konfiguracji parametrów wtyczki.
+5. Naciśnij przycisk `Save config`.
+
+### Parametry
+
+#### Główne parametry
+
+| Parameter | Opis |
+|---------|-----------|
+| Czy włączyć wtyczkę? | Określa czy metoda płatności będzie dostępna w sklepie na liście płatności. |
+| Tryb testowy (Sandbox) | Określa czy płatności będą realizowane na środowisku testowym (sandbox) PayU. |
+
+#### Parametry punktu płatności (POS)
+
+| Parameter | Opis |
+|---------|-----------|
+| Id punktu płatności| Identyfikator POS-a z systemu PayU |
+| Drugi klucz MD5 | Drugi klucz MD5 z systemu PayU |
+| OAuth - client_id | client_id dla protokołu OAuth z systemu PayU |
+| OAuth - client_secret | client_secret for OAuth z systemu PayU |
+
+#### Parametry punktu płatności (POS) - Tryb testowy (Sandbox)
+Dostępne gdy parametr `Tryb testowy (Sandbox)` jest ustawiony na `Tak`.
+
+| Parameter | Opis |
+|---------|-----------|
+| Id punktu płatności| Identyfikator POS-a z systemu PayU |
+| Drugi klucz MD5 | Drugi klucz MD5 z systemu PayU |
+| OAuth - client_id | client_id dla protokołu OAuth z systemu PayU |
+| OAuth - client_secret | client_secret for OAuth z systemu PayU |
+
 
 <!--LINKS-->
 
 <!--topic urls:-->
 
 <!--external links:-->
-
-[ext1]: https://github.com/PayU/plugin_magento_160
-[ext2]: http://php.net/manual/en/book.curl.php
-[ext3]: http://php.net/manual/en/book.hash.php
+[ext0]: README.EN.md
+[ext1]: http://php.net/manual/en/book.curl.php
+[ext2]: http://php.net/manual/en/book.hash.php
+[ext3]: https://github.com/PayU/plugin_magento_160
 
 <!--images:-->
-
-[img2]: https://raw.github.com/PayU/plugin_magento_160/master/readme_images/save_config.png
-[img3]: https://raw.github.com/PayU/plugin_magento_160/master/readme_images/cache_flushed.png
+[img0]: readme_images/methods.png

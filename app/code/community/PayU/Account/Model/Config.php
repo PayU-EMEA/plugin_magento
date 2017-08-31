@@ -11,7 +11,7 @@ class PayU_Account_Model_Config
     /**
      * @var string self version
      */
-    protected $_pluginVersion = '2.2.1';
+    protected $_pluginVersion = '2.3.0';
 
     /**
      * @var string minimum Magento e-commerce version
@@ -24,6 +24,11 @@ class PayU_Account_Model_Config
     protected $_storeId;
 
     /**
+     * @var string
+     */
+    private $_method;
+
+    /**
      * Constructor
      *
      * @param $params
@@ -32,6 +37,8 @@ class PayU_Account_Model_Config
     {
         // assign current store id
         $this->setStoreId(Mage::app()->getStore()->getId());
+
+        $this->_method = $params['method'];
     }
 
     /**
@@ -47,55 +54,51 @@ class PayU_Account_Model_Config
     /** @return string get Merchant POS Id */
     public function getMerchantPosId()
     {
-        return $this->getStoreConfig('payment/payu_account/pos_id');
+        return $this->getStoreConfig('pos_id');
     }
 
     /**
-     * @return string get signature key
+     * @return string get Signature Key
      */
     public function getSignatureKey()
     {
-        return $this->getStoreConfig('payment/payu_account/signature_key');
+        return $this->getStoreConfig('signature_key');
     }
 
     /**
-     * @return string get (OAuth Client Name)
+     * @return string get OAuth Client Id
      */
     public function getClientId()
     {
-        return $this->getStoreConfig('payment/payu_account/oauth_client_id');
+        return $this->getStoreConfig('oauth_client_id');
     }
 
     /**
-     * @return string get (OAuth Client Secret)
+     * @return string get OAuth Client Secret
      */
     public function getClientSecret()
     {
-        return $this->getStoreConfig('payment/payu_account/oauth_client_secret');
+        return $this->getStoreConfig('oauth_client_secret');
     }
 
     /**
-     * @return string one step checkout button url
+     * @return string get Sandbox
      */
-    public function getButtonSrc()
+    public function isSandbox()
     {
-        return 'https://static.payu.com/pl/standard/partners/buttons/payu_account_button_01.png';
+        return (bool)Mage::getStoreConfig('payment/' . $this->_method . '/sandbox', $this->_storeId);
     }
 
     /**
+     * @param string $action
+     * @param array $params
+     *
      * @return string base module url
      */
-    public function getUrl($action)
+    public function getUrl($action, $params = array())
     {
-        return Mage::getUrl("payu_account/payment/$action", array('_secure' => true));
-    }
-
-    /**
-     * @return string check if is one step checkout method enabled
-     */
-    public function getIsOneStepCheckoutEnabled()
-    {
-        return $this->getStoreConfig('payment/payu_account/onestepcheckoutenabled');
+        $params['_secure'] = true;
+        return Mage::getUrl('payu/payment/' . $action, $params);
     }
 
     /**
@@ -121,7 +124,6 @@ class PayU_Account_Model_Config
      */
     protected function getStoreConfig($name)
     {
-        return Mage::getStoreConfig($name, $this->_storeId);
+        return Mage::getStoreConfig('payment/' . $this->_method . '/' . ($this->isSandbox() ? 'sandbox_' : '') . $name, $this->_storeId);
     }
-
 }
