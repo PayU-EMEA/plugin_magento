@@ -1,3 +1,6 @@
+## 2.3.1
+ * Fixed sandbox configuration for card
+
 ## 2.3.0
  * Separated card payment
  * Added sandbox
