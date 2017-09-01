@@ -11,7 +11,7 @@ class PayU_Account_Model_Config
     /**
      * @var string self version
      */
-    protected $_pluginVersion = '2.3.0';
+    protected $_pluginVersion = '2.3.1';
 
     /**
      * @var string minimum Magento e-commerce version

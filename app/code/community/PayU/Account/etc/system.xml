@@ -219,6 +219,51 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </oauth_client_secret>
+                        <sandbox_header2 translate="label">
+                            <label>POS parameters - Sandbox mode</label>
+                            <depends><sandbox>1</sandbox></depends>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_header2>
+                        <sandbox_pos_id translate="label">
+                            <label>POS ID (pos_id)</label>
+                            <depends><sandbox>1</sandbox></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_pos_id>
+                        <sandbox_signature_key translate="label">
+                            <label>Second key (MD5)</label>
+                            <depends><sandbox>1</sandbox></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_signature_key>
+                        <sandbox_oauth_client_id translate="label">
+                            <label>OAuth protocol - client_id</label>
+                            <depends><sandbox>1</sandbox></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_oauth_client_id>
+                        <sandbox_oauth_client_secret translate="label">
+                            <label>OAuth protocol - client_secret</label>
+                            <depends><sandbox>1</sandbox></depends>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_oauth_client_secret>
                         <header5 translate="label">
                             <label>PayU Plugin Information</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
