@@ -207,7 +207,11 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
         }
 
         try {
-
+            $requestObject = new Varien_Object($OCReq);
+            $eventArgs = array('request' => $requestObject);
+            Mage::dispatchEvent('payu_order_create_request', $eventArgs);
+            $OCReq = $requestObject->getData();
+            
             $result = OpenPayU_Order::create($OCReq);
 
             if ($result->getStatus() == OpenPayU_Order::SUCCESS) {
@@ -216,7 +220,16 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
                 Mage::getSingleton('core/session')->setPayUSessionId($this->_transactionId);
 
                 $payment = $order->getPayment();
+                
+                $eventArgs = array(
+                    'result' => $result,
+                    'order' => $order,
+                    'payment' => $payment,
+                );
+                Mage::dispatchEvent('payu_order_create_success', $eventArgs);
+
                 $payment->setAdditionalInformation('payu_payment_status', OpenPayuOrderStatus::STATUS_NEW)
+                    ->setAdditionalInformation('req_ext_order_id', $OCReq['extOrderId'])
                     ->save();
 
                 $this->_updatePaymentStatusNew($payment);
