@@ -5,6 +5,8 @@
 
 **Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym wsparciem pod adresem: tech@payu.pl.**
 
+* Jeżeli używasz Magneto w wersji 2.x proszę skorzystać z [pluginu dla wersji 2.x][ext6]
+
 ## Spis treści
 
 1. [Cechy](#cechy)
@@ -29,7 +31,7 @@ Moduł dodaje dwie metody płatności:
 
 ## Wymagania
 
-**Ważne:** Moduł ten działa tylko z punktem płatności typu `REST API` (Checkout).
+**Ważne:** Moduł ten działa tylko z punktem płatności typu `REST API` (Checkout), jeżeli nie posiadasz jeszcze konta w systemie PayU [**zarejestruj się w systemie produkcyjnym**][ext4] lub [**zarejestruj się w systemie sandbox**][ext5]
 
 Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia PHP: [cURL][ext1] i [hash][ext2].
 
@@ -107,6 +109,9 @@ Dostępne gdy parametr `Tryb testowy (Sandbox)` jest ustawiony na `Tak`.
 [ext1]: http://php.net/manual/en/book.curl.php
 [ext2]: http://php.net/manual/en/book.hash.php
 [ext3]: https://github.com/PayU/plugin_magento_160
+[ext4]: https://secure.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext6]: https://github.com/PayU/plugin_magento_2
 
 <!--images:-->
 [img0]: readme_images/methods.png

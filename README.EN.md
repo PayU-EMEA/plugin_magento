@@ -5,6 +5,8 @@
 
 **If you have any questions or issues, feel free to contact our technical support: tech@payu.pl.**
 
+* If you have Magneto in version 2.x please use [plugin for ver 2.x][ext6]
+
 ## Table of Contents
 
 1. [Features](#features)
@@ -27,7 +29,7 @@ The module adds two payment methods:
 
 # Prerequisites
 
-**Important:** This plugin works only with REST API (checkout) points of sales (POS).
+**Important:** This plugin works only with REST API (checkout) points of sales (POS). If you do not already have PayU merchant account, [**please register in Production**][ext4] or [**please register in Sandbox**][ext5]
 
 The following PHP extensions are required:
 
@@ -110,6 +112,9 @@ Available when parameter `Sandbox mode` is set to `Yes`.
 [ext1]: https://github.com/PayU/plugin_magento_160
 [ext2]: http://php.net/manual/en/book.curl.php
 [ext3]: http://php.net/manual/en/book.hash.php
+[ext4]: https://secure.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext6]: https://github.com/PayU/plugin_magento_2
 
 <!--images:-->
 [img0]: readme_images/methods_en.png
