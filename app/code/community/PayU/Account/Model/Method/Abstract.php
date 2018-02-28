@@ -178,21 +178,6 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
                     'language' => $this->_getLanguageCode()
                 );
 
-                if (!$order->getIsVirtual() && !empty($order->getShippingAddressId())) {
-                    $shippingAddress = $order->getShippingAddress();
-
-                    $customerSheet ['delivery'] = array(
-                        'street' => trim(implode(' ', $shippingAddress->getStreet())),
-                        'postalCode' => $shippingAddress->getPostcode(),
-                        'city' => $shippingAddress->getCity(),
-                        'countryCode' => $shippingAddress->getCountry(),
-                        'recipientName' => trim(
-                            $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname()
-                        ),
-                        'recipientPhone' => $shippingAddress->getTelephone(),
-                        'recipientEmail' => $shippingAddress->getEmail()
-                    );
-                }
                 $OCReq['buyer'] = $customerSheet;
             }
         }
