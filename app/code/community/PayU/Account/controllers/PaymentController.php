@@ -88,7 +88,6 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
      */
     private function _redirectAction($action)
     {
-        echo $action;
         $this->_redirect('checkout/onepage/' . $action, array('_secure' => true));
     }
 }
