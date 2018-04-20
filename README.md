@@ -47,7 +47,6 @@ Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia 
     * Przejdź do strony administracyjnej swojego sklepu Magento [http://adres-sklepu/admin].
     * Przejdź do **System** > **Cache Management**.
     * Naciśnij przycisk **Flush Magento Cache**.
-1. Jeżeli używasz opcji kompilacji po przejściu do **System** > **Tools** > **Compilation** należy nacisnąć przycisk **Run Compilation Process**.
 
 ### Opcja 2
 **Z użyciem Magento Connect**
@@ -62,6 +61,11 @@ Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia 
 
 Moduł PayU zawiera konfigurację umożliwiającą instalację poprzez skrypt `modman`.
 W celu instalcji z użyciem `modman` proszę skozystać z dokumentacji skryptu `modman`.
+
+#### UWAGA
+Jeżeli używasz opcji kompilacji po przejściu do **System** > **Tools** > **Compilation** należy nacisnąć przycisk **Run Compilation Process**.
+
+Dodatkowo jeżeli aktualizujesz moduł ze starszej wersji należy z katalogu `includes/src` usunąć katalog `OpenPayu` oraz wszystkie pliki zaczynające się na `OpenPayU`
 
 ## Konfiguracja
 

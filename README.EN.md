@@ -48,7 +48,6 @@ The following PHP extensions are required:
     * Go to admin page of your Magento installation [http://shop-url/admin].
     * Choose **System** > **Cache Management**.
     * Click **Flush Magento Cache** button.
-1. If you are using compilation option, choose **System** > **Tools** > **Compilation** and click **Run Compilation Process** button.
 
 ### Option 2
 **Using Magento Connect**
@@ -63,6 +62,11 @@ The following PHP extensions are required:
 
 PayU module includes configuration which makes it possible to install via `modman` script.
 Please refer to `modman` documentation for further details.
+
+#### WARNING
+If you are using compilation option, choose **System** > **Tools** > **Compilation** and click **Run Compilation Process** button.
+
+Additionally, if you update the module from an older version, you must delete from `includes/src` directory `OpenPayu` directory and all files that start with `OpenPayU`
 
 ## Configuration
 
