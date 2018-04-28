@@ -21,7 +21,7 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
     /**
      * Get Payu Model
      */
-    public function getPayuModel($method)
+    private function getPayuModel($method)
     {
         return Mage::getModel('payu/method_' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $method)))));
     }
@@ -50,7 +50,6 @@ class PayU_Account_PaymentController extends Mage_Core_Controller_Front_Action
         } catch (Exception $e) {
             Mage::logException($e);
             Mage::getSingleton('core/session')->addError($e->getMessage());
-
         }
 
         $this->_redirectAction('failure');

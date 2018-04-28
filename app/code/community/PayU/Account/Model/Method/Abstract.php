@@ -55,7 +55,7 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
     {
         parent::__construct();
         $this->_payuConfig = Mage::getSingleton('payu/config', array('method' => $this->_code));
-        $this->_initializeOpenPayUConfiguration();
+        $this->_payuConfig->initializeOpenPayUConfiguration();
     }
 
     /**
@@ -125,34 +125,56 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
      *
      * @param Mage_Sales_Model_Order
      * @return array
+     * @throws Mage_Core_Exception
+     * @throws Varien_Exception
+     * @throws Exception
      */
     public function orderCreateRequest(Mage_Sales_Model_Order $order)
     {
-        $this->setOrder($order);
-        $response = array();
-        $items = array();
-        $items[] = array(
-            'quantity' => 1,
-            'name' => $this->_helper()->__('Shipping') . ': ' . $order->getShippingDescription(),
-            'unitPrice' => $this->_toAmount($order->getShippingInclTax())
+
+        $orderData = $this->prepareOrderData($order);
+        $response = null;
+
+        $result = (new PayU_Account_Model_CreateOrder($this->_payuConfig))->execute($orderData);
+
+        $payuOrderId = $result->orderId;
+
+        Mage::getSingleton('core/session')->setPayUSessionId($payuOrderId);
+
+        $payment = $order->getPayment();
+        $payment->setAdditionalInformation('payu_payment_status', OpenPayuOrderStatus::STATUS_NEW)
+            ->save();
+
+        $this->_updatePaymentStatusNew($payment, $payuOrderId);
+
+        $response = array(
+            'redirectUri' => $result->redirectUri
         );
 
-        $orderItems = $order->getAllVisibleItems();
-
-        foreach ($orderItems as $key => $item) {
-            $itemInfo = $item->getData();
-
-            $items[] = array(
-                'quantity' => (int)$itemInfo['qty_ordered'],
-                'name' => $itemInfo['name'],
-                'unitPrice' => $this->_toAmount($itemInfo['price_incl_tax'])
-            );
+        try {
+            $order->sendNewOrderEmail()->save();
+        } catch (\Exception $e) {
+            Mage::log($e->getMessage());
         }
 
-        $OCReq = array(
-            'merchantPosId' => $this->_payuConfig->getMerchantPosId(),
+        return $response;
+    }
+
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @return array
+     */
+    private function prepareOrderData($order) {
+        $orderData = array(
             'description' => $this->_helper()->__('Order #%s', $order->getRealOrderId()),
-            'products' => $items,
+            'products' => array(
+                array(
+                    'quantity' => 1,
+                    'name' => $this->_helper()->__('Order #%s', $order->getRealOrderId()),
+                    'unitPrice' => $this->_toAmount($order->getGrandTotal())
+                )
+            ),
             'customerIp' => trim(strtok(Mage::app()->getFrontController()->getRequest()->getClientIp(), ',')),
             'notifyUrl' => $this->_payuConfig->getUrl('orderNotifyRequest', array('method' => $this->_code)),
             'continueUrl' => $this->_payuConfig->getUrl('continuePayment'),
@@ -164,67 +186,40 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
             )
         );
 
-        $billingAddressId = $order->getBillingAddressId();
-
-        if (!empty ($billingAddressId)) {
-            $billingAddress = $order->getBillingAddress();
-            $customerEmail = $billingAddress->getEmail();
-            if (!empty ($customerEmail)) {
-                $customerSheet = array(
-                    'email' => $billingAddress->getEmail(),
-                    'phone' => $billingAddress->getTelephone(),
-                    'firstName' => $billingAddress->getFirstname(),
-                    'lastName' => $billingAddress->getLastname(),
-                    'language' => $this->_getLanguageCode()
-                );
-
-                $OCReq['buyer'] = $customerSheet;
-            }
+        $billingAddress = $order->getBillingAddress();
+        if ($billingAddress) {
+            $orderData['buyer'] = array(
+                'email' => $billingAddress->getEmail(),
+                'phone' => $billingAddress->getTelephone(),
+                'firstName' => $billingAddress->getFirstname(),
+                'lastName' => $billingAddress->getLastname(),
+                'language' => $this->_getLanguageCode()
+            );
         }
 
         if ($this->_code === 'payu_card') {
-            $OCReq['payMethods'] = array(
+            $orderData['payMethods'] = array(
                 'payMethod' => array(
                     'type' => 'PBL',
                     'value' => 'c'
                 )
             );
-        }
+        } else {
 
-        try {
+            $payType = $order->getPayment()->getMethodInstance()->getInfoInstance()->getAdditionalInformation(PayU_Account_Model_Method_PayuAccount::PAY_TYPE);
 
-            $result = OpenPayU_Order::create($OCReq);
-
-            if ($result->getStatus() == OpenPayU_Order::SUCCESS) {
-                $this->_transactionId = $result->getResponse()->orderId;
-
-                Mage::getSingleton('core/session')->setPayUSessionId($this->_transactionId);
-
-                $payment = $order->getPayment();
-                $payment->setAdditionalInformation('payu_payment_status', OpenPayuOrderStatus::STATUS_NEW)
-                    ->save();
-
-                $this->_updatePaymentStatusNew($payment);
-
-                $response = array(
-                    'redirectUri' => $result->getResponse()->redirectUri
+            if ($payType) {
+                $orderData['payMethods'] = array(
+                    'payMethod' => array(
+                        'type' => 'PBL',
+                        'value' => $payType
+                    )
                 );
-
-            } else {
-                Mage::throwException($this->_helper()
-                    ->__('There was a problem with the payment initialization, please contact system administrator.'));
             }
-        } catch (Exception $e) {
-            Mage::throwException($this->_helper()
-                ->__('There was a problem with the payment initialization - "%s", please contact system administrator.', $e->getMessage()));
-
-            Mage::logException($e);
         }
 
-        $order->sendNewOrderEmail()->save();
-        return $response;
+        return $orderData;
     }
-
 
     /**
      * @param Mage_Payment_Model_Info $payment
@@ -372,12 +367,13 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
      * Update payment status to new
      *
      * @param Mage_Sales_Model_Order_Payment $payment
+     * @param string $orderId
      */
-    protected function _updatePaymentStatusNew(Mage_Sales_Model_Order_Payment $payment)
+    protected function _updatePaymentStatusNew(Mage_Sales_Model_Order_Payment $payment, $orderId)
     {
         $comment = $this->_helper()->__('New transaction started.');
 
-        $payment->setTransactionId($this->_transactionId)
+        $payment->setTransactionId($orderId)
             ->setPreparedMessage($comment)
             ->setCurrencyCode($payment->getOrder()->getBaseCurrencyCode())
             ->setIsTransactionApproved(false)
@@ -521,25 +517,13 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
      */
     protected function _getLanguageCode()
     {
-        $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
+        try {
+            $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
+        } catch (Mage_Core_Model_Store_Exception $exception) {
+            $locale = 'pl_PL';
+        }
         $langCode = explode('_', $locale, 2);
         return strtolower($langCode[0]);
-    }
-
-    /**
-     * Initialize PayU configuration
-     */
-    protected function _initializeOpenPayUConfiguration()
-    {
-        OpenPayU_Configuration::setEnvironment($this->_payuConfig->isSandbox() ? 'sandbox' : 'secure');
-        OpenPayU_Configuration::setMerchantPosId($this->_payuConfig->getMerchantPosId());
-        OpenPayU_Configuration::setSignatureKey($this->_payuConfig->getSignatureKey());
-        if ($this->_payuConfig->getClientId() && $this->_payuConfig->getClientSecret()) {
-            OpenPayU_Configuration::setOauthClientId($this->_payuConfig->getClientId());
-            OpenPayU_Configuration::setOauthClientSecret($this->_payuConfig->getClientSecret());
-        }
-        OpenPayU_Configuration::setOauthTokenCache(new OauthCacheFile(Mage::getBaseDir('cache')));
-        OpenPayU_Configuration::setSender('Magento ver ' . Mage::getVersion() . '/Plugin ver ' . $this->_payuConfig->getPluginVersion());
     }
 
 }

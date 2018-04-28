@@ -39,6 +39,23 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </sandbox>
+                        <paytypes translate="label">
+                            <label>Show paytypes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </paytypes>
+                        <paytypes_order translate="label">
+                            <label>Paytypes order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </paytypes_order>
                         <header2 translate="label">
                             <label>POS parameters</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>

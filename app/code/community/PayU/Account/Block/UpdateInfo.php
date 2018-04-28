@@ -14,7 +14,7 @@ class PayU_Account_Block_UpdateInfo extends Mage_Adminhtml_Block_System_Config_F
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        $html = '<b>' . Mage::getModel('payu/config')->getPluginVersion() . ' ' . Mage::helper('payu')->__('for') . ' magento ' . Mage::getModel('payu/config')->getMinimumMageVersion() . '+</b>';
+        $html = '<b>' . Mage::getModel('payu/config')->getPluginVersion() . '</b>';
 
         return $html;
     }

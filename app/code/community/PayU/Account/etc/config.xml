@@ -63,6 +63,7 @@
             <payu_account>
                 <active>0</active>
                 <sandbox>0</sandbox>
+                <paytypes>1</paytypes>
                 <title>PayU</title>
                 <model>payu/method_payuAccount</model>
                 <group>payu</group>

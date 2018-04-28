@@ -1,7 +1,38 @@
-<?php /** @var PayU_Account_Block_Form $this */ ?>
+<?php
+/** @var PayU_Account_Block_Form_PayuAccount $this */
+
+$paymethods = $this->getPayMethods();
+
+?>
+<script type="text/javascript">
+    //<![CDATA[
+        new PayU();
+    //]]>
+</script>
 
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
-    <li class="form-alt">
-        <?php echo $this->__('You will be redirected to PayU after submitting the order.'); ?>
-    </li>
+    <?php if ($paymethods) { ?>
+        <li class="form-alt">
+            <?php echo $this->__('You will be redirected to PayU after submitting the order.'); ?>
+        </li>
+        <li>
+            <div id="payMethods">
+                <?php foreach ($paymethods as $paymethod) { ?>
+                <div class="payMethod <?php echo $paymethod->status !== PayU_Account_Model_GetPayMethods::PAYMETHOD_STATUS_ENABLED ? 'payMethodDisable' : 'payMethodEnable' ?>">
+                    <?php if ($paymethod->status === PayU_Account_Model_GetPayMethods::PAYMETHOD_STATUS_ENABLED) { ?>
+                    <input id="payMethod-<?php echo $paymethod->value ?>" type="radio" value="<?php echo $paymethod->value ?>" name="payment[pay_type]" >
+                    <?php } ?>
+                    <label for="payMethod-<?php echo $paymethod->value ?>" class="payMethodLabel">
+                        <div class="payMethodImage"><img src="<?php echo $paymethod->brandImageUrl ?>" alt="<?php echo $paymethod->name ?>" title="<?php echo $paymethod->name ?>"></div>
+                        <?php echo $paymethod->name ?>
+                    </label>
+                </div>
+                <?php } ?>
+            </div>
+        </li>
+    <?php } else  { ?>
+        <li class="form-alt">
+            <?php echo $this->__('You will be redirected to PayU after submitting the order.'); ?>
+        </li>
+    <?php } ?>
 </ul>

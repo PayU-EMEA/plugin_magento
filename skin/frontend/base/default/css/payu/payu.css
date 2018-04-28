@@ -2,3 +2,72 @@
     height: 22px;
     margin-right: 10px;
 }
+
+#payMethods {
+    clear: both;
+    overflow: auto;
+    margin-top: 20px;
+}
+
+.payMethod {
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    margin: 3px;
+    height: 78px;
+    width: 118px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    background-color: #ffffff;
+}
+
+.payMethodEnable:hover {
+    background-color: #eeeeee;
+}
+
+.payMethodActive {
+    border-color: #438F29;
+    background-color: #eeeeee;
+}
+
+.payMethod input[type="radio"] {
+    display: none;
+}
+
+.payMethodImage {
+    width: 106px;
+    height: 40px;
+    margin: 6px 0 4px;
+    position: relative;
+}
+
+.payMethod label {
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 120%;
+    padding: 0;
+    margin: 0 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+.payMethodEnable label {
+    cursor: pointer;
+}
+
+.payMethodDisable label {
+    cursor: default;
+}
+
+div.payMethodImage img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
