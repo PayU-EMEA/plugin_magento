@@ -111,7 +111,7 @@ class PayU_Account_Model_GetPayMethods
                 } else if ($item->status !== self::PAYMETHOD_STATUS_ENABLED) {
                     $item->sort = $key + 200;
                 } else if (array_key_exists($item->value, $paymentMethodsOrder)) {
-                    $item->sort = $paymentMethodsOrder[$item->value];
+                    $item->sort = $paymentMethodsOrder[$item->value] - 100;
                 } else {
                     $item->sort = $key + 100;
                 }
