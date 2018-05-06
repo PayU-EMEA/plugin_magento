@@ -71,3 +71,14 @@ div.payMethodImage img {
     right: 0;
     margin: auto;
 }
+
+.payuConditions {
+    margin-top: 20px;
+}
+.payuConditions label a {
+    float: none !important;
+    margin: 0 !important;
+}
+.payuText {
+    font-size: 10px;
+}

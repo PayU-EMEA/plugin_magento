@@ -135,7 +135,10 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
         $orderData = $this->prepareOrderData($order);
         $response = null;
 
-        $result = (new PayU_Account_Model_CreateOrder($this->_payuConfig))->execute($orderData);
+        /** @var PayU_Account_Model_CreateOrder $createOrder */
+        $createOrder = Mage::getModel('payu/createOrder', array('method' => $this->_code));
+
+        $result =  $createOrder->execute($orderData);
 
         $payuOrderId = $result->orderId;
 
@@ -197,25 +200,20 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
             );
         }
 
+
         if ($this->_code === 'payu_card') {
+            $payType = PayU_Account_Model_GetPayMethods::CREDIT_CARD_CODE;
+        } else {
+            $payType = $order->getPayment()->getMethodInstance()->getInfoInstance()->getAdditionalInformation(PayU_Account_Model_Method_PayuAccount::PAY_TYPE);
+        }
+
+        if ($payType) {
             $orderData['payMethods'] = array(
                 'payMethod' => array(
                     'type' => 'PBL',
-                    'value' => 'c'
+                    'value' => $payType
                 )
             );
-        } else {
-
-            $payType = $order->getPayment()->getMethodInstance()->getInfoInstance()->getAdditionalInformation(PayU_Account_Model_Method_PayuAccount::PAY_TYPE);
-
-            if ($payType) {
-                $orderData['payMethods'] = array(
-                    'payMethod' => array(
-                        'type' => 'PBL',
-                        'value' => $payType
-                    )
-                );
-            }
         }
 
         return $orderData;
@@ -517,13 +515,7 @@ abstract class PayU_Account_Model_Method_Abstract extends Mage_Payment_Model_Met
      */
     protected function _getLanguageCode()
     {
-        try {
-            $locale = Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId());
-        } catch (Mage_Core_Model_Store_Exception $exception) {
-            $locale = 'pl_PL';
-        }
-        $langCode = explode('_', $locale, 2);
-        return strtolower($langCode[0]);
+        return substr(Mage::app()->getLocale()->getLocaleCode(), 0, 2);
     }
 
 }

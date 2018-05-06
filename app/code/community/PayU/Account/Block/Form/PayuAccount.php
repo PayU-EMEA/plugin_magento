@@ -13,6 +13,9 @@ class PayU_Account_Block_Form_PayuAccount extends PayU_Account_Block_Form_Abstra
 
     }
 
+    /**
+     * @return array|null
+     */
     public function getPayMethods()
     {
         /** @var PayU_Account_Model_Config $payuConfig */
@@ -27,4 +30,13 @@ class PayU_Account_Block_Form_PayuAccount extends PayU_Account_Block_Form_Abstra
 
         return $getPayMetods->execute();
     }
+
+    /**
+     * @return bool
+     */
+    public function isShowPayuConditions()
+    {
+        return substr(Mage::app()->getLocale()->getLocaleCode(), 0, 2) === 'pl';
+    }
+
 }

@@ -33,11 +33,12 @@ class PayU_Account_Model_GetPayMethods
      */
     public function __construct($method) {
         $this->payuConfig = Mage::getSingleton('payu/config', array('method' => $method));
-        $this->payuConfig->initializeOpenPayUConfiguration();
     }
 
     public function execute()
     {
+        $this->payuConfig->initializeOpenPayUConfiguration();
+
         try {
             $response = \OpenPayU_Retrieve::payMethods()->getResponse();
             if (isset($response->payByLinks)) {

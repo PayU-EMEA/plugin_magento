@@ -5,14 +5,13 @@ class PayU_Account_Model_CreateOrder
     /** @var PayU_Account_Model_Config */
     private $payuConfig;
 
-
     /**
      * PayU_Account_Model_CreateOrder constructor.
-     * @param $payuConfig
+     * @param string $method
      */
-    public function __construct($payuConfig)
+    public function __construct($method)
     {
-        $this->payuConfig = $payuConfig;
+        $this->payuConfig = Mage::getSingleton('payu/config', array('method' => $method));
     }
 
     /**
