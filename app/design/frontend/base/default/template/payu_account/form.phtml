@@ -1,7 +1,44 @@
-<?php /** @var PayU_Account_Block_Form $this */ ?>
+<?php
+/** @var PayU_Account_Block_Form_PayuAccount $this */
+$paymethods = $this->getPayMethods();
+?>
 
 <ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
-    <li class="form-alt">
-        <?php echo $this->__('You will be redirected to PayU after submitting the order.'); ?>
-    </li>
+    <?php if ($paymethods) { ?>
+        <script type="text/javascript">
+            //<![CDATA[
+            new PayU();
+            //]]>
+        </script>
+        <li class="form-alt">
+            <?php echo $this->__('After placing the order you will be redirected to the chosen method in order to make the payment'); ?>
+        </li>
+        <li>
+            <div id="payMethods">
+                <?php foreach ($paymethods as $paymethod) { ?>
+                <div class="payMethod <?php echo $paymethod->status !== PayU_Account_Model_GetPayMethods::PAYMETHOD_STATUS_ENABLED ? 'payMethodDisable' : 'payMethodEnable' ?>">
+                    <?php if ($paymethod->status === PayU_Account_Model_GetPayMethods::PAYMETHOD_STATUS_ENABLED) { ?>
+                    <input id="payMethod-<?php echo $paymethod->value ?>" type="radio" value="<?php echo $paymethod->value ?>" name="payment[pay_type]" >
+                    <?php } ?>
+                    <label for="payMethod-<?php echo $paymethod->value ?>" class="payMethodLabel">
+                        <div class="payMethodImage"><img src="<?php echo $paymethod->brandImageUrl ?>" alt="<?php echo $paymethod->name ?>" title="<?php echo $paymethod->name ?>"></div>
+                        <?php echo $paymethod->name ?>
+                    </label>
+                </div>
+                <?php } ?>
+            </div>
+            <?php if ($this->isShowPayuConditions()) { ?>
+                <div class="payuConditions">
+                    <input type="checkbox" value="1" name="payment[payu_condition]" id="payu_condition" checked="checked" class="checkbox">
+                    <label for="payu_condition"><?php echo $this->__('I accept'); ?> <a href="http://static.payu.com/sites/terms/files/payu_terms_of_service_single_transaction_pl_pl.pdf"><?php echo $this->__('Terms and Conditions of the single transaction in of PayU') ?></a></label>
+                    <p class="payuText"><?php echo $this->__('Payment order: Payment is processed by PayU SA; The recipient\'s data, the payment title and the amount are provided to PayU SA by the recipient; The order is sent for processing when PayU SA receives your payment. The payment is transferred to the recipient within 1 hour, not later than until the end of the next business day; PayU SA does not charge any service fees.'); ?></p>
+                    <p  class="payuText"><?php echo $this->__('The administrator of your personal data within the meaning of the Personal Data Protection Act of 29 August 1997 (Journal of Laws of 2002, No. 101, item 926 as amended) is PayU SA with the registered office in Poznań (60-166) at ul. Grunwaldzka 182. Your personal data will be processed according to the applicable provisions of law for archiving and service provision purposes. Your data will not be made available to other entities, except of entities authorized by law. You are entitled to access and edit your data. Data provision is voluntary but required to achieve the above-mentioned purposes.'); ?></p>
+                </div>
+            <?php } ?>
+        </li>
+    <?php } else  { ?>
+        <li class="form-alt">
+            <?php echo $this->__('You will be redirected to PayU after submitting the order.'); ?>
+        </li>
+    <?php } ?>
 </ul>

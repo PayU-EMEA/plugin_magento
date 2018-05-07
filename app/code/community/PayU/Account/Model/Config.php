@@ -1,92 +1,48 @@
 <?php
 
-/**
- * PayU Config Model
- *
- * @copyright Copyright (c) 2011-2016 PayU
- * @license http://opensource.org/licenses/GPL-3.0  Open Software License (GPL 3.0)
- */
 class PayU_Account_Model_Config
 {
     /**
-     * @var string self version
+     * Sanbox code
      */
-    protected $_pluginVersion = '2.3.1';
+    const ENVIRONMENT_SANBOX = 'sandbox';
 
     /**
-     * @var string minimum Magento e-commerce version
+     * Secure code
      */
-    protected $_minimumMageVersion = '1.6.0';
+    const ENVIRONMENT_SECURE = 'secure';
+
+    /**
+     * Plugin version
+     */
+    const PLUGIN_VERSION = '2.4.0';
 
     /**
      * @var int
      */
-    protected $_storeId;
+    private $storeId;
 
     /**
      * @var string
      */
-    private $_method;
+    private $method;
 
     /**
      * Constructor
      *
-     * @param $params
+     * @param array $params
+     * @param int|null $storeId
+     * @throws Mage_Core_Model_Store_Exception
      */
-    public function __construct($params = array())
+    public function __construct($params = array(), $storeId = null)
     {
-        // assign current store id
-        $this->setStoreId(Mage::app()->getStore()->getId());
+        if ($storeId !== null) {
+            $this->storeId = $storeId;
+        } else {
+            $this->storeId = Mage::app()->getStore()->getId();
+        }
 
-        $this->_method = $params['method'];
-    }
-
-    /**
-     * @param int $storeId
-     * @return $this
-     */
-    public function setStoreId($storeId)
-    {
-        $this->_storeId = $storeId;
-        return $this;
-    }
-
-    /** @return string get Merchant POS Id */
-    public function getMerchantPosId()
-    {
-        return $this->getStoreConfig('pos_id');
-    }
-
-    /**
-     * @return string get Signature Key
-     */
-    public function getSignatureKey()
-    {
-        return $this->getStoreConfig('signature_key');
-    }
-
-    /**
-     * @return string get OAuth Client Id
-     */
-    public function getClientId()
-    {
-        return $this->getStoreConfig('oauth_client_id');
-    }
-
-    /**
-     * @return string get OAuth Client Secret
-     */
-    public function getClientSecret()
-    {
-        return $this->getStoreConfig('oauth_client_secret');
-    }
-
-    /**
-     * @return string get Sandbox
-     */
-    public function isSandbox()
-    {
-        return (bool)Mage::getStoreConfig('payment/' . $this->_method . '/sandbox', $this->_storeId);
+        $this->method = $params['method'];
     }
 
     /**
@@ -102,19 +58,70 @@ class PayU_Account_Model_Config
     }
 
     /**
-     * @return string get current plugin version
+     * @return string
      */
     public function getPluginVersion()
     {
-        return $this->_pluginVersion;
+        return self::PLUGIN_VERSION;
     }
 
     /**
-     * @return string get minimum mage version for the plugin to work on
+     * Initialize PayU configuration
      */
-    public function getMinimumMageVersion()
+    public function initializeOpenPayUConfiguration()
     {
-        return $this->_minimumMageVersion;
+        OpenPayU_Configuration::setEnvironment($this->getEnvironment());
+        OpenPayU_Configuration::setMerchantPosId($this->getStoreConfig('pos_id'));
+        OpenPayU_Configuration::setSignatureKey($this->getStoreConfig('signature_key'));
+        OpenPayU_Configuration::setOauthClientId($this->getStoreConfig('oauth_client_id'));
+        OpenPayU_Configuration::setOauthClientSecret($this->getStoreConfig('oauth_client_secret'));
+        OpenPayU_Configuration::setOauthTokenCache(new OauthCacheFile(Mage::getBaseDir('cache')));
+        OpenPayU_Configuration::setSender('Magento ver ' . Mage::getVersion() . '/Plugin ver ' . $this->getPluginVersion());
+    }
+
+    /**
+     * @return string
+     */
+    public function getMerchantPosId()
+    {
+        return \OpenPayU_Configuration::getMerchantPosId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowPaytypes()
+    {
+        return (bool)Mage::getStoreConfig('payment/' . $this->method . '/paytypes', $this->storeId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return (bool)Mage::getStoreConfig('payment/' . $this->method . '/active', $this->storeId);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaytypesOrder() {
+        return explode(
+            ',',
+            str_replace(
+                ' ',
+                '',
+                Mage::getStoreConfig('payment/' . $this->method . '/paytypes_order', $this->storeId)
+            )
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getEnvironment() {
+        return $this->isSandbox() ? self::ENVIRONMENT_SANBOX : self::ENVIRONMENT_SECURE;
     }
 
     /**
@@ -122,8 +129,17 @@ class PayU_Account_Model_Config
      * @param $name
      * @return string
      */
-    protected function getStoreConfig($name)
+    private function getStoreConfig($name)
     {
-        return Mage::getStoreConfig('payment/' . $this->_method . '/' . ($this->isSandbox() ? 'sandbox_' : '') . $name, $this->_storeId);
+        return Mage::getStoreConfig('payment/' . $this->method . '/' . ($this->isSandbox() ? 'sandbox_' : '') . $name, $this->storeId);
     }
+
+    /**
+     * @return bool
+     */
+    private function isSandbox()
+    {
+        return (bool)Mage::getStoreConfig('payment/' . $this->method . '/sandbox', $this->storeId);
+    }
+
 }

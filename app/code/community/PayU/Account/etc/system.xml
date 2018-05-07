@@ -10,7 +10,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <comment>Important: This plugin works only with REST (Checkout) points of sales (POS).</comment>
+                    <comment><![CDATA[If you do not already have PayU merchant account, <a href="https://secure.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Production</a> or <a href="https://secure.snd.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Sandbox</a>]]></comment>
                     <frontend_model>payu/adminhtml_block_system_config_form_fieldset</frontend_model>
                     <fields>
                         <header1 translate="label">
@@ -39,6 +39,25 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </sandbox>
+                        <paytypes translate="label">
+                            <label>Display payment methods</label>
+                            <comment>Payment methods displayed on checkout page</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </paytypes>
+                        <paytypes_order translate="label">
+                            <label>Payment Methods Order</label>
+                            <comment><![CDATA[Enter payment methods values separated by comma. <a href="http://developers.payu.com/pl/overview.html#paymethods" target="_blank">List of payment methods</a>]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </paytypes_order>
                         <header2 translate="label">
                             <label>POS parameters</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -150,7 +169,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <comment>Important: This plugin works only with REST (Checkout) points of sales (POS).</comment>
+                    <comment><![CDATA[If you do not already have PayU merchant account, <a href="https://secure.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Production</a> or <a href="https://secure.snd.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Sandbox</a>]]></comment>
                     <frontend_model>payu/adminhtml_block_system_config_form_fieldset</frontend_model>
                     <fields>
                         <header1 translate="label">

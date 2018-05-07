@@ -2,7 +2,6 @@
 
 abstract class PayU_Account_Block_Form_Abstract extends Mage_Payment_Block_Form {
 
-
     protected function _construct()
     {
         parent::_construct();
@@ -17,7 +16,9 @@ abstract class PayU_Account_Block_Form_Abstract extends Mage_Payment_Block_Form 
     protected function _prepareLayout()
     {
         if ($head = $this->getLayout()->getBlock('head')) {
-            $head->addCss('css/payu/payu.css');
+            $head
+                ->addCss('css/payu/payu.css')
+                ->addItem('skin_js', 'js/payu/payu.js');
         }
         return parent::_prepareLayout();
     }
