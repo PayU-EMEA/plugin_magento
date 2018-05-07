@@ -14,6 +14,8 @@
 1. [Instalacja](#instalacja)
 1. [Konfiguracja](#konfiguracja)
     * [Parametry](#parametry)
+1. [Informacje o cechach](#informacje-o-cechach)
+    * [Kolejność metod płatności](#kolejność-metod-płatności)
 
 ## Cechy
 Moduł płatności PayU dodaje do Magento opcję płatności PayU.
@@ -26,7 +28,7 @@ Możliwe są następujące operacje:
 Moduł dodaje dwie metody płatności:
   
 ![methods][img0]
-  * **Zapłać przez PayU** - przekierowanie na stronę wyboru metod płatności w PayU
+  * **Zapłać przez PayU** - wybór metody płatności i przekierowanie do banku / formatkę kartową lub przekierowanie na stronę wyboru metod płatności w PayU
   * **Zapłać kartą** - bezpośrednie przekierowanie na formularz płatności kartą
 
 ## Wymagania
@@ -84,6 +86,13 @@ Dodatkowo jeżeli aktualizujesz moduł ze starszej wersji należy z katalogu `in
 | Czy włączyć wtyczkę? | Określa czy metoda płatności będzie dostępna w sklepie na liście płatności. |
 | Tryb testowy (Sandbox) | Określa czy płatności będą realizowane na środowisku testowym (sandbox) PayU. |
 
+#### Parametry dla metody `Zapłać przez PayU`
+
+| Parameter | Opis |
+|---------|-----------|
+| Wyświetlaj metody płatności | Określa czy ma być wyświetlana lista bramek płatności podczas procesu zamówienia w Magento |
+| Kolejność metod płatności | Określa kolejnośc wyświetlanych metod płatności [więcej informacji](#kolejność-metod-płatności). |
+
 #### Parametry punktu płatności (POS)
 
 | Parameter | Opis |
@@ -103,6 +112,10 @@ Dostępne gdy parametr `Tryb testowy (Sandbox)` jest ustawiony na `Tak`.
 | OAuth - client_id | client_id dla protokołu OAuth z systemu PayU |
 | OAuth - client_secret | client_secret for OAuth z systemu PayU |
 
+## Informacje o cechach
+
+### Kolejność metod płatności
+W celu ustalenia kolejności wyświetlanych ikon matod płatności należy podać symbole metod płatności oddzielając je przecinkiem. [Lista metod płatności][ext7].
 
 <!--LINKS-->
 
@@ -113,9 +126,10 @@ Dostępne gdy parametr `Tryb testowy (Sandbox)` jest ustawiony na `Tak`.
 [ext1]: http://php.net/manual/en/book.curl.php
 [ext2]: http://php.net/manual/en/book.hash.php
 [ext3]: https://github.com/PayU/plugin_magento_160
-[ext4]: https://secure.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
-[ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext4]: https://secure.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
+[ext5]: https://secure.snd.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
 [ext6]: https://github.com/PayU/plugin_magento_2
+[ext7]: http://developers.payu.com/pl/overview.html#paymethods
 
 <!--images:-->
 [img0]: readme_images/methods.png

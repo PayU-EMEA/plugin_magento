@@ -50,7 +50,7 @@ class PayU_Account_Model_Method_PayuAccount extends PayU_Account_Model_Method_Ab
 
         if (!$paytype) {
             $errorMsg = Mage::helper('payu')->__('Please choose a payment method');
-        } else if (!$payuCondition) {
+        } else if ($this->_getLanguageCode() === 'pl' && !$payuCondition) {
             $errorMsg = Mage::helper('payu')->__('You must accept the "Terms and Conditions of the single transaction in of PayU"');
         }
 
