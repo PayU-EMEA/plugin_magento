@@ -15,7 +15,7 @@ class PayU_Account_Model_Config
     /**
      * Plugin version
      */
-    const PLUGIN_VERSION = '2.4.0';
+    const PLUGIN_VERSION = '2.4.1';
 
     /**
      * @var int

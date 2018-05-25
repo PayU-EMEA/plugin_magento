@@ -1,3 +1,9 @@
+## 2.4.1
+ * Update private policy
+
+## 2.4.0
+ * Payment methods show on one step checkout
+
 ## 2.3.1
  * Fixed sandbox configuration for card
 
