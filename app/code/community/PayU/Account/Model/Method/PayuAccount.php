@@ -26,14 +26,17 @@ class PayU_Account_Model_Method_PayuAccount extends PayU_Account_Model_Method_Ab
     {
         $result = parent::assignData($data);
 
-        if (!($data instanceof Varien_Object)) {
-            $data = new Varien_Object($data);
-        }
-        $info = $this->getInfoInstance();
+        if ($this->_payuConfig->isShowPaytypes()) {
 
-        $info
-            ->setAdditionalInformation(self::PAY_TYPE, $data->getData(self::PAY_TYPE))
-            ->setAdditionalInformation(self::PAYU_CONDITION, $data->getData(self::PAYU_CONDITION));
+            if (!($data instanceof Varien_Object)) {
+                $data = new Varien_Object($data);
+            }
+            $info = $this->getInfoInstance();
+
+            $info
+                ->setAdditionalInformation(self::PAY_TYPE, $data->getData(self::PAY_TYPE))
+                ->setAdditionalInformation(self::PAYU_CONDITION, $data->getData(self::PAYU_CONDITION));
+        }
 
         return $result;
     }
@@ -42,20 +45,22 @@ class PayU_Account_Model_Method_PayuAccount extends PayU_Account_Model_Method_Ab
     {
         parent::validate();
 
-        $info = $this->getInfoInstance();
-        $errorMsg = false;
+        if ($this->_payuConfig->isShowPaytypes()) {
+            $info = $this->getInfoInstance();
+            $errorMsg = false;
 
-        $paytype = $info->getAdditionalInformation(self::PAY_TYPE);
-        $payuCondition = $info->getAdditionalInformation(self::PAYU_CONDITION);
+            $paytype = $info->getAdditionalInformation(self::PAY_TYPE);
+            $payuCondition = $info->getAdditionalInformation(self::PAYU_CONDITION);
 
-        if (!$paytype) {
-            $errorMsg = Mage::helper('payu')->__('Please choose a payment method');
-        } else if ($this->_getLanguageCode() === 'pl' && !$payuCondition) {
-            $errorMsg = Mage::helper('payu')->__('You must accept the "Terms and Conditions of the single transaction in of PayU"');
-        }
+            if (!$paytype) {
+                $errorMsg = Mage::helper('payu')->__('Please choose a payment method');
+            } else if ($this->_getLanguageCode() === 'pl' && !$payuCondition) {
+                $errorMsg = Mage::helper('payu')->__('You must accept the "Terms and Conditions of the single transaction in of PayU"');
+            }
 
-        if ($errorMsg) {
-            Mage::throwException($errorMsg);
+            if ($errorMsg) {
+                Mage::throwException($errorMsg);
+            }
         }
 
         return $this;
