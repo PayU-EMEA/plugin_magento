@@ -1,3 +1,6 @@
+## 2.4.2
+ * Fixed checkout when not show paymethods
+
 ## 2.4.1
  * Update private policy
 
