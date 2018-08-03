@@ -1,3 +1,6 @@
+## 2.4.3
+ * Update SDK
+
 ## 2.4.2
  * Fixed checkout when not show paymethods
 
