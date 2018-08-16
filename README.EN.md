@@ -50,14 +50,6 @@ The following PHP extensions are required:
     * Click **Flush Magento Cache** button.
 
 ### Option 2
-**Using Magento Connect**
-
-1. Go to admin page of your Magento installation [http://shop-url/admin].
-1. Choose **System** > **Magento Connect** > **Magento Connect Manager**.
-1. In **Install New Extensions section** insert `http://connect20.magentocommerce.com/community/PayU_Account` into the `Paste the extension key to install` field and click `Install`
-1. Information about the plugin shall appear shortly. To continue installation click `Proceed`.
-
-### Option 3
 **Using modman script**
 
 PayU module includes configuration which makes it possible to install via `modman` script.

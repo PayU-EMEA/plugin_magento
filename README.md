@@ -51,14 +51,6 @@ Do prawidłowego funkcjonowania modułu wymagane są następujące rozszerzenia 
     * Naciśnij przycisk **Flush Magento Cache**.
 
 ### Opcja 2
-**Z użyciem Magento Connect**
-
-1. Przejdź do strony administracyjnej swojego sklepu Magento [http://adres-sklepu/admin].
-1. Przejdź do **System** > **Magento Connect** > **Magento Connect Manager**.
-1. W sekcji **Install New Extensions section** do pola `Paste the extension key to install` należy wkleić `http://connect20.magentocommerce.com/community/PayU_Account` i wcisnąć przycisk `Install`
-1. Po chwili pojawi się informacji o wtyczce. W celu instalacji należy nacisnąć przycisk `Proceed`
-
-### Opcja 3
 **Z użyciem skryptu modman**
 
 Moduł PayU zawiera konfigurację umożliwiającą instalację poprzez skrypt `modman`.
