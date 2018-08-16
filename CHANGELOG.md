@@ -1,3 +1,6 @@
+## 2.4.4
+ * Moved payu.js to correct path
+
 ## 2.4.3
  * Update SDK
 
