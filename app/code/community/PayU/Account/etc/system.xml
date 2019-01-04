@@ -13,10 +13,18 @@
                     <comment><![CDATA[If you do not already have PayU merchant account, <a href="https://secure.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Production</a> or <a href="https://secure.snd.payu.com/boarding/?pk_campaign=Plugin&pk_kwd=Magento#/form" target="_blank">please register in Sandbox</a>]]></comment>
                     <frontend_model>payu/adminhtml_block_system_config_form_fieldset</frontend_model>
                     <fields>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
                         <header1 translate="label">
                             <label>Main parameters</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>0</sort_order>
+                            <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
