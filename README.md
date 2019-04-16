@@ -26,7 +26,7 @@ Możliwe są następujące operacje:
   * Utworzenie zwrotu online (pełnego lub częściowego)
 
 Moduł dodaje dwie metody płatności:
-  
+
 ![methods][img0]
   * **Zapłać przez PayU** - wybór metody płatności i przekierowanie do banku / formatkę kartową lub przekierowanie na stronę wyboru metod płatności w PayU
   * **Zapłać kartą** - bezpośrednie przekierowanie na formularz płatności kartą
@@ -118,7 +118,7 @@ W celu ustalenia kolejności wyświetlanych ikon matod płatności należy poda�
 [ext1]: http://php.net/manual/en/book.curl.php
 [ext2]: http://php.net/manual/en/book.hash.php
 [ext3]: https://github.com/PayU/plugin_magento_160
-[ext4]: https://secure.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
+[ext4]: https://www.payu.pl/oferta-handlowa
 [ext5]: https://secure.snd.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
 [ext6]: https://github.com/PayU/plugin_magento_2
 [ext7]: http://developers.payu.com/pl/overview.html#paymethods

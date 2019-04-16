@@ -108,7 +108,7 @@ Available when parameter `Sandbox mode` is set to `Yes`.
 [ext1]: https://github.com/PayU/plugin_magento_160
 [ext2]: http://php.net/manual/en/book.curl.php
 [ext3]: http://php.net/manual/en/book.hash.php
-[ext4]: https://secure.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
+[ext4]: https://www.payu.pl/en/commercial-offer
 [ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
 [ext6]: https://github.com/PayU/plugin_magento_2
 
