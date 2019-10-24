@@ -3,7 +3,7 @@
 # PayU account plugin for Magento 1.6.0+
 ``This plugin is released under the GPL license.``
 
-**If you have any questions or issues, feel free to contact our technical support: tech@payu.pl.**
+**If you have any questions or issues, feel free to contact our [technical support][ext7].**
 
 * If you have Magneto in version 2.x please use [plugin for ver 2.x][ext6]
 
@@ -111,6 +111,7 @@ Available when parameter `Sandbox mode` is set to `Yes`.
 [ext4]: https://www.payu.pl/en/commercial-offer
 [ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
 [ext6]: https://github.com/PayU/plugin_magento_2
+[ext7]: https://www.payu.pl/en/help
 
 <!--images:-->
 [img0]: readme_images/methods_en.png

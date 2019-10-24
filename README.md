@@ -3,7 +3,7 @@
 # Moduł PayU dla Magento 1.6.0+
 ``Moduł jest wydawany na licencji GPL.``
 
-**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym wsparciem pod adresem: tech@payu.pl.**
+**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext8].**
 
 * Jeżeli używasz Magneto w wersji 2.x proszę skorzystać z [pluginu dla wersji 2.x][ext6]
 
@@ -122,6 +122,7 @@ W celu ustalenia kolejności wyświetlanych ikon matod płatności należy poda�
 [ext5]: https://secure.snd.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
 [ext6]: https://github.com/PayU/plugin_magento_2
 [ext7]: http://developers.payu.com/pl/overview.html#paymethods
+[ext8]: https://www.payu.pl/pomoc
 
 <!--images:-->
 [img0]: readme_images/methods.png
