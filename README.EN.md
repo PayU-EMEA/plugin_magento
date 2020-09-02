@@ -5,7 +5,9 @@
 
 **If you have any questions or issues, feel free to contact our [technical support][ext7].**
 
-* If you have Magneto in version 2.x please use [plugin for ver 2.x][ext6]
+* If you are using Magento version >2.0.6, 2.1, 2.2, please use a [plugin for version >2.0.6, 2.1, 2.2][ext6]
+* If you are using Magento version 2.3, please use a [plugin for version 2.3][ext8]
+* If you are using Magento version 2.4, please use a [plugin for version 2.4][ext9]
 
 ## Table of Contents
 
@@ -105,13 +107,15 @@ Available when parameter `Sandbox mode` is set to `Yes`.
 
 <!--external links:-->
 [ext0]: README.md
-[ext1]: https://github.com/PayU/plugin_magento_160
+[ext1]: https://github.com/PayU-EMEA/plugin_magento
 [ext2]: http://php.net/manual/en/book.curl.php
 [ext3]: http://php.net/manual/en/book.hash.php
 [ext4]: https://www.payu.pl/en/commercial-offer
 [ext5]: https://secure.snd.payu.com/boarding/#/form&pk_campaign=Plugin-Github&pk_kwd=Magento
-[ext6]: https://github.com/PayU/plugin_magento_2
+[ext6]: https://github.com/PayU-EMEA/plugin_magento_2
 [ext7]: https://www.payu.pl/en/help
+[ext8]: https://github.com/PayU-EMEA/plugin_magento_23
+[ext9]: https://github.com/PayU-EMEA/plugin_magento_24
 
 <!--images:-->
 [img0]: readme_images/methods_en.png

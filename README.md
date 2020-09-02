@@ -5,7 +5,9 @@
 
 **Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext8].**
 
-* Jeżeli używasz Magneto w wersji 2.x proszę skorzystać z [pluginu dla wersji 2.x][ext6]
+* Jeżeli używasz Magneto w wersji >2.0.6, 2.1, 2.2 proszę skorzystać z [pluginu dla wersji >2.0.6, 2.1, 2.2][ext6]
+* Jeżeli używasz Magneto w wersji 2.3 proszę skorzystać z [pluginu dla wersji 2.3][ext9]
+* Jeżeli używasz Magneto w wersji 2.4 proszę skorzystać z [pluginu dla wersji 2.4][ext10]
 
 ## Spis treści
 
@@ -117,12 +119,14 @@ W celu ustalenia kolejności wyświetlanych ikon matod płatności należy poda�
 [ext0]: README.EN.md
 [ext1]: http://php.net/manual/en/book.curl.php
 [ext2]: http://php.net/manual/en/book.hash.php
-[ext3]: https://github.com/PayU/plugin_magento_160
+[ext3]: https://github.com/PayU-EMEA/plugin_magento
 [ext4]: https://www.payu.pl/oferta-handlowa
 [ext5]: https://secure.snd.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
-[ext6]: https://github.com/PayU/plugin_magento_2
+[ext6]: https://github.com/PayU-EMEA/plugin_magento_2
 [ext7]: http://developers.payu.com/pl/overview.html#paymethods
 [ext8]: https://www.payu.pl/pomoc
+[ext9]: https://github.com/PayU-EMEA/plugin_magento_23
+[ext10]: https://github.com/PayU-EMEA/plugin_magento_24
 
 <!--images:-->
 [img0]: readme_images/methods.png
