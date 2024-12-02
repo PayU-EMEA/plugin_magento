@@ -1,11 +1,9 @@
 [**English version**][ext0]
+# Uwaga: Ta wtyczka dla Magento 1.6.0+ została zarchiwizowana i nie jest już wspierana
 
 # Moduł PayU dla Magento 1.6.0+
 ``Moduł jest wydawany na licencji GPL.``
 
-**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext8].**
-
-* Jeżeli używasz Magneto w wersji >2.0.6, 2.1, 2.2 proszę skorzystać z [pluginu dla wersji >2.0.6, 2.1, 2.2][ext6]
 * Jeżeli używasz Magneto w wersji 2.3 proszę skorzystać z [pluginu dla wersji 2.3][ext9]
 * Jeżeli używasz Magneto w wersji 2.4 proszę skorzystać z [pluginu dla wersji 2.4][ext10]
 
@@ -122,9 +120,7 @@ W celu ustalenia kolejności wyświetlanych ikon matod płatności należy poda�
 [ext3]: https://github.com/PayU-EMEA/plugin_magento
 [ext4]: https://www.payu.pl/oferta-handlowa
 [ext5]: https://secure.snd.payu.com/boarding/?pk_campaign=Plugin-Github&pk_kwd=Magento#/form
-[ext6]: https://github.com/PayU-EMEA/plugin_magento_2
 [ext7]: http://developers.payu.com/pl/overview.html#paymethods
-[ext8]: https://www.payu.pl/pomoc
 [ext9]: https://github.com/PayU-EMEA/plugin_magento_23
 [ext10]: https://github.com/PayU-EMEA/plugin_magento_24
 
